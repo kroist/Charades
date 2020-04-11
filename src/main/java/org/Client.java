@@ -15,19 +15,28 @@ public class Client {
 
     public static String username;
 
+    public static boolean connected;
+
     private static void readFromServer(){
         while(true){
             try {
                 String s = in.readLine();
+                if (s == null){
+                    System.err.println("disconnected (null string)");
+                    connected = false;
+                    return;
+                }
                 System.out.println("message: " + s);
             } catch(IOException e){
                 System.err.println("something wrong in readFromServer");
+                connected = false;
+                return;
             }
         }
     }
 
     private static void writeToServer(){
-        while(true){
+        while(connected){
             try {
                 String s = stdIn.readLine();
                 System.out.println("wtf: " + s);
@@ -51,23 +60,32 @@ public class Client {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             stdIn = new BufferedReader(new InputStreamReader(System.in));
+            connected = true;
+            /*Runtime.getRuntime().addShutdownHook(new Thread(){
+                public void run(){
+                    try {
+                        clientSocket.close();
+                        System.out.println("socket is shut down");
+                    } catch (IOException e){
+                        System.out.println(e.getMessage());
+                    }
+                }
+            });*/
+
             System.out.println("Established connection");
             System.out.println("Enter your username:");
             username = stdIn.readLine();
+            connected = false;
             out.println(username);
 
             new Thread(){
                 @Override
                 public void run(){
-                    writeToServer();
+                    readFromServer();
                 }
             }.start();
-                /*new Thread(){
-                    @Override
-                    public void run(){
-                        readFromServer();
-                    }
-                }.start();*/
+            writeToServer();
+            System.out.println("Server closed");
 
         } catch (UnknownHostException e){
             System.err.println("Don't know about host on da port " + hostName + ":" + portNumber);
@@ -77,6 +95,11 @@ public class Client {
             System.exit(1);
         } finally {
             out.close();
+            try {
+                clientSocket.close();
+            } catch (IOException e){
+                System.err.println(e.getMessage());
+            }
         }
 
 

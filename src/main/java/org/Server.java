@@ -22,18 +22,23 @@ public class Server {
 
         public ConnectionThread(Socket socket){
             this.socket = socket;
-            try {
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
-                username = in.readLine();
-            } catch (IOException e){
-                System.out.println(e.getMessage());
-            }
         }
 
         @Override
         public void run(){
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
+                username = in.readLine();
+                System.out.println("Connected " + username);
+                connections.add(this);
+            } catch (IOException e){
+                System.out.println(e.getMessage());
+            }
             while(true){
+                if (socket.isClosed()){
+                    break;
+                }
                 try {
                     String recievedMessage = in.readLine();
                     System.out.println(recievedMessage);
@@ -41,16 +46,17 @@ public class Server {
                         System.out.println(username + " wants to say: " + recievedMessage);
                         this.sendToAnyone(username + " says: " + recievedMessage);
                     }
-                    TimeUnit.SECONDS.sleep(1);
+                    else {
+                        System.out.println("Disconnected + NullMessage");
+                        break;
+                    }
                 } catch (IOException e){
-                    System.out.println(e.getMessage());
-                } catch(InterruptedException e){
-                    System.out.println(e.getMessage());
-                }
-                finally {
-                    out.close();
+                    System.out.println("Disconnected + IOException");
+                    break;
                 }
             }
+            System.out.println(username + " disconnected");
+            connections.remove(this);
         }
 
         protected void sendMessage(String message){
@@ -79,8 +85,6 @@ public class Server {
             while(true){
                 Socket socket = serverSocket.accept();
                 ConnectionThread service = new ConnectionThread(socket);
-                System.out.println("Connected " + service.username);
-                connections.add(service);
                 service.start();
             }
         }
