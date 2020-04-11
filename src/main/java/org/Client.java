@@ -75,7 +75,6 @@ public class Client {
             System.out.println("Established connection");
             System.out.println("Enter your username:");
             username = stdIn.readLine();
-            connected = true;
             out.println(username);
 
             new Thread(){
