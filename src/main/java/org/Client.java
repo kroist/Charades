@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.Buffer;
 import java.util.concurrent.TimeUnit;
 
 public class Client extends Application{
@@ -24,6 +25,12 @@ public class Client extends Application{
 
     public static boolean connected;
 
+    private static boolean isSpectator;
+
+    private static String hostName;
+    private static int portNumber;
+
+    ///useless method
     private static void readFromServer(){
         while(true){
             try {
@@ -41,21 +48,50 @@ public class Client extends Application{
             }
         }
     }
+
     public static void main(String[] args){
-        String hostName = "localhost";
-        int portNumber = 6868;
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            System.out.println("enter host ip:");
+            hostName = stdIn.readLine();
+            System.out.println("enter host port:");
+            portNumber = Integer.parseInt(stdIn.readLine());
+            System.out.println("Are you going to be a host(H) or a spectator(S)? Enter the corresponding letter");
+            String hostOrSpectator = stdIn.readLine();
+            if (hostOrSpectator.equals("H")){
+                isSpectator = false;
+            }
+            else if (hostOrSpectator.equals("S")){
+                isSpectator = true;
+            }
+            else {
+                System.out.println("Please enter correct value!");
+                System.exit(1);
+            }
+        } catch (IOException e){
+        }
+
         try {
             clientSocket = new Socket(hostName, portNumber);
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new ObjectInputStream(clientSocket.getInputStream());
             connected = true;
             System.out.println("Established connection");
-            out.writeObject(new String("create new game"));
-            try{
-                Object obj = in.readObject();
-                if (obj instanceof Integer)System.out.println("your game ID is: " + obj);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            if (!isSpectator) {
+                out.writeObject("create new game");
+                try {
+                    Object obj = in.readObject();
+                    if (obj instanceof Integer) System.out.println("your game ID is: " + obj);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                out.writeObject("connect to the existing game");
+                System.out.println("enter ID of the game you want to join: ");
+                stdIn = new BufferedReader(new InputStreamReader(System.in));
+                int id = Integer.parseInt(stdIn.readLine());
+                out.writeObject(id);
             }
             launch(args);
             System.out.println("Server closed");
@@ -74,8 +110,6 @@ public class Client extends Application{
                 System.err.println(e.getMessage());
             }
         }
-
-
 
     }
     private int lineWidth = 3;
@@ -113,6 +147,8 @@ public class Client extends Application{
     private static GraphicsContext gc;
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setMinHeight(400);
+        stage.setMinWidth(400);
         stage.setResizable(false);
         Canvas canvas = new Canvas(400, 400);
         gc = canvas.getGraphicsContext2D();
@@ -157,33 +193,71 @@ public class Client extends Application{
         stage.setTitle("Charades");
         stage.setScene(scene);
         stage.show();
-        new Thread(() -> {
-            while(true){
-                try{
-                    if (in.available() == 0)continue;
-                    Object obj = in.readObject();
-                    if(obj instanceof Point){
-                        System.out.println("POINT!!!");
-                        Point p = (Point)obj;
-                        if(p.single){
-                            prevX = p.x;
-                            prevY = p.y;
-                            drawPoint(p.x, p.y);
-                        }
-                        else{
-                            x = p.x;
-                            y = p.y;
-                            drawLine(x, y);
+        if (!isSpectator) {
+            new Thread() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            if (in.available() == 0) continue;
+                            Object obj = in.readObject();
+                            if (obj instanceof Point) {
+                                System.out.println("POINT!!!");
+                                Point p = (Point) obj;
+                                if (p.single) {
+                                    prevX = p.x;
+                                    prevY = p.y;
+                                    drawPoint(p.x, p.y);
+                                } else {
+                                    x = p.x;
+                                    y = p.y;
+                                    drawLine(x, y);
+                                }
+                            } else {
+                                System.out.println("KEK???");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.exit(0);
                         }
                     }
-                    else{
-                        System.out.println("KEK???");
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                    System.exit(0);
                 }
-            }
-        }).start();
+            }.start();
+        }
+        else {
+            new Thread(){
+                @Override
+                public void run(){
+                    while(true){
+                        try{
+                            //if (in.available() == 0)continue;
+                            Object obj = in.readObject();
+                            System.out.println("WE GOT SOMETHING");
+                            if(obj instanceof Point){
+                                System.out.print("ITS POINT!!!");
+                                Point p = (Point)obj;
+                                if(p.single){
+                                    prevX = p.x;
+                                    prevY = p.y;
+                                    drawPoint(p.x, p.y);
+                                }
+                                else{
+                                    x = p.x;
+                                    y = p.y;
+                                    drawLine(x, y);
+                                }
+                            }
+                            else{
+                                System.out.println("KEK???");
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                            System.exit(0);
+                        }
+                    }
+                }
+            }.start();
+
+        }
     }
 }

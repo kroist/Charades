@@ -3,6 +3,7 @@ package main.java.org;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -132,10 +133,16 @@ public class Server {
         }
         int portNumber = Integer.parseInt(args[0]);
          */
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        int portNumber = 4000;
+        try {
+            System.out.println("Enter port number");
+            portNumber = Integer.parseInt(stdIn.readLine());
+        } catch (IOException e){
+        }
         for (int i = 0; i < 100; ++i){
             freeIDs.add(i);
         }
-        int portNumber = 6868;
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
         ) {
