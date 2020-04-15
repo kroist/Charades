@@ -48,7 +48,7 @@ public class Server {
                             if (!(recievedEvent instanceof String))break;
                             if (recievedEvent.equals("create new game")){
                                 if (freeIDs.isEmpty())break;
-                                int ID = freeIDs.get(0);
+                                Integer ID = freeIDs.get(0);
                                 freeIDs.remove(ID);
                                 Game game = new Game(ID);
                                 games.add(game);
