@@ -81,7 +81,15 @@ public class Client extends Application{
                 out.writeObject("create new game");
                 try {
                     Object obj = in.readObject();
-                    if (obj instanceof Integer) System.out.println("your game ID is: " + obj);
+                    if (obj instanceof String) {
+                        if (obj.equals("maxnumlobb")) {
+                            System.out.println("Maximum number of lobbies exceeded");
+                            System.exit(1);
+                        }
+                    }
+                    if (obj instanceof Integer) {
+                        System.out.println("your game ID is: " + obj);
+                    }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -219,7 +227,8 @@ public class Client extends Application{
                                 System.out.println("KEK???");
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            System.out.println("SERVER DOWN");
+                            //e.printStackTrace();
                             System.exit(0);
                         }
                     }
@@ -249,10 +258,14 @@ public class Client extends Application{
                                     drawLine(x, y);
                                 }
                             }
+                            if (obj == null){
+                                System.out.println("DISCONNECTED");
+                            }
                             else{
                                 System.out.println("KEK???");
                             }
                         }catch(Exception e){
+                            System.out.println("SERVER DISCONNECTED");
                             e.printStackTrace();
                             System.exit(0);
                         }

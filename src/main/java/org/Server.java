@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.Buffer;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -14,9 +15,12 @@ public class Server {
     //private static ArrayList<ConnectionThread> connections = new ArrayList<>();
     private static CopyOnWriteArrayList<Game> games = new CopyOnWriteArrayList<>();
     private static ConcurrentHashMap<Integer, Game> gameIDs = new ConcurrentHashMap<>();
-    private static CopyOnWriteArrayList<Integer> freeIDs = new CopyOnWriteArrayList<>();
+    private static int freeIDs;
     private static ConnectionThread host;
     private static final Object lock = new Object();
+
+    private static Random random;
+
     public static class ConnectionThread extends Thread {
 
         private final Socket socket;
@@ -25,12 +29,16 @@ public class Server {
         private static String username;
         private boolean inGame;
         Player player;
+        private Game game;
+        private boolean isHost;
 
         public ConnectionThread(Socket socket) throws IOException {
             this.socket = socket;
             this.in = new ObjectInputStream(this.socket.getInputStream());
             this.out = new ObjectOutputStream(this.socket.getOutputStream());
             inGame = false;
+            isHost = false;
+            game = null;
         }
 
         @Override
@@ -47,10 +55,20 @@ public class Server {
                         if (!inGame){
                             if (!(recievedEvent instanceof String))break;
                             if (recievedEvent.equals("create new game")){
-                                if (freeIDs.isEmpty())break;
-                                Integer ID = freeIDs.get(0);
-                                freeIDs.remove(ID);
-                                Game game = new Game(ID);
+                                if (freeIDs == 0){
+                                    System.out.println("Maximum number of lobbies exceeded");
+                                    out.writeObject("maxnumlobb");
+                                }
+                                isHost = true;
+                                Integer ID;
+                                while(true){
+                                    ID = random.nextInt(10000);
+                                    if (gameIDs.containsKey(ID))
+                                        continue;
+                                    break;
+                                }
+                                --freeIDs;
+                                game = new Game(ID);
                                 games.add(game);
                                 gameIDs.put(ID, game);
                                 game.start();
@@ -104,6 +122,16 @@ public class Server {
                 System.out.println("ingored " + notignored);
                 notignored.printStackTrace();
             } finally{
+                if (isHost){
+                    try {
+                        game.drawAll(null);
+                    } catch (IOException e){
+                        System.out.println("WTF?");
+                    }
+                    games.remove(game);
+                    gameIDs.remove(game.getGameID(), game);
+                    ++freeIDs;
+                }
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -126,6 +154,7 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
+        random = new Random();
         /*
         if (args.length != 1) {
             System.err.println("java clientEcho <portNumber>");
@@ -140,9 +169,7 @@ public class Server {
             portNumber = Integer.parseInt(stdIn.readLine());
         } catch (IOException e){
         }
-        for (int i = 0; i < 100; ++i){
-            freeIDs.add(i);
-        }
+        freeIDs = 10;
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
         ) {
