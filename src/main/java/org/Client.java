@@ -81,7 +81,15 @@ public class Client extends Application{
                 out.writeObject("create new game");
                 try {
                     Object obj = in.readObject();
-                    if (obj instanceof Integer) System.out.println("your game ID is: " + obj);
+                    if (obj instanceof String) {
+                        if (obj.equals("maxnumlobb")) {
+                            System.out.println("Maximum number of lobbies exceeded");
+                            System.exit(1);
+                        }
+                    }
+                    if (obj instanceof Integer) {
+                        System.out.println("your game ID is: " + obj);
+                    }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -154,38 +162,40 @@ public class Client extends Application{
         gc = canvas.getGraphicsContext2D();
         initDraw(gc);
         //--Write to server--//
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                event -> {
-                    gc.beginPath();
-                    prevX = event.getX();
-                    prevY = event.getY();
-                    drawPoint(prevX, prevY);
-                    gc.moveTo(prevX, prevY);
-                    gc.stroke();
-                    try{
-                        out.writeObject(new Point(prevX, prevY, true));
-                    }catch(IOException e){
-                        e.printStackTrace();
-                    }
-                });
+        if (!isSpectator) {
+            canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                    event -> {
+                        gc.beginPath();
+                        prevX = event.getX();
+                        prevY = event.getY();
+                        drawPoint(prevX, prevY);
+                        gc.moveTo(prevX, prevY);
+                        gc.stroke();
+                        try {
+                            out.writeObject(new Point(prevX, prevY, true));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
 
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                event -> {
-                    x = event.getX();
-                    y = event.getY();
-                    gc.lineTo(x, y);
-                    gc.stroke();
-                    try{
-                        out.writeObject(new Point(x, y, false));
-                    }catch(IOException e){
-                        e.printStackTrace();
-                    }
-                });
+            canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                    event -> {
+                        x = event.getX();
+                        y = event.getY();
+                        gc.lineTo(x, y);
+                        gc.stroke();
+                        try {
+                            out.writeObject(new Point(x, y, false));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
 
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
-                event -> {
+            canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                    event -> {
 
-                });
+                    });
+        }
         //-------------//
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
@@ -217,7 +227,8 @@ public class Client extends Application{
                                 System.out.println("KEK???");
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            System.out.println("SERVER DOWN");
+                            //e.printStackTrace();
                             System.exit(0);
                         }
                     }
@@ -247,10 +258,14 @@ public class Client extends Application{
                                     drawLine(x, y);
                                 }
                             }
+                            if (obj == null){
+                                System.out.println("DISCONNECTED");
+                            }
                             else{
                                 System.out.println("KEK???");
                             }
                         }catch(Exception e){
+                            System.out.println("SERVER DISCONNECTED");
                             e.printStackTrace();
                             System.exit(0);
                         }
