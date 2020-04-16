@@ -142,6 +142,7 @@ public class Server {
         }
 
         protected void sendObject(Object o) throws IOException {
+            System.out.println("something sent");
             out.writeObject(o);
         }
 
@@ -164,11 +165,11 @@ public class Server {
          */
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         int portNumber = 4000;
-        try {
+        /*try {
             System.out.println("Enter port number");
             portNumber = Integer.parseInt(stdIn.readLine());
         } catch (IOException e){
-        }
+        }*/
         freeIDs = 10;
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
