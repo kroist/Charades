@@ -246,22 +246,15 @@ public class Client extends Application{
         
         messageText = new Text();
         button1.setOnMouseClicked(mouseEvent -> createNewGame());
+        System.out.println(textField.getCharacters().toString());
         button2.setOnMouseClicked(mouseEvent -> connectToTheExistingGame(textField.getCharacters().toString()));
         
         menu.getChildren().addAll(textField, button1, button2, messageText);
         menuScene = new Scene(menu, 400, 400);
         stage.setScene(menuScene);
 
-
+        stage.setOnCloseRequest(windowEvent -> System.exit(0));
         stage.show();
-
-        /*Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                stage.setScene(menuScene);
-            }
-        }));
-        timeline.play();*/
         inGame = false;
 
         new Thread(() -> {
@@ -410,7 +403,7 @@ public class Client extends Application{
 
     private void returnToMenu(String message) {
         try {
-            clientSocket.close();
+            if (clientSocket != null)clientSocket.close();
         } catch (IOException e){
             System.err.println(e.getMessage());
         }
