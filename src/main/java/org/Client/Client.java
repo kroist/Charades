@@ -3,6 +3,7 @@ package main.java.org.Client;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -25,6 +26,8 @@ import java.net.ContentHandler;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Time;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -135,7 +138,7 @@ public class Client extends Application{
         launch(args);
 
     }
-    private int lineWidth = 3;
+    private static int lineWidth = 3;
     private void initDraw(GraphicsContext gc){
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
@@ -153,28 +156,28 @@ public class Client extends Application{
         gc.setLineWidth(lineWidth);
 
     }
-    private void drawPoint(double x, double y){
+    private static void drawPoint(double x, double y){
         x = x - lineWidth / 2.0;
         y = y - lineWidth / 2.0;
         gc.setFill(Color.BLACK);
         gc.fillOval(x, y, lineWidth, lineWidth);
     }
-    private void drawLine(double x, double y){
+    private static void drawLine(double x, double y){
         gc.setLineWidth(lineWidth);
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.strokeLine(prevX, prevY, x, y);
         prevX = x;
         prevY = y;
     }
-    private double prevX, prevY, x, y;
+    private static double prevX, prevY, x, y;
     private static GraphicsContext gc;
-    private Stage stage;
-    private Scene menuScene;
-    private Scene gameScene;
-    private Text messageText;
-    private boolean inGame = false;
-    Canvas canvas;
-
+    private static Stage stage;
+    private static Scene menuScene;
+    private static Scene gameScene;
+    private static Text messageText;
+    private static boolean inGame = false;
+    static Canvas canvas;
+    static Thread reading;
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
@@ -221,7 +224,7 @@ public class Client extends Application{
                     try {
                         out.writeObject(new Point(x, y, false));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                 });
                 canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
@@ -231,8 +234,10 @@ public class Client extends Application{
             }
         }).start();
         //-------------//
-        StackPane root = new StackPane();
-        root.getChildren().add(canvas);
+        Button returnToMenuButton = new Button("Return to menu");
+        returnToMenuButton.setOnMouseClicked(mouseEvent -> returnToMenu("you asked me to return you to menu"));
+        VBox root = new VBox();
+        root.getChildren().addAll(returnToMenuButton, canvas);
         gameScene = new Scene(root, 400, 400);
         stage.setTitle("Charades");
         //stage.setScene(gameScene);
@@ -257,50 +262,58 @@ public class Client extends Application{
         stage.show();
         inGame = false;
 
-        new Thread(() -> {
+    }
+    private static class PointReader extends Thread{
+        @Override
+        public synchronized void run() {
+            //System.out.println("i started");
             while (!inGame){
                 synchronized (this){
                     try {
+                        //System.out.println("i try to wait");
                         wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         returnToMenu("cannot wait");
                     }
                 }
                 if (!inGame)continue;
-                //System.out.println("i waited");
-                while (inGame) {
-                    try {
-                        //System.out.println(in.available());
-                        //if (in.available() == 0) continue;
-                        //System.out.println("i received something");
-                        Object obj = in.readObject();
-                        if (obj instanceof Point) {
-                            System.out.println("POINT!!!");
-                            Point p = (Point) obj;
-                            if (p.single) {
-                                prevX = p.x;
-                                prevY = p.y;
-                                drawPoint(p.x, p.y);
-                            } else {
-                                x = p.x;
-                                y = p.y;
-                                drawLine(x, y);
-                            }
+            }
+            //System.out.println("i waited");
+            while (inGame) {
+
+                try {
+                    //System.out.println(in.available());
+                    //if (in.available() == 0) continue;
+                    //System.out.println("i received something");
+                    //continue;
+                    Object obj = in.readObject();
+                    if (obj instanceof Point) {
+                        System.out.println("POINT!!!");
+                        Point p = (Point) obj;
+                        if (p.single) {
+                            prevX = p.x;
+                            prevY = p.y;
+                            drawPoint(p.x, p.y);
                         } else {
-                            System.out.println("KEK???");
+                            x = p.x;
+                            y = p.y;
+                            drawLine(x, y);
                         }
-                    } catch (Exception e) {
-                        System.out.println("SERVER DOWN");
-                        returnToMenu("SERVER DOWN");
-                        e.printStackTrace();
-                        //System.exit(0);
+                    } else {
+                        System.out.println("KEK???");
                     }
+
+                } catch (Exception e) {
+                    System.out.println("SERVER DOWN");
+                    new Thread(()->returnToMenu("SERVER DOWN")).start();
+                    //e.printStackTrace();
+                    //System.exit(0);
                 }
             }
-        }).start();
+        }
     }
-
+    ExecutorService e = Executors.newCachedThreadPool();
     private void connectToTheExistingGame(String stringID) {
         int ID;
         try {
@@ -325,6 +338,12 @@ public class Client extends Application{
             inGame = true;
             isSpectator = true;
             System.out.println("i am here");
+
+            reader = new PointReader();
+            e.execute(reader);
+            synchronized (reader){
+                reader.notify();
+            }
             synchronized (this){
                 notifyAll();
             }
@@ -349,7 +368,7 @@ public class Client extends Application{
             //returnToMenu("");
         }
     }
-
+    private static Thread reader;
     private void createNewGame() {
         try {
             clientSocket = new Socket(hostName, portNumber);
@@ -375,7 +394,13 @@ public class Client extends Application{
                 inGame = true;
                 isSpectator = false;
                 System.out.println("i am here");
-                stage.setScene(gameScene);
+                Platform.runLater(() -> stage.setScene(gameScene));
+
+                reader = new PointReader();
+                e.execute(reader);
+                synchronized (reader){
+                    reader.notify();
+                }
                 synchronized (this){
                     notifyAll();
                 }
@@ -401,21 +426,25 @@ public class Client extends Application{
         }
     }
 
-    private void returnToMenu(String message) {
+    private static void returnToMenu(String message) {
+        //System.out.println(message);
+        inGame = false;
+        //System.out.println("haha");
+        //if (reading != null)reading.interrupt();
         try {
             if (clientSocket != null)clientSocket.close();
         } catch (IOException e){
             System.err.println(e.getMessage());
         }
-        System.out.println("i returned to menu?");
-        clearEventHAndlers(canvas);
-        inGame = false;
+        //System.exit(0);
+        System.out.println("i returned to menu");
+        clearEventHandlers(canvas);
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         messageText.setText(message);
-        stage.setScene(menuScene);
+        Platform.runLater(() -> stage.setScene(menuScene));
     }
 
-    private void clearEventHAndlers(Canvas canvas) {
+    private static void clearEventHandlers(Canvas canvas) {
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 event -> {
                 });
