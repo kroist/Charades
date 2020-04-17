@@ -1,4 +1,6 @@
-package main.java.org;
+package main.java.org.Server;
+
+import main.java.org.Client.Point;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;

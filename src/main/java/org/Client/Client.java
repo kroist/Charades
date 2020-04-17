@@ -1,4 +1,4 @@
-package main.java.org;
+package main.java.org.Client;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
