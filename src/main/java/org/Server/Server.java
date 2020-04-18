@@ -176,6 +176,7 @@ public class Server {
         ) {
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("accepted");
                 ConnectionThread service = new ConnectionThread(socket);
                 service.start();
             }
