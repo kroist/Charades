@@ -1,14 +1,14 @@
-package main.java.org;
+package main.java.org.Server;
+
+import main.java.org.Tools.Point;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.Buffer;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.RecursiveAction;
 
 public class Server {
 
@@ -78,9 +78,6 @@ public class Server {
                                 game.addPlayer(player);
                                 System.out.println("player " + username + " connected to game with ID: " + ID);
                                 inGame = true;
-                                synchronized (game) {
-                                    game.notify();
-                                }
                                 out.writeObject(ID);
                             }else
                             if (recievedEvent.equals("connect to the existing game")){
@@ -90,14 +87,18 @@ public class Server {
                                     int ID = (int) nextEvent;
                                     if (gameIDs.containsKey(ID)){
                                         Game game = gameIDs.get(ID);
+                                        if (game.isStarted()){
+                                            sendObject("game is already started");
+                                            continue;
+                                        }
                                         player = new Player(this, game);
                                         game.addPlayer(player);
                                         System.out.println("player " + username + " connected to game with ID: " + ID);
                                         inGame = true;
-                                        synchronized (game) {
-                                            game.notify();
-                                        }
-                                    }else break;
+                                        sendObject("connected");
+                                    }else {
+                                        sendObject("bad ID");
+                                    }
                                 } catch (IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
@@ -105,9 +106,19 @@ public class Server {
                         }else {
 
                             if (recievedEvent != null) {
+                                if (recievedEvent instanceof Point){
+                                    if (player.isDrawing())player.getGame().writeEvent(recievedEvent);
+                                }
+                                if (recievedEvent instanceof String){
+                                    if (recievedEvent.equals("start game")){
+                                        synchronized (game){
+                                            game.notify();
+                                        }
+                                    }
+                                }
                                 //System.out.println("We got object from: " + username);
-                                System.out.println(player.isDrawing());
-                                if (player.isDrawing())player.getGame().writeEvent(recievedEvent);
+                                //System.out.println(player.isDrawing());
+                                //if (player.isDrawing())player.getGame().writeEvent(recievedEvent);
                             } else {
                                 System.out.println("Disconnected + NullMessage");
                                 break;
@@ -142,6 +153,7 @@ public class Server {
         }
 
         protected void sendObject(Object o) throws IOException {
+            System.out.println("something sent");
             out.writeObject(o);
         }
 
@@ -164,17 +176,18 @@ public class Server {
          */
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         int portNumber = 4000;
-        try {
+        /*try {
             System.out.println("Enter port number");
             portNumber = Integer.parseInt(stdIn.readLine());
         } catch (IOException e){
-        }
+        }*/
         freeIDs = 10;
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
         ) {
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("accepted");
                 ConnectionThread service = new ConnectionThread(socket);
                 service.start();
             }
