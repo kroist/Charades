@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 import javafx.application.Platform;
+import main.java.org.Tools.Point;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,6 +13,7 @@ public class Model {
     private static String hostName = "localhost";
     private static int portNumber = 4000;
     private static boolean inGame;
+    private static boolean gameStarted;
     private static boolean isSpectator;
     private static Controller controller;
     ObjectInputStream in;
@@ -71,7 +73,7 @@ public class Model {
         return null;
     }
 
-    public void PointReader(){
+    public void objectReader(){
         System.out.println(inGame);
         while (inGame) {
             //System.out.println("inGame");
@@ -80,7 +82,12 @@ public class Model {
                 Object obj = getObject();
                 if (obj instanceof Point) {
                     controller.newPoint(obj);
+                } else if (obj instanceof String){
+                    if (obj.equals("game started")){
+                        controller.startGame();
+                    }
                 } else {
+                    System.out.println(obj);
                     System.out.println("KEK???");
                 }
 
@@ -93,7 +100,15 @@ public class Model {
         }
     }
 
-    public void startReadingPoints() {
-        new Thread(() -> PointReader()).start();
+    public void startReadingObjects() {
+        new Thread(this::objectReader).start();
+    }
+
+    public void setGameStarted(boolean b) {
+        gameStarted = b;
+    }
+
+    public boolean isSpectator() {
+        return isSpectator;
     }
 }

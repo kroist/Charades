@@ -1,6 +1,7 @@
 package main.java.org.Server;
 
-import main.java.org.Client.Point;
+import javafx.application.Platform;
+import main.java.org.Tools.Point;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,11 +35,17 @@ public class Game extends Thread{
     @Override
     public void run() {
         try {
-            while (players.size() < 2){
+            /*while (players.size() < 2){
                 //System.out.println("hahahah " + players.size());
                 synchronized (this){
                     wait();
                 }
+            }*/
+            synchronized (this){
+                wait();
+            }
+            for (Player player : players){
+                player.getConn().sendObject("game started");
             }
             System.out.println("game started");
             isStarted = true;
@@ -49,6 +56,7 @@ public class Game extends Thread{
         }
     }
     public synchronized void writeEvent(Object o) throws IOException {
+        if (!isStarted)return;
         if (o instanceof Point){
             drawAll((Point)o);
         }
@@ -58,4 +66,5 @@ public class Game extends Thread{
                 player.getConn().sendObject(p);
             }
     }
+
 }

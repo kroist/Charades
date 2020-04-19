@@ -3,6 +3,7 @@ package main.java.org.Client;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
+import main.java.org.Tools.Point;
 
 
 public class Controller {
@@ -13,6 +14,7 @@ public class Controller {
          this.model = model;
     }
     public void createNewGame(){
+        System.out.println(Thread.currentThread());
         //System.out.println("button pressed");
         if (!model.connect()){
             returnToMenu("cannot connect");
@@ -33,26 +35,28 @@ public class Controller {
         if (o instanceof Integer){
             ID = (int)o;
             System.out.println("your game ID is: " + ID);
+            view.setGameID("" + ID);
         }
-        getReadyToWritePoints();
+        //getReadyToWritePoints();
         model.setInGame(true);
         model.setIsSpectator(false);
+        view.setVisibleStartGameButton(true);
         view.setGameScene();
         System.out.println("i believe");
-        model.startReadingPoints();
+        model.startReadingObjects();
     }
 
     private void getReadyToWritePoints() {
         Canvas canvas = view.getCanvas();
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 event -> {
-                    view.mousePressed(event);
+                    //view.mousePressed(event);
                     model.sendObject(new Point(event.getX(), event.getY(), true));
                 });
 
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 event -> {
-                    view.mouseDragged(event);
+                    //view.mouseDragged(event);
                     model.sendObject(new Point(event.getX(), event.getY(), false));
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
@@ -84,10 +88,22 @@ public class Controller {
             returnToMenu("cannot send");
             return;
         }
+        Object msg = model.getObject();
+        System.out.println(msg);
+        if (msg == null || (!(msg instanceof String))){
+            returnToMenu("is should not happened, wow, you found the bug");
+            return;
+        }
+        if (!msg.equals("connected")){
+            returnToMenu((String)msg);
+            return;
+        }
+        view.setGameID(stringID);
         model.setInGame(true);
         model.setIsSpectator(true);
+        view.setVisibleStartGameButton(false);
         view.setGameScene();
-        model.startReadingPoints();
+        model.startReadingObjects();
     }
 
     public void returnToMenu(String message) {
@@ -116,5 +132,17 @@ public class Controller {
 
     public void newPoint(Object obj) {
         view.newPoint(obj);
+    }
+
+    public void startGameButton() {
+        model.sendObject("start game");
+    }
+
+    public void startGame() {
+        if (!model.isSpectator()){
+            getReadyToWritePoints();
+            view.setVisibleStartGameButton(false);
+        }
+
     }
 }

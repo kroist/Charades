@@ -1,5 +1,6 @@
 package main.java.org.Client;
 
+import com.sun.media.jfxmediaimpl.platform.gstreamer.GSTPlatform;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -8,12 +9,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import main.java.org.Tools.Point;
 
 
 public class View extends Application {
@@ -49,17 +52,25 @@ public class View extends Application {
         initMenuScene();
         initGameScene();
     }
-
+    private static Text gameID;
+    private static Button startGameButton;
     private void initGameScene() {
         VBox game = new VBox();
+        HBox tools = new HBox();
+        gameID = new Text();
+
         Button returnToMenuButton = new Button("Return to menu");
+        startGameButton = new Button("Start game");
+        startGameButton.setOnMouseClicked(mouseEvent -> controller.startGameButton());
         returnToMenuButton.setOnMouseClicked(mouseEvent -> controller.returnToMenu("you asked me to return you to menu"));
 
         canvas = new Canvas(400, 400);
         initDraw(canvas.getGraphicsContext2D());
 
+        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton);
 
-        game.getChildren().addAll(returnToMenuButton, canvas);
+
+        game.getChildren().addAll(tools, canvas);
         gameScene = new Scene(game, 400, 400);
         stage.setTitle("Charades");
     }
@@ -82,10 +93,13 @@ public class View extends Application {
     }
 
     private void initMenuScene() {
+        BorderPane pane = new BorderPane();
         VBox menu = new VBox();
         Button button1 = new Button("Create new game");
         Button button2 = new Button("Connect to the existing game");
         TextField textField = new TextField("Enter your game ID here");
+
+        pane.setCenter(menu);
 
         messageText = new Text();
         button1.setOnMouseClicked(mouseEvent -> controller.createNewGame());
@@ -93,7 +107,7 @@ public class View extends Application {
         button2.setOnMouseClicked(mouseEvent -> controller.connectToTheExistingGame(textField.getCharacters().toString()));
 
         menu.getChildren().addAll(textField, button1, button2, messageText);
-        menuScene = new Scene(menu, 400, 400);
+        menuScene = new Scene(pane, 400, 400);
     }
     private static void drawPoint(double x, double y){
         //System.out.println("draw Point");
@@ -156,5 +170,14 @@ public class View extends Application {
     public void clearCanvas() {
         Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight()));
         canvas.getGraphicsContext2D().beginPath();
+    }
+    public void setGameID(String s){
+            //System.out.println(s + "i am here");
+            //if (gameID == null) System.out.println("tou loh");
+        Platform.runLater(() -> gameID.setText("Your game ID is: " + s));
+    }
+
+    public void setVisibleStartGameButton(boolean b) {
+        Platform.runLater(() -> startGameButton.setVisible(b));
     }
 }
