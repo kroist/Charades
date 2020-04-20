@@ -64,35 +64,42 @@ public class Server {
                                     System.out.println("Maximum number of lobbies exceeded");
                                     out.writeObject(ConnectionMessage.MAX_NUM_LOBBY);
                                 }
-                                isHost = true;
-                                Integer ID;
-                                while(true){
-                                    ID = random.nextInt(10000);
-                                    if (gameIDs.containsKey(ID))
-                                        continue;
-                                    break;
-                                }
-                                --freeIDs;
-                                game = new Game(ID);
-                                games.add(game);
-                                gameIDs.put(ID, game);
-                                game.start();
-                                System.out.println("New game started with ID: " + ID);
-
-                                player = new Player(this, game);
-                                game.addPlayer(player);
-                                System.out.println("Player-host " + username + " connected to game with ID: " + ID);
-                                inGame = true;
-                                out.writeObject(ID);
-                            }else
-                            if (receivedObject.equals(ConnectionMessage.CONN_TO_GAME)){
-                                try{
+                                try {
                                     Object nextEvent = in.readObject();
-                                    if (!(nextEvent instanceof Integer))break;
+                                    if(!(nextEvent instanceof Boolean)) break;
+                                    boolean isPrivate = (boolean)nextEvent;
+                                    isHost = true;
+                                    Integer ID;
+                                    while (true) {
+                                        ID = random.nextInt(10000);
+                                        if (gameIDs.containsKey(ID))
+                                            continue;
+                                        break;
+                                    }
+                                    --freeIDs;
+                                    game = new Game(ID, isPrivate);
+                                    games.add(game);
+                                    gameIDs.put(ID, game);
+                                    game.start();
+                                    System.out.println("New game started with ID: " + ID + " and isPrivate is " + game.isPrivate());
+
+                                    player = new Player(this, game);
+                                    game.addPlayer(player);
+                                    System.out.println("Player-host " + username + " connected to game with ID: " + ID);
+                                    inGame = true;
+                                    out.writeObject(ID);
+                                }catch (IOException | ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else if (receivedObject.equals(ConnectionMessage.CONN_TO_GAME)) {
+                                try {
+                                    Object nextEvent = in.readObject();
+                                    if (!(nextEvent instanceof Integer)) break;
                                     int ID = (int) nextEvent;
-                                    if (gameIDs.containsKey(ID)){
+                                    if (gameIDs.containsKey(ID)) {
                                         Game game = gameIDs.get(ID);
-                                        if (game.isStarted()){
+                                        if (game.isStarted()) {
                                             sendObject(ConnectionMessage.GAME_ALREADY_STARTED);
                                             continue;
                                         }
@@ -101,14 +108,16 @@ public class Server {
                                         System.out.println("Player " + username + " connected to game with ID: " + ID);
                                         inGame = true;
                                         sendObject(ConnectionMessage.CONNECTED);
-                                    }else {
+                                    } else {
                                         sendObject(ConnectionMessage.BAD_ID);
                                     }
                                 } catch (IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
-                            }else break;
-                        }else {
+                            }
+                            else break;
+                        }
+                        else {
                             if (receivedObject instanceof Point) {
                                 if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
                             }

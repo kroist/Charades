@@ -14,16 +14,20 @@ public class Controller {
          this.view = view;
          this.model = model;
     }
-    public void createNewGame(){
+    public void createNewGame(boolean isPrivate){
         System.out.println(Thread.currentThread());
-        //System.out.println("button pressed");
         if (!model.connect()){
             System.out.println("Cannot connect");
             returnToMenu("Cannot connect");
             return;
         }
-        if (!model.sendObject(ConnectionMessage.CREATE_NEW_GAME)){
+        if (!model.sendObject(ConnectionMessage.CREATE_NEW_GAME)) {
             System.out.println("Cannot start new game");
+            returnToMenu("Cannot start new game");
+            return;
+        }
+        if(!model.sendObject(isPrivate)){
+            System.out.println("Cannot start new private/public game");
             returnToMenu("Cannot start new game");
             return;
         }

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -95,18 +96,19 @@ public class View extends Application {
     private void initMenuScene() {
         BorderPane pane = new BorderPane();
         VBox menu = new VBox();
-        Button button1 = new Button("Create new game");
-        Button button2 = new Button("Connect to the existing game");
+        Button createNewGame = new Button("Create new game");
+        Button connectToTheExistingGame = new Button("Connect to the existing game");
         TextField textField = new TextField("Enter your game ID here");
-
+        CheckBox privateGame = new CheckBox("Private game");
         pane.setCenter(menu);
 
         messageText = new Text();
-        button1.setOnMouseClicked(mouseEvent -> controller.createNewGame());
+        createNewGame.setOnMouseClicked(mouseEvent -> controller.createNewGame(privateGame.isSelected()));
         //System.out.println(textField.getCharacters().toString());
-        button2.setOnMouseClicked(mouseEvent -> controller.connectToTheExistingGame(textField.getCharacters().toString()));
+        connectToTheExistingGame.setOnMouseClicked(mouseEvent ->
+                controller.connectToTheExistingGame(textField.getCharacters().toString()));
 
-        menu.getChildren().addAll(textField, button1, button2, messageText);
+        menu.getChildren().addAll(textField, privateGame, createNewGame, connectToTheExistingGame, messageText);
         menuScene = new Scene(pane, 400, 400);
     }
     private static void drawPoint(double x, double y){

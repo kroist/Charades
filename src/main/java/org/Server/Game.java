@@ -9,10 +9,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Game extends Thread{
     private CopyOnWriteArrayList<Player> players;
     private int gameID;
-    private boolean isStarted;
+    private boolean isStarted, isPrivate;
     private Player whoDrawing;
-    public Game(int gameID){
+    public Game(int gameID, boolean isPrivate){
         this.gameID = gameID;
+        this.isPrivate = isPrivate;
         isStarted = false;
         players = new CopyOnWriteArrayList<>();
     }
@@ -21,6 +22,9 @@ public class Game extends Thread{
     }
     public boolean isStarted(){
         return isStarted;
+    }
+    public boolean isPrivate(){
+        return isPrivate;
     }
     public void addPlayer(Player player){
         players.add(player);
