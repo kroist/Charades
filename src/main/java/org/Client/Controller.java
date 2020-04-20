@@ -1,7 +1,6 @@
 package main.java.org.Client;
 
 
-import com.sun.javafx.iio.jpeg.JPEGDescriptor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
