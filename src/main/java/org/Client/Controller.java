@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 
+import com.sun.javafx.iio.jpeg.JPEGDescriptor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -120,6 +121,7 @@ public class Controller {
         model.disconnect();
         model.setInGame(false);
         System.out.println("I returned to menu");
+        view.setColorPickerVisible(true);
         view.setMessageText(message);
         view.setMenuScene();
         view.clearCanvas();
@@ -151,6 +153,7 @@ public class Controller {
         if (!model.isSpectator()){
             getReadyToWritePoints();
             view.setVisibleStartGameButton(false);
+            view.setColorPickerVisible(true);
         }
     }
     public void setColor(MyColor color){

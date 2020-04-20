@@ -81,6 +81,7 @@ public class Model {
             try {
                 System.out.println("Something received");
                 Object obj = getObject();
+                System.out.println("really received");
                 System.out.println(obj);
                 if (obj instanceof Point) {
                     controller.newPoint(obj);

@@ -25,6 +25,9 @@ import main.java.org.Tools.Point;
 
 
 public class View extends Application {
+
+    public static final int size = 600;
+
     public View(){
         //launch();
     }
@@ -47,8 +50,8 @@ public class View extends Application {
     public void start(Stage stage) throws Exception {
         View.stage = stage;
         createContent();
-        stage.setMinHeight(400);
-        stage.setMinWidth(400);
+        stage.setMinHeight(size);
+        stage.setMinWidth(size);
         stage.setResizable(false);
         stage.setScene(menuScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
@@ -60,6 +63,7 @@ public class View extends Application {
     }
     private static Text gameID;
     private static Button startGameButton;
+    private static ColorPicker colorPicker;
     private void initGameScene() {
         VBox game = new VBox();
         HBox tools = new HBox();
@@ -70,16 +74,17 @@ public class View extends Application {
         startGameButton.setOnMouseClicked(mouseEvent -> controller.startGameButton());
         returnToMenuButton.setOnMouseClicked(mouseEvent -> controller.returnToMenu("You asked me to return you to menu"));
 
-        canvas = new Canvas(400, 400);
+        canvas = new Canvas(size, size);
         initDraw(canvas.getGraphicsContext2D());
 
-        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+        colorPicker = new ColorPicker(Color.BLACK);
         colorPicker.setOnAction(ActionEvent -> controller.setColor(new MyColor(colorPicker.getValue())));
+        colorPicker.setVisible(false);
 
         tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker);
 
         game.getChildren().addAll(tools, canvas);
-        gameScene = new Scene(game, 400, 400);
+        gameScene = new Scene(game, size, size);
         stage.setTitle("Charades");
     }
 
@@ -116,7 +121,7 @@ public class View extends Application {
                 controller.connectToTheExistingGame(textField.getCharacters().toString()));
 
         menu.getChildren().addAll(textField, privateGame, createNewGame, connectToTheExistingGame, messageText);
-        menuScene = new Scene(pane, 400, 400);
+        menuScene = new Scene(pane, size, size);
     }
     private static void drawPoint(double x, double y){
         //System.out.println("draw Point");
@@ -195,5 +200,9 @@ public class View extends Application {
 
     public void setVisibleStartGameButton(boolean b) {
         Platform.runLater(() -> startGameButton.setVisible(b));
+    }
+
+    public void setColorPickerVisible(boolean b) {
+        Platform.runLater(() -> colorPicker.setVisible(b));
     }
 }
