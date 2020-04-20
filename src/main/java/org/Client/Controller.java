@@ -3,6 +3,7 @@ package main.java.org.Client;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
+import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.Point;
 
 
@@ -17,16 +18,18 @@ public class Controller {
         System.out.println(Thread.currentThread());
         //System.out.println("button pressed");
         if (!model.connect()){
-            returnToMenu("cannot connect");
+            System.out.println("Cannot connect");
+            returnToMenu("Cannot connect");
             return;
         }
-        if (!model.sendObject("create new game")){
-            returnToMenu("cannot send");
+        if (!model.sendObject(ConnectionMessage.CREATE_NEW_GAME)){
+            System.out.println("Cannot start new game");
+            returnToMenu("Cannot start new game");
             return;
         }
         Object o = model.getObject();
-        if (o instanceof String){
-            if (o.equals("maxnumlobb")){
+        if (o instanceof ConnectionMessage){
+            if (o.equals(ConnectionMessage.MAX_NUM_LOBBY)){
                 System.out.println("Maximum number of lobbies exceeded");
                 returnToMenu("Maximum number of lobbies exceeded");
             }
@@ -34,7 +37,7 @@ public class Controller {
         int ID;
         if (o instanceof Integer){
             ID = (int)o;
-            System.out.println("your game ID is: " + ID);
+            System.out.println("Your game ID is: " + ID);
             view.setGameID("" + ID);
         }
         //getReadyToWritePoints();
@@ -42,7 +45,7 @@ public class Controller {
         model.setIsSpectator(false);
         view.setVisibleStartGameButton(true);
         view.setGameScene();
-        System.out.println("i believe");
+        System.out.println("I believe");
         model.startReadingObjects();
     }
 
@@ -68,34 +71,34 @@ public class Controller {
         int ID;
         try {
             if (stringID == null){
-                returnToMenu("game ID should be an integer between 0 and 9999");
+                returnToMenu("Game ID should be an integer between 0 and 9999");
                 return;
             }
             ID = Integer.parseInt(stringID);
         } catch (NumberFormatException e) {
-            returnToMenu("game ID should be an integer between 0 and 9999");
+            returnToMenu("Game ID should be an integer between 0 and 9999");
             return;
         }
         if (!model.connect()){
-            returnToMenu("cannot connect");
+            returnToMenu("Cannot connect to server?");
             return;
         }
-        if (!model.sendObject("connect to the existing game")){
-            returnToMenu("cannot send");
+        if (!model.sendObject(ConnectionMessage.CONN_TO_GAME)){
+            returnToMenu("Cannot connect to game");
             return;
         }
         if (!model.sendObject(ID)){
-            returnToMenu("cannot send");
+            returnToMenu("Cannot send ID");
             return;
         }
         Object msg = model.getObject();
         System.out.println(msg);
-        if (msg == null || (!(msg instanceof String))){
-            returnToMenu("is should not happened, wow, you found the bug");
+        if (!(msg instanceof ConnectionMessage)){
+            returnToMenu("It should not happened. Wow!!! You found the bug!!!");
             return;
         }
-        if (!msg.equals("connected")){
-            returnToMenu((String)msg);
+        if (!msg.equals(ConnectionMessage.CONNECTED)){
+            returnToMenu(msg.toString());
             return;
         }
         view.setGameID(stringID);
@@ -110,7 +113,7 @@ public class Controller {
         finishWritePoints();
         model.disconnect();
         model.setInGame(false);
-        System.out.println("i returend to menu");
+        System.out.println("I returned to menu");
         view.setMessageText(message);
         view.setMenuScene();
         view.clearCanvas();
@@ -135,7 +138,7 @@ public class Controller {
     }
 
     public void startGameButton() {
-        model.sendObject("start game");
+        model.sendObject(ConnectionMessage.START_GAME);
     }
 
     public void startGame() {

@@ -1,6 +1,6 @@
 package main.java.org.Client;
 
-import com.sun.media.jfxmediaimpl.platform.gstreamer.GSTPlatform;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -62,7 +62,7 @@ public class View extends Application {
         Button returnToMenuButton = new Button("Return to menu");
         startGameButton = new Button("Start game");
         startGameButton.setOnMouseClicked(mouseEvent -> controller.startGameButton());
-        returnToMenuButton.setOnMouseClicked(mouseEvent -> controller.returnToMenu("you asked me to return you to menu"));
+        returnToMenuButton.setOnMouseClicked(mouseEvent -> controller.returnToMenu("You asked me to return you to menu"));
 
         canvas = new Canvas(400, 400);
         initDraw(canvas.getGraphicsContext2D());

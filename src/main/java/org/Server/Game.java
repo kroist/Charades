@@ -1,5 +1,6 @@
 package main.java.org.Server;
 
+import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.Point;
 
 import java.io.IOException;
@@ -43,10 +44,11 @@ public class Game extends Thread{
             synchronized (this){
                 wait();
             }
+            System.out.println("KEKOS");
             for (Player player : players){
-                player.getConn().sendObject("game started");
+                player.getConn().sendObject(ConnectionMessage.GAME_STARTED);
             }
-            System.out.println("game started");
+            System.out.println("Game started");
             isStarted = true;
             whoDrawing = players.get(0);
             whoDrawing.setIsDrawing(true);

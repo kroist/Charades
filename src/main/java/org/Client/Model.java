@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 import javafx.application.Platform;
+import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.Point;
 
 import java.io.IOException;
@@ -65,8 +66,7 @@ public class Model {
     public Object getObject() {
         if (clientSocket == null || in == null)return null;
         try{
-            Object o = in.readObject();
-            return o;
+            return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
         }
@@ -76,29 +76,26 @@ public class Model {
     public void objectReader(){
         System.out.println(inGame);
         while (inGame) {
-            //System.out.println("inGame");
             try {
                 System.out.println("Something received");
                 Object obj = getObject();
                 System.out.println(obj);
                 if (obj instanceof Point) {
                     controller.newPoint(obj);
-                } else if (obj instanceof String){
-                    if (obj.equals("game started")){
+                } else if (obj instanceof ConnectionMessage){
+                    if (obj.equals(ConnectionMessage.GAME_STARTED)){
                         controller.startGame();
                     }
-                } else if (obj instanceof Integer){
-                    controller.returnToMenu("game is ended");
+                    if (obj.equals(ConnectionMessage.GAME_ENDED)){
+                        controller.returnToMenu("Game is ended");
+                    }
                 }else {
                     System.out.println(obj);
-                    System.out.println("KEK???");
+                    System.out.println("IMPOSSIBLE");
                 }
-
             } catch (Exception e) {
                 System.out.println("SERVER DOWN");
                 Platform.runLater(() -> controller.returnToMenu("SERVER DOWN"));
-                //e.printStackTrace();
-                //System.exit(0);
             }
         }
     }

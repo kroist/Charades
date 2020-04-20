@@ -47,7 +47,7 @@ public class Server {
             try {
                 while (true) {
                     if (socket.isClosed()) {
-                        System.out.println("socket is closed");
+                        System.out.println("Socket is closed");
                         break;
                     }
                     try {
@@ -62,7 +62,7 @@ public class Server {
                             if (receivedObject.equals(ConnectionMessage.CREATE_NEW_GAME)){
                                 if (freeIDs == 0){
                                     System.out.println("Maximum number of lobbies exceeded");
-                                    out.writeObject("maxnumlobb");
+                                    out.writeObject(ConnectionMessage.MAX_NUM_LOBBY);
                                 }
                                 isHost = true;
                                 Integer ID;
@@ -77,11 +77,11 @@ public class Server {
                                 games.add(game);
                                 gameIDs.put(ID, game);
                                 game.start();
-                                System.out.println("new game started with ID: " + ID);
+                                System.out.println("New game started with ID: " + ID);
 
                                 player = new Player(this, game);
                                 game.addPlayer(player);
-                                System.out.println("player " + username + " connected to game with ID: " + ID);
+                                System.out.println("Player-host " + username + " connected to game with ID: " + ID);
                                 inGame = true;
                                 out.writeObject(ID);
                             }else
@@ -98,7 +98,7 @@ public class Server {
                                         }
                                         player = new Player(this, game);
                                         game.addPlayer(player);
-                                        System.out.println("player " + username + " connected to game with ID: " + ID);
+                                        System.out.println("Player " + username + " connected to game with ID: " + ID);
                                         inGame = true;
                                         sendObject(ConnectionMessage.CONNECTED);
                                     }else {
@@ -112,8 +112,8 @@ public class Server {
                             if (receivedObject instanceof Point) {
                                 if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
                             }
-                            if (receivedObject instanceof String){
-                                if (receivedObject.equals("start game")){
+                            if (receivedObject instanceof ConnectionMessage){
+                                if (receivedObject.equals(ConnectionMessage.START_GAME)){
                                     synchronized (game){
                                         game.notify();
                                     }
@@ -130,12 +130,12 @@ public class Server {
                     }
                 }
             }catch(Exception notignored){
-                System.out.println("ingored " + notignored);
+                System.out.println("Ignored " + notignored);
                 notignored.printStackTrace();
             } finally{
                 game.removePlayer(player);
                 if (isHost){
-                    game.sendAll(5);
+                    game.sendAll(ConnectionMessage.GAME_ENDED);
                     games.remove(game);
                     gameIDs.remove(game.getGameID(), game);
                     ++freeIDs;
@@ -145,12 +145,12 @@ public class Server {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println(username + " disconnected");
+                System.out.println(username + " is disconnected");
             }
         }
 
         public void sendObject(Object o) throws IOException {
-            System.out.println("something sent " + o);
+            System.out.println("Something sent " + o);
             out.writeObject(o);
         }
 
@@ -180,7 +180,7 @@ public class Server {
         }*/
         freeIDs = 10;
         try (
-                ServerSocket serverSocket = new ServerSocket(portNumber);
+                ServerSocket serverSocket = new ServerSocket(portNumber)
         ) {
             while (true) {
                 Socket socket = serverSocket.accept();
