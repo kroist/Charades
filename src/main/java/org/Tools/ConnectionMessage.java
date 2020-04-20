@@ -8,5 +8,5 @@ public enum ConnectionMessage {
             return "You entered bad ID!";
         }
     },
-    CONNECTED, GAME_ALREADY_STARTED, MAX_NUM_LOBBY, START_GAME
+    CONNECTED, GAME_ALREADY_STARTED, MAX_NUM_LOBBY, START_GAME,
 }

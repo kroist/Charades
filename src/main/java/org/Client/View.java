@@ -78,6 +78,7 @@ public class View extends Application {
         initDraw(canvas.getGraphicsContext2D());
 
         colorPicker = new ColorPicker(Color.BLACK);
+        colorPicker.setStyle("-fx-color-label-visible: false;");
         colorPicker.setOnAction(ActionEvent -> controller.setColor(new MyColor(colorPicker.getValue())));
         colorPicker.setVisible(false);
 
@@ -204,5 +205,9 @@ public class View extends Application {
 
     public void setColorPickerVisible(boolean b) {
         Platform.runLater(() -> colorPicker.setVisible(b));
+    }
+    public void setDefaultPickerColor(){
+        color = new MyColor(Color.BLACK);
+        colorPicker.setValue(Color.BLACK);
     }
 }

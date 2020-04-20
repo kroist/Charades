@@ -121,6 +121,7 @@ public class Controller {
         model.setInGame(false);
         System.out.println("I returned to menu");
         view.setColorPickerVisible(false);
+        view.setDefaultPickerColor();
         view.setMessageText(message);
         view.setMenuScene();
         view.clearCanvas();
