@@ -80,13 +80,16 @@ public class Model {
             try {
                 System.out.println("Something received");
                 Object obj = getObject();
+                System.out.println(obj);
                 if (obj instanceof Point) {
                     controller.newPoint(obj);
                 } else if (obj instanceof String){
                     if (obj.equals("game started")){
                         controller.startGame();
                     }
-                } else {
+                } else if (obj instanceof Integer){
+                    controller.returnToMenu("game is ended");
+                }else {
                     System.out.println(obj);
                     System.out.println("KEK???");
                 }

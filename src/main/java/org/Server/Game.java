@@ -1,6 +1,5 @@
 package main.java.org.Server;
 
-import javafx.application.Platform;
 import main.java.org.Tools.Point;
 
 import java.io.IOException;
@@ -58,13 +57,19 @@ public class Game extends Thread{
     public synchronized void writeEvent(Object o) throws IOException {
         if (!isStarted)return;
         if (o instanceof Point){
-            drawAll((Point)o);
+            sendAll(o);
         }
     }
-    public synchronized void drawAll(Point p) throws IOException {
-            for (Player player : players){
-                player.getConn().sendObject(p);
+    public synchronized void sendAll(Object o)  {
+        for (Player player : players){
+            //System.out.println("sent to " + player + " " + o);
+            try {
+                player.getConn().sendObject(o);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("cannot send message");
             }
+        }
     }
 
 }

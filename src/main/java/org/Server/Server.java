@@ -1,14 +1,15 @@
 package main.java.org.Server;
 
+import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.Point;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.MessageDigest;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.RecursiveAction;
 
 public class Server {
 
@@ -50,11 +51,15 @@ public class Server {
                         break;
                     }
                     try {
-                        Object recievedEvent = in.readObject();
-                        System.out.println(recievedEvent);
+                        Object receivedObject = in.readObject();
+                        System.out.println(receivedObject);
+                        if (receivedObject == null){
+                            System.out.println("Disconnected: NullMessage");
+                            break;
+                        }
                         if (!inGame){
-                            if (!(recievedEvent instanceof String))break;
-                            if (recievedEvent.equals("create new game")){
+                            if (!(receivedObject instanceof ConnectionMessage))break;
+                            if (receivedObject.equals(ConnectionMessage.CREATE_NEW_GAME)){
                                 if (freeIDs == 0){
                                     System.out.println("Maximum number of lobbies exceeded");
                                     out.writeObject("maxnumlobb");
@@ -80,7 +85,7 @@ public class Server {
                                 inGame = true;
                                 out.writeObject(ID);
                             }else
-                            if (recievedEvent.equals("connect to the existing game")){
+                            if (receivedObject.equals(ConnectionMessage.CONN_TO_GAME)){
                                 try{
                                     Object nextEvent = in.readObject();
                                     if (!(nextEvent instanceof Integer))break;
@@ -88,41 +93,36 @@ public class Server {
                                     if (gameIDs.containsKey(ID)){
                                         Game game = gameIDs.get(ID);
                                         if (game.isStarted()){
-                                            sendObject("game is already started");
+                                            sendObject(ConnectionMessage.GAME_ALREADY_STARTED);
                                             continue;
                                         }
                                         player = new Player(this, game);
                                         game.addPlayer(player);
                                         System.out.println("player " + username + " connected to game with ID: " + ID);
                                         inGame = true;
-                                        sendObject("connected");
+                                        sendObject(ConnectionMessage.CONNECTED);
                                     }else {
-                                        sendObject("bad ID");
+                                        sendObject(ConnectionMessage.BAD_ID);
                                     }
                                 } catch (IOException | ClassNotFoundException e) {
                                     e.printStackTrace();
                                 }
                             }else break;
                         }else {
-
-                            if (recievedEvent != null) {
-                                if (recievedEvent instanceof Point){
-                                    if (player.isDrawing())player.getGame().writeEvent(recievedEvent);
-                                }
-                                if (recievedEvent instanceof String){
-                                    if (recievedEvent.equals("start game")){
-                                        synchronized (game){
-                                            game.notify();
-                                        }
+                            if (receivedObject instanceof Point) {
+                                if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
+                            }
+                            if (receivedObject instanceof String){
+                                if (receivedObject.equals("start game")){
+                                    synchronized (game){
+                                        game.notify();
                                     }
                                 }
-                                //System.out.println("We got object from: " + username);
-                                //System.out.println(player.isDrawing());
-                                //if (player.isDrawing())player.getGame().writeEvent(recievedEvent);
-                            } else {
-                                System.out.println("Disconnected + NullMessage");
-                                break;
                             }
+                            //System.out.println("We got object from: " + username);
+                            //System.out.println(player.isDrawing());
+                            //if (player.isDrawing())player.getGame().writeEvent(receivedObject);
+
                         }
                     } catch (IOException e) {
                         System.out.println("Disconnected + IOException");
@@ -133,12 +133,9 @@ public class Server {
                 System.out.println("ingored " + notignored);
                 notignored.printStackTrace();
             } finally{
+                game.removePlayer(player);
                 if (isHost){
-                    try {
-                        game.drawAll(null);
-                    } catch (IOException e){
-                        System.out.println("WTF?");
-                    }
+                    game.sendAll(5);
                     games.remove(game);
                     gameIDs.remove(game.getGameID(), game);
                     ++freeIDs;
@@ -152,8 +149,8 @@ public class Server {
             }
         }
 
-        protected void sendObject(Object o) throws IOException {
-            System.out.println("something sent");
+        public void sendObject(Object o) throws IOException {
+            System.out.println("something sent " + o);
             out.writeObject(o);
         }
 
