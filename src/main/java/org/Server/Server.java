@@ -123,7 +123,7 @@ public class Server {
                                 if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
                             }
                             if (receivedObject instanceof MyColor){
-                                if(player.isDrawing()) player.getGame().writeEvent(receivedObject);
+                                player.getGame().writeEvent(receivedObject);
                             }
                             if (receivedObject instanceof ConnectionMessage){
                                 if (receivedObject.equals(ConnectionMessage.START_GAME)){
