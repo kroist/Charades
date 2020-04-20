@@ -3,12 +3,14 @@ package main.java.org.Client;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
 
 public class Controller {
-    private  View view;
+    private View view;
     private Model model;
     public Controller(View view, Model model) {
          this.view = view;
@@ -150,6 +152,11 @@ public class Controller {
             getReadyToWritePoints();
             view.setVisibleStartGameButton(false);
         }
-
+    }
+    public void setColor(MyColor color){
+        model.sendObject(color);
+    }
+    public void newColor(Object obj){
+        view.newColor(obj);
     }
 }

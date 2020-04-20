@@ -3,11 +3,14 @@ package main.java.org.Client;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
 
@@ -25,6 +29,7 @@ public class View extends Application {
         //launch();
     }
     private static double prevX, prevY, x, y;
+    private static MyColor color = new MyColor(Color.BLACK);
     private static Scene menuScene;
     private static Scene gameScene;
     private static Text messageText;
@@ -68,8 +73,10 @@ public class View extends Application {
         canvas = new Canvas(400, 400);
         initDraw(canvas.getGraphicsContext2D());
 
-        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton);
+        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+        colorPicker.setOnAction(ActionEvent -> controller.setColor(new MyColor(colorPicker.getValue())));
 
+        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker);
 
         game.getChildren().addAll(tools, canvas);
         gameScene = new Scene(game, 400, 400);
@@ -89,7 +96,7 @@ public class View extends Application {
                 canvasWidth,    //width of the rectangle
                 canvasHeight);  //height of the rectangle
         gc.setFill(Color.RED);
-        gc.setStroke(Color.BLACK);
+        gc.setStroke(color.getColor());
         gc.setLineWidth(lineWidth);
     }
 
@@ -115,12 +122,14 @@ public class View extends Application {
         //System.out.println("draw Point");
         x = x - lineWidth / 2.0;
         y = y - lineWidth / 2.0;
-        canvas.getGraphicsContext2D().setFill(Color.BLACK);
+        System.out.println("COLOR IS " + color.getColor());
+        canvas.getGraphicsContext2D().setFill(color.getColor());
         canvas.getGraphicsContext2D().fillOval(x, y, lineWidth, lineWidth);
     }
     private static void drawLine(double x, double y){
         canvas.getGraphicsContext2D().setLineWidth(lineWidth);
         canvas.getGraphicsContext2D().setLineCap(StrokeLineCap.ROUND);
+        canvas.getGraphicsContext2D().setStroke(color.getColor());
         canvas.getGraphicsContext2D().strokeLine(prevX, prevY, x, y);
         prevX = x;
         prevY = y;
@@ -128,15 +137,22 @@ public class View extends Application {
 
     public void newPoint(Object obj) {
         Point p = (Point)obj;
-        if (p.single) {
-            prevX = p.x;
-            prevY = p.y;
-            Platform.runLater(() -> drawPoint(p.x, p.y));
+        if (p.getSingle()) {
+            prevX = p.getX();
+            prevY = p.getY();
+            Platform.runLater(() -> drawPoint(p.getX(), p.getY()));
         } else {
-            x = p.x;
-            y = p.y;
+            x = p.getX();
+            y = p.getY();
             Platform.runLater(() -> drawLine(x, y));
         }
+    }
+    private static void changeColor(MyColor cl){
+        color = cl;
+    }
+    public void newColor(Object obj){
+        MyColor cl = (MyColor)obj;
+        Platform.runLater(() -> changeColor(cl));
     }
 
     public void setGameScene() {
@@ -146,9 +162,7 @@ public class View extends Application {
         Platform.runLater(() -> stage.setScene(menuScene));
     }
 
-    public Canvas getCanvas() {
-        return canvas;
-    }
+    public Canvas getCanvas() { return canvas; }
 
     public void mousePressed(MouseEvent event) {
         prevX = event.getX();

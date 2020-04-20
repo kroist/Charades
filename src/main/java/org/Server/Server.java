@@ -1,12 +1,13 @@
 package main.java.org.Server;
 
+import javafx.scene.paint.Color;
 import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.MessageDigest;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -120,6 +121,9 @@ public class Server {
                         else {
                             if (receivedObject instanceof Point) {
                                 if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
+                            }
+                            if (receivedObject instanceof MyColor){
+                                if(player.isDrawing()) player.getGame().writeEvent(receivedObject);
                             }
                             if (receivedObject instanceof ConnectionMessage){
                                 if (receivedObject.equals(ConnectionMessage.START_GAME)){

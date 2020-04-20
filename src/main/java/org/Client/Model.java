@@ -1,7 +1,9 @@
 package main.java.org.Client;
 
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
 import java.io.IOException;
@@ -82,14 +84,19 @@ public class Model {
                 System.out.println(obj);
                 if (obj instanceof Point) {
                     controller.newPoint(obj);
-                } else if (obj instanceof ConnectionMessage){
-                    if (obj.equals(ConnectionMessage.GAME_STARTED)){
+                }
+                else if (obj instanceof ConnectionMessage) {
+                    if (obj.equals(ConnectionMessage.GAME_STARTED)) {
                         controller.startGame();
                     }
-                    if (obj.equals(ConnectionMessage.GAME_ENDED)){
+                    if (obj.equals(ConnectionMessage.GAME_ENDED)) {
                         controller.returnToMenu("Game is ended");
                     }
-                }else {
+                }
+                else if (obj instanceof MyColor){
+                    controller.newColor(obj);
+                }
+                else {
                     System.out.println(obj);
                     System.out.println("IMPOSSIBLE");
                 }
