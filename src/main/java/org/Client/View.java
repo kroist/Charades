@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -36,7 +39,7 @@ public class View extends Application {
     private static Scene menuScene;
     private static Scene gameScene;
     private static Text messageText;
-    private static Controller controller;
+    public static Controller controller;
     private static Stage stage;
     private static Canvas canvas;
     private static final int lineWidth = 3;
@@ -50,8 +53,9 @@ public class View extends Application {
     public void start(Stage stage) throws Exception {
         View.stage = stage;
         createContent();
-        stage.setMinHeight(size);
-        stage.setMinWidth(size);
+
+        stage.setMinHeight(400);
+        stage.setMinWidth(600);
         stage.setResizable(false);
         stage.setScene(menuScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
@@ -107,22 +111,15 @@ public class View extends Application {
     }
 
     private void initMenuScene() {
-        BorderPane pane = new BorderPane();
-        VBox menu = new VBox();
-        Button createNewGame = new Button("Create new game");
-        Button connectToTheExistingGame = new Button("Connect to the existing game");
-        TextField textField = new TextField("Enter your game ID here");
-        CheckBox privateGame = new CheckBox("Private game");
-        pane.setCenter(menu);
-
         messageText = new Text();
-        createNewGame.setOnMouseClicked(mouseEvent -> controller.createNewGame(privateGame.isSelected()));
-        //System.out.println(textField.getCharacters().toString());
-        connectToTheExistingGame.setOnMouseClicked(mouseEvent ->
-                controller.connectToTheExistingGame(textField.getCharacters().toString()));
+        try {
+            Pane mainMenu = (Pane) FXMLLoader.load(getClass().getResource("/fxml/mainMenu.fxml"));
+            menuScene = new Scene(mainMenu);
+        }
+        catch (Exception e){
+            System.out.println("SOMETHING WRONG WITH initMenuScene()");
+        }
 
-        menu.getChildren().addAll(textField, privateGame, createNewGame, connectToTheExistingGame, messageText);
-        menuScene = new Scene(pane, size, size);
     }
     private static void drawPoint(double x, double y){
         //System.out.println("draw Point");

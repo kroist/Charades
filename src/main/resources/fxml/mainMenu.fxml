@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@bootstrap3.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.AppController">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@bootstrap3.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.FxmlController">
    <children>
       <Pane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -27,7 +27,7 @@
             <VBox alignment="CENTER" layoutX="191.0" layoutY="100.0" prefHeight="192.0" prefWidth="252.0" spacing="35.0">
                <children>
                   <Button id="browseGames" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="213.0" styleClass="success" text="Browse games" />
-                  <Button id="startNewGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="213.0" styleClass="warning" text="Start new game" />
+                  <Button id="startNewGame" fx:id="createNewGameButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#createNewGameFXML" prefHeight="38.0" prefWidth="213.0" styleClass="warning" text="Start new game" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -49,6 +49,8 @@
                   </Label>
                </children>
             </HBox>
+            <TextField fx:id="gameIdField" layoutX="14.0" layoutY="85.0" />
+            <Button fx:id="connectToAnotherGameButton" layoutX="50.0" layoutY="135.0" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" mnemonicParsing="false" onMouseClicked="#connectToExistingGameFXML" prefHeight="100.0" prefWidth="108.0" text="connect to another game" textAlignment="CENTER" wrapText="true" />
          </children>
       </Pane>
    </children>
