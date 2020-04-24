@@ -113,7 +113,7 @@ public class View extends Application {
     private void initMenuScene() {
         messageText = new Text();
         try {
-            Pane mainMenu = (Pane) FXMLLoader.load(getClass().getResource("/fxml/mainMenu.fxml"));
+            Pane mainMenu = (Pane) FXMLLoader.load(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
             menuScene = new Scene(mainMenu);
         }
         catch (Exception e){
