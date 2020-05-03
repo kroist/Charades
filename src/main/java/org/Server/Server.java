@@ -1,6 +1,7 @@
 package main.java.org.Server;
 
 import javafx.scene.paint.Color;
+import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
@@ -131,6 +132,10 @@ public class Server {
                                         game.notify();
                                     }
                                 }
+                            }
+                            if (receivedObject instanceof ChatMessage){
+                                ((ChatMessage)receivedObject).setText("[" + username + "]: " + ((ChatMessage) receivedObject).getText());
+                                player.getGame().writeEvent(receivedObject);
                             }
                             //System.out.println("We got object from: " + username);
                             //System.out.println(player.isDrawing());

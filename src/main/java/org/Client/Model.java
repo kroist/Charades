@@ -2,6 +2,7 @@ package main.java.org.Client;
 
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
+import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
@@ -96,6 +97,9 @@ public class Model {
                 }
                 else if (obj instanceof MyColor){
                     controller.newColor(obj);
+                }
+                else if (obj instanceof ChatMessage){
+                    controller.newChatMessage(obj);
                 }
                 else {
                     System.out.println(obj);

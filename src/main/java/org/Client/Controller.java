@@ -4,6 +4,7 @@ package main.java.org.Client;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
@@ -161,5 +162,11 @@ public class Controller {
     }
     public void newColor(Object obj){
         view.newColor(obj);
+    }
+    public void sendChatMessage(ChatMessage msg){
+        model.sendObject(msg);
+    }
+    public void newChatMessage(Object msg){
+        view.newChatMessage(msg);
     }
 }

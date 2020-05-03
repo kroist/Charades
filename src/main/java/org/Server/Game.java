@@ -1,5 +1,6 @@
 package main.java.org.Server;
 
+import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
@@ -62,6 +63,9 @@ public class Game extends Thread{
         }
     }
     public synchronized void writeEvent(Object o) throws IOException {
+        if (o instanceof ChatMessage){
+            sendAll(o);
+        }
         if (!isStarted)return;
         if (o instanceof Point){
             sendAll(o);

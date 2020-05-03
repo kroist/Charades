@@ -10,10 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -23,13 +22,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
 
 public class View extends Application {
 
-    public static final int size = 600;
+    public static final int size = 300;
 
     public View(){
         //launch();
@@ -42,6 +42,7 @@ public class View extends Application {
     public static Controller controller;
     private static Stage stage;
     private static Canvas canvas;
+    private static TextArea chat;
     private static final int lineWidth = 3;
     public void setController(Controller c){
         controller = c;
@@ -54,8 +55,8 @@ public class View extends Application {
         View.stage = stage;
         createContent();
 
-        stage.setMinHeight(400);
-        stage.setMinWidth(600);
+        stage.setMinHeight(800);
+        stage.setMinWidth(800);
         stage.setResizable(false);
         stage.setScene(menuScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
@@ -86,10 +87,25 @@ public class View extends Application {
         colorPicker.setOnAction(ActionEvent -> controller.setColor(new MyColor(colorPicker.getValue())));
         colorPicker.setVisible(false);
 
-        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker);
-
+        chat = new TextArea();
+        chat.setEditable(false);
+        chat.setWrapText(true);
+        //chat.setStyle("");
+        for(int i = 1; i <= 20; i++){
+            chat.appendText(i + "\n");
+        }
+        TextField enterMessage = new TextField();
+        enterMessage.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER){
+                controller.sendChatMessage(new ChatMessage(enterMessage.getText() + "\n"));
+                enterMessage.clear();
+            }
+        });
+        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, chat, enterMessage);
         game.getChildren().addAll(tools, canvas);
-        gameScene = new Scene(game, size, size);
+        gameScene = new Scene(game, 800, 800);
+        gameScene.getStylesheets().add("main/resources/fxml/chat.css");
+
         stage.setTitle("Charades");
     }
 
@@ -113,7 +129,7 @@ public class View extends Application {
     private void initMenuScene() {
         messageText = new Text();
         try {
-            Pane mainMenu = (Pane) FXMLLoader.load(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
+            Pane mainMenu = FXMLLoader.load(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
             menuScene = new Scene(mainMenu);
         }
         catch (Exception e){
@@ -206,5 +222,12 @@ public class View extends Application {
     public void setDefaultPickerColor(){
         color = new MyColor(Color.BLACK);
         colorPicker.setValue(Color.BLACK);
+    }
+    private static void addMessage(ChatMessage msg){
+        chat.appendText(msg.getText());
+    }
+    public void newChatMessage(Object obj) {
+        ChatMessage msg = (ChatMessage)obj;
+        Platform.runLater(() -> addMessage(msg));
     }
 }
