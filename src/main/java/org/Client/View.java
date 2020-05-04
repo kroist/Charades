@@ -3,18 +3,16 @@ package main.java.org.Client;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -81,6 +79,7 @@ public class View extends Application {
 
         canvas = new Canvas(size, size);
         initDraw(canvas.getGraphicsContext2D());
+        controller.getReadyToWritePoints();
 
         colorPicker = new ColorPicker(Color.BLACK);
         colorPicker.setStyle("-fx-color-label-visible: false;");
@@ -203,7 +202,7 @@ public class View extends Application {
     }
 
     public void clearCanvas() {
-        Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight()));
+        Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(1, 2, canvas.getWidth() - 2, canvas.getHeight() - 3));
         canvas.getGraphicsContext2D().beginPath();
     }
     public void setGameID(String s){

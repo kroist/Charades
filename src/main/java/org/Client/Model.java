@@ -1,7 +1,6 @@
 package main.java.org.Client;
 
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
 import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
@@ -31,14 +30,21 @@ public class Model {
     public void setIsSpectator(boolean b){
         isSpectator = b;
     }
-    public boolean connect() {
+    public boolean connect(String nickname) {
         try{
             clientSocket = new Socket(hostName, portNumber);
             System.out.println(clientSocket.isConnected());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new ObjectInputStream(clientSocket.getInputStream());
-            System.out.println("Established connection");
-            return true;
+            sendObject(nickname);
+            Object o = getObject();
+            if (o instanceof ConnectionMessage && o.equals(ConnectionMessage.LOGGED_IN)){
+                System.out.println("Established connection");
+                return true;
+            }else {
+                disconnect();
+                return false;
+            }
         } catch (IOException e) {
             //e.printStackTrace();
             System.out.println("cannot connect");

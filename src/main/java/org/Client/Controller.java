@@ -1,9 +1,8 @@
 package main.java.org.Client;
 
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
+import javafx.scene.input.MouseEvent;
 import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
@@ -17,9 +16,9 @@ public class Controller {
          this.view = view;
          this.model = model;
     }
-    public void createNewGame(boolean isPrivate){
+    public void createNewGame(boolean isPrivate, String nickname){
         System.out.println(Thread.currentThread());
-        if (!model.connect()){
+        if (!model.connect(nickname)){
             System.out.println("Cannot connect");
             returnToMenu("Cannot connect");
             return;
@@ -56,7 +55,7 @@ public class Controller {
         model.startReadingObjects();
     }
 
-    private void getReadyToWritePoints() {
+    public void getReadyToWritePoints() {
         Canvas canvas = view.getCanvas();
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 event -> {
@@ -74,7 +73,7 @@ public class Controller {
                 });
     }
 
-    public void connectToTheExistingGame(String stringID) {
+    public void connectToTheExistingGame(String stringID, String nickname) {
         int ID;
         try {
             if (stringID == null){
@@ -86,7 +85,7 @@ public class Controller {
             returnToMenu("Game ID should be an integer between 0 and 9999");
             return;
         }
-        if (!model.connect()){
+        if (!model.connect(nickname)){
             returnToMenu("Cannot connect to server?");
             return;
         }
@@ -130,6 +129,8 @@ public class Controller {
 
     private void finishWritePoints() {
         Canvas canvas = view.getCanvas();
+        canvas.setDisable(true);
+        /*
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 event -> {
                 });
@@ -140,6 +141,8 @@ public class Controller {
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 event -> {
                 });
+
+         */
     }
 
     public void newPoint(Object obj) {
@@ -152,7 +155,8 @@ public class Controller {
 
     public void startGame() {
         if (!model.isSpectator()){
-            getReadyToWritePoints();
+            //getReadyToWritePoints();
+            view.getCanvas().setDisable(false);
             view.setVisibleStartGameButton(false);
             view.setColorPickerVisible(true);
         }

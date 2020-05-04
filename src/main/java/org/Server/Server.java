@@ -1,6 +1,5 @@
 package main.java.org.Server;
 
-import javafx.scene.paint.Color;
 import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
@@ -29,7 +28,7 @@ public class Server {
         private final Socket socket;
         private final ObjectInputStream in;
         private final ObjectOutputStream out;
-        private static String username;
+        private String username;
         private boolean inGame;
         Player player;
         private Game game;
@@ -42,6 +41,7 @@ public class Server {
             inGame = false;
             isHost = false;
             game = null;
+            username = null;
         }
 
         @Override
@@ -60,6 +60,10 @@ public class Server {
                             break;
                         }
                         if (!inGame){
+                            if (!(receivedObject instanceof String))break;
+                            username = (String)receivedObject;
+                            sendObject(ConnectionMessage.LOGGED_IN);
+                            receivedObject = in.readObject();
                             if (!(receivedObject instanceof ConnectionMessage))break;
                             if (receivedObject.equals(ConnectionMessage.CREATE_NEW_GAME)){
                                 if (freeIDs == 0){
@@ -118,6 +122,7 @@ public class Server {
                                 }
                             }
                             else break;
+
                         }
                         else {
                             if (receivedObject instanceof Point) {

@@ -24,11 +24,11 @@ public class FxmlController {
     public void createNewGameFXML() {
         ///SHOULD LOOK LIKE THIS BUT I HAVEN'T ADDED PRIVATEGAME
         //View.controller.createNewGame(privateGame.isSelected()));
-        View.controller.createNewGame(false);
+        View.controller.createNewGame(false, nicknameField.getCharacters().toString());
         //System.out.println(textField.getCharacters().toString());
     }
     public void connectToExistingGameFXML() {
-        View.controller.connectToTheExistingGame(gameIdField.getCharacters().toString());
+        View.controller.connectToTheExistingGame(gameIdField.getCharacters().toString(), nicknameField.getCharacters().toString());
     }
 
 }
