@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Model {
     private static Socket clientSocket;
@@ -106,6 +107,9 @@ public class Model {
                 }
                 else if (obj instanceof ChatMessage){
                     controller.newChatMessage(obj);
+                }
+                else if (obj instanceof ArrayList){
+                    controller.newLeaderBoard(obj);
                 }
                 else {
                     System.out.println(obj);

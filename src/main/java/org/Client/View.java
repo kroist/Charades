@@ -3,14 +3,13 @@ package main.java.org.Client;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -20,9 +19,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
+
+import java.util.ArrayList;
 
 
 public class View extends Application {
@@ -41,6 +43,7 @@ public class View extends Application {
     private static Stage stage;
     private static Canvas canvas;
     private static TextArea chat;
+    private static ListView<Pair<String, Integer>> leaderBoard;
     private static final int lineWidth = 3;
     public void setController(Controller c){
         controller = c;
@@ -90,6 +93,12 @@ public class View extends Application {
         chat.setEditable(false);
         chat.setWrapText(true);
 
+        leaderBoard = new ListView<>();
+        leaderBoard.setMinHeight(50);
+        leaderBoard.setMaxHeight(50);
+        leaderBoard.setMinWidth(50);
+        leaderBoard.setMaxWidth(50);
+
         TextField enterMessage = new TextField();
         enterMessage.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER){
@@ -98,7 +107,7 @@ public class View extends Application {
             }
         });
 
-        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, chat, enterMessage);
+        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, chat, enterMessage, leaderBoard);
         game.getChildren().addAll(tools, canvas);
         gameScene = new Scene(game, 800, 800);
         gameScene.getStylesheets().add("main/resources/fxml/chat.css");
@@ -225,10 +234,22 @@ public class View extends Application {
     }
     public void newChatMessage(Object obj) {
         ChatMessage msg = (ChatMessage)obj;
-        Platform.runLater(() -> addMessage(msg));
+        Platform.runLater(() -> chat.appendText(msg.getText()));
     }
 
     public void clearChat() {
-        chat.clear();
+        Platform.runLater(() -> chat.clear());
+    }
+
+    private static void addLeaderBoard(ObservableList<Pair<String, Integer>> arr) {
+        leaderBoard.setItems(arr);
+    }
+    public void newLeaderBoard(Object obj) {
+        @SuppressWarnings("unchecked")
+        ObservableList<Pair<String, Integer>> arr = FXCollections.observableArrayList((ArrayList<Pair<String, Integer>>)obj);
+        Platform.runLater(() -> addLeaderBoard(arr));
+    }
+    public void clearLeaderBoard(){
+        Platform.runLater(() -> leaderBoard.getItems().clear());
     }
 }

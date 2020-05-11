@@ -126,6 +126,7 @@ public class Controller {
         view.setMenuScene();
         view.clearChat();
         view.clearCanvas();
+        view.clearLeaderBoard();
     }
 
     private void finishWritePoints() {
@@ -173,5 +174,9 @@ public class Controller {
     }
     public void newChatMessage(Object msg){
         view.newChatMessage(msg);
+    }
+
+    public void newLeaderBoard(Object obj) {
+        view.newLeaderBoard(obj);
     }
 }
