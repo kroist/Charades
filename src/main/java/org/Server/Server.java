@@ -89,7 +89,7 @@ public class Server {
                                     game.start();
                                     System.out.println("New game started with ID: " + ID + " and isPrivate is " + game.isPrivate());
 
-                                    player = new Player(this, game);
+                                    player = new Player(this, game, username);
                                     game.addPlayer(player);
                                     System.out.println("Player-host " + username + " connected to game with ID: " + ID);
                                     inGame = true;
@@ -109,7 +109,7 @@ public class Server {
                                             sendObject(ConnectionMessage.GAME_ALREADY_STARTED);
                                             continue;
                                         }
-                                        player = new Player(this, game);
+                                        player = new Player(this, game, username);
                                         game.addPlayer(player);
                                         System.out.println("Player " + username + " connected to game with ID: " + ID);
                                         inGame = true;

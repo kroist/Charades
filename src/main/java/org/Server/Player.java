@@ -6,9 +6,13 @@ public class Player {
     private Server.ConnectionThread conn;
     private boolean isDrawing;
     private Game game;
-    public Player(Server.ConnectionThread conn, Game game){
+    private String username;
+    private int score;
+    public Player(Server.ConnectionThread conn, Game game, String username){
         this.conn = conn;
         this.game = game;
+        this.username = username;
+        this.score = 0;
     }
     Server.ConnectionThread getConn(){
         return conn;
@@ -21,6 +25,12 @@ public class Player {
     }
     public Game getGame(){
         return game;
+    }
+    public String getUsername(){
+        return username;
+    }
+    public int getScore(){
+        return score;
     }
     @Override
     public boolean equals(Object obj) {
