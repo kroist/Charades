@@ -124,6 +124,7 @@ public class Controller {
         view.setDefaultPickerColor();
         view.setMessageText(message);
         view.setMenuScene();
+        view.clearChat();
         view.clearCanvas();
     }
 

@@ -49,7 +49,7 @@ public class View extends Application {
         launch();
     }
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
         View.stage = stage;
         createContent();
 
@@ -89,10 +89,7 @@ public class View extends Application {
         chat = new TextArea();
         chat.setEditable(false);
         chat.setWrapText(true);
-        //chat.setStyle("");
-        for(int i = 1; i <= 20; i++){
-            chat.appendText(i + "\n");
-        }
+
         TextField enterMessage = new TextField();
         enterMessage.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER){
@@ -100,6 +97,7 @@ public class View extends Application {
                 enterMessage.clear();
             }
         });
+
         tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, chat, enterMessage);
         game.getChildren().addAll(tools, canvas);
         gameScene = new Scene(game, 800, 800);
@@ -228,5 +226,9 @@ public class View extends Application {
     public void newChatMessage(Object obj) {
         ChatMessage msg = (ChatMessage)obj;
         Platform.runLater(() -> addMessage(msg));
+    }
+
+    public void clearChat() {
+        chat.clear();
     }
 }

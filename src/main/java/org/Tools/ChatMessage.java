@@ -1,7 +1,5 @@
 package main.java.org.Tools;
 
-import javafx.scene.paint.Color;
-
 import java.io.Serializable;
 
 public class ChatMessage implements Serializable {
