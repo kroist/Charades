@@ -142,6 +142,9 @@ public class Server {
                                 ((ChatMessage)receivedObject).setText("[" + username + "]: " + ((ChatMessage) receivedObject).getText());
                                 player.getGame().writeEvent(receivedObject);
                             }
+                            if (receivedObject instanceof Integer){
+                                if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
+                            }
                             //System.out.println("We got object from: " + username);
                             //System.out.println(player.isDrawing());
                             //if (player.isDrawing())player.getGame().writeEvent(receivedObject);

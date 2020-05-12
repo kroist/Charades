@@ -95,6 +95,9 @@ public class Game extends Thread{
         if (o instanceof MyColor){
             sendAll(o);
         }
+        if (o instanceof Integer){
+            sendAll(o);
+        }
     }
     public synchronized void sendAll(Object o)  {
         for (Player player : players){

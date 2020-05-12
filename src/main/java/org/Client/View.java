@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -44,7 +46,7 @@ public class View extends Application {
     private static Canvas canvas;
     private static TextArea chat;
     private static ListView<Pair<String, Integer>> leaderBoard;
-    private static final int lineWidth = 3;
+    private static int lineWidth = 3;
     public void setController(Controller c){
         controller = c;
     }
@@ -70,6 +72,7 @@ public class View extends Application {
     private static Text gameID;
     private static Button startGameButton;
     private static ColorPicker colorPicker;
+    private static Button eraser;
     private void initGameScene() {
         VBox game = new VBox();
         HBox tools = new HBox();
@@ -86,12 +89,19 @@ public class View extends Application {
 
         colorPicker = new ColorPicker(Color.BLACK);
         colorPicker.setStyle("-fx-color-label-visible: false;");
-        colorPicker.setOnAction(ActionEvent -> controller.setColor(new MyColor(colorPicker.getValue())));
+        colorPicker.setOnAction(ActionEvent -> {
+            controller.setColor(new MyColor(colorPicker.getValue()));
+            controller.setLineWidth(3);
+        });
         colorPicker.setVisible(false);
 
         chat = new TextArea();
         chat.setEditable(false);
         chat.setWrapText(true);
+        chat.setMinHeight(200);
+        chat.setMaxHeight(200);
+        chat.setMinWidth(200);
+        chat.setMaxWidth(200);
 
         leaderBoard = new ListView<>();
         leaderBoard.setMinHeight(50);
@@ -107,7 +117,19 @@ public class View extends Application {
             }
         });
 
-        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, chat, enterMessage, leaderBoard);
+        eraser = new Button();
+        eraser.setOnAction(ActionEvent -> {
+            controller.setColor(new MyColor(Color.web("#f4f4f4")));
+            controller.setLineWidth(10);
+        });
+
+        ImageView eraserIcon = new ImageView(new Image("main/resources/1200px-Eraser_icon.svg.png"));
+        eraserIcon.setFitHeight(10);
+        eraserIcon.setFitWidth(10);
+        eraser.setGraphic(eraserIcon);
+        eraser.setVisible(false);
+
+        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, eraser, chat, enterMessage, leaderBoard);
         game.getChildren().addAll(tools, canvas);
         gameScene = new Scene(game, 800, 800);
         gameScene.getStylesheets().add("main/resources/fxml/chat.css");
@@ -177,7 +199,7 @@ public class View extends Application {
     }
     public void newColor(Object obj){
         MyColor cl = (MyColor)obj;
-        Platform.runLater(() -> changeColor(cl));
+        Platform.runLater(() -> color = cl);
     }
 
     public void setGameScene() {
@@ -217,17 +239,21 @@ public class View extends Application {
             //if (gameID == null) System.out.println("tou loh");
         Platform.runLater(() -> gameID.setText("Your game ID is: " + s));
     }
-
     public void setVisibleStartGameButton(boolean b) {
         Platform.runLater(() -> startGameButton.setVisible(b));
     }
-
     public void setColorPickerVisible(boolean b) {
         Platform.runLater(() -> colorPicker.setVisible(b));
+    }
+    public void setEraserVisible(boolean b){
+        Platform.runLater(() -> eraser.setVisible(b));
     }
     public void setDefaultPickerColor(){
         color = new MyColor(Color.BLACK);
         colorPicker.setValue(Color.BLACK);
+    }
+    public void setDefaultLineWidth(){
+        lineWidth = 3;
     }
     private static void addMessage(ChatMessage msg){
         chat.appendText(msg.getText());
@@ -251,5 +277,13 @@ public class View extends Application {
     }
     public void clearLeaderBoard(){
         Platform.runLater(() -> leaderBoard.getItems().clear());
+    }
+
+    public void changeLineWidth(Integer lineWidth){
+        View.lineWidth = lineWidth;
+    }
+    public void newLineWidth(Object obj) {
+        Integer lineWidth = (Integer)obj;
+        Platform.runLater(() -> View.lineWidth = lineWidth);
     }
 }

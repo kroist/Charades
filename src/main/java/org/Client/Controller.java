@@ -121,6 +121,8 @@ public class Controller {
         model.setInGame(false);
         System.out.println("I returned to menu");
         view.setColorPickerVisible(false);
+        view.setEraserVisible(false);
+        view.setDefaultLineWidth();
         view.setDefaultPickerColor();
         view.setMessageText(message);
         view.setMenuScene();
@@ -161,6 +163,7 @@ public class Controller {
             view.getCanvas().setDisable(false);
             view.setVisibleStartGameButton(false);
             view.setColorPickerVisible(true);
+            view.setEraserVisible(true);
         }
     }
     public void setColor(MyColor color){
@@ -168,6 +171,12 @@ public class Controller {
     }
     public void newColor(Object obj){
         view.newColor(obj);
+    }
+    public void setLineWidth(Integer lineWidth){
+        model.sendObject(lineWidth);
+    }
+    public void newLineWidth(Object obj){
+        view.newLineWidth(obj);
     }
     public void sendChatMessage(ChatMessage msg){
         model.sendObject(msg);

@@ -111,6 +111,9 @@ public class Model {
                 else if (obj instanceof ArrayList){
                     controller.newLeaderBoard(obj);
                 }
+                else if (obj instanceof Integer){
+                    controller.newLineWidth(obj);
+                }
                 else {
                     System.out.println(obj);
                     System.out.println("IMPOSSIBLE");
