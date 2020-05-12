@@ -154,11 +154,14 @@ public class View extends Application {
         gc.setStroke(color.getColor());
         gc.setLineWidth(lineWidth);
     }
-
+    FXMLLoader mainMenuLoader;
+    FxmlController fxmlController;
     private void initMenuScene() {
         messageText = new Text();
         try {
-            Pane mainMenu = FXMLLoader.load(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
+            mainMenuLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
+            fxmlController = mainMenuLoader.getController();
+            Pane mainMenu = mainMenuLoader.load();
             menuScene = new Scene(mainMenu);
         }
         catch (Exception e){
@@ -236,8 +239,8 @@ public class View extends Application {
         canvas.getGraphicsContext2D().beginPath();
     }
     public void setGameID(String s){
-            //System.out.println(s + "i am here");
-            //if (gameID == null) System.out.println("tou loh");
+        //System.out.println(s + "i am here");
+        //if (gameID == null) System.out.println("tou loh");
         Platform.runLater(() -> gameID.setText("Your game ID is: " + s));
     }
     public void setVisibleStartGameButton(boolean b) {
