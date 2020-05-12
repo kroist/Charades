@@ -58,8 +58,8 @@ public class View extends Application {
         View.stage = stage;
         createContent();
 
-        stage.setMinHeight(800);
-        stage.setMinWidth(800);
+        stage.setMinHeight(400);
+        stage.setMinWidth(600);
         stage.setResizable(false);
         stage.setScene(menuScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
