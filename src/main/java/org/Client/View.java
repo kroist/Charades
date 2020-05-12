@@ -133,6 +133,7 @@ public class View extends Application {
         game.getChildren().addAll(tools, canvas);
         gameScene = new Scene(game, 800, 800);
         gameScene.getStylesheets().add("main/resources/fxml/chat.css");
+        gameScene.getStylesheets().add("main/resources/fxml/entermessage.css");
 
         stage.setTitle("Charades");
     }
