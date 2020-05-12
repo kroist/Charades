@@ -3,6 +3,7 @@ package main.java.org.Client;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
@@ -49,6 +50,7 @@ public class Controller {
         //getReadyToWritePoints();
         model.setInGame(true);
         model.setIsSpectator(false);
+        view.getCanvas().setDisable(false);
         view.setVisibleStartGameButton(true);
         view.setGameScene();
         System.out.println("I believe");
@@ -57,9 +59,11 @@ public class Controller {
 
     public void getReadyToWritePoints() {
         Canvas canvas = view.getCanvas();
+        System.out.println(canvas);
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 event -> {
                     //view.mousePressed(event);
+                    System.out.println("hah");
                     model.sendObject(new Point(event.getX(), event.getY(), true));
                 });
 
@@ -122,6 +126,7 @@ public class Controller {
         System.out.println("I returned to menu");
         view.setColorPickerVisible(false);
         view.setEraserVisible(false);
+        view.setBrushVisible(false);
         view.setDefaultLineWidth();
         view.setDefaultPickerColor();
         view.setMessageText(message);
@@ -164,6 +169,7 @@ public class Controller {
             view.setVisibleStartGameButton(false);
             view.setColorPickerVisible(true);
             view.setEraserVisible(true);
+            view.setBrushVisible(true);
         }
     }
     public void setColor(MyColor color){
@@ -187,5 +193,21 @@ public class Controller {
 
     public void newLeaderBoard(Object obj) {
         view.newLeaderBoard(obj);
+    }
+
+    public void setIsBrash(boolean b) {
+        view.setIsBrash(b);
+        if (b){
+            setColor(view.getBrushColor());
+            setLineWidth(3);
+        }else {
+            setColor(new MyColor(Color.web("#f4f4f4")));
+            setLineWidth(10);
+        }
+    }
+
+    public void setBrushColor(MyColor myColor) {
+        view.setBrushColor(myColor);
+        if (view.isBrash())setColor(view.getBrushColor());
     }
 }

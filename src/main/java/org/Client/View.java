@@ -9,14 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
@@ -26,6 +26,7 @@ import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -38,6 +39,8 @@ public class View extends Application {
     }
     private static double prevX, prevY, x, y;
     private static MyColor color = new MyColor(Color.BLACK);
+    private static MyColor brushColor = new MyColor(Color.BLACK);
+    private static boolean isBrush = true;
     private static Scene menuScene;
     private static Scene gameScene;
     private static Text messageText;
@@ -73,67 +76,53 @@ public class View extends Application {
     private static Button startGameButton;
     private static ColorPicker colorPicker;
     private static Button eraser;
+    private static Button brush;
+    FXMLLoader gameSceneLoader;
+    GameSceneFXMLController gameSceneController;
     private void initGameScene() {
-        VBox game = new VBox();
-        HBox tools = new HBox();
-        gameID = new Text();
-
-        Button returnToMenuButton = new Button("Return to menu");
-        startGameButton = new Button("Start game");
-        startGameButton.setOnMouseClicked(mouseEvent -> controller.startGameButton());
-        returnToMenuButton.setOnMouseClicked(mouseEvent -> controller.returnToMenu("You asked me to return you to menu"));
-
-        canvas = new Canvas(size, size);
+        gameSceneLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/gameScene.fxml"));
+        Pane gamePane;
+        try {
+            gamePane = gameSceneLoader.load();
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("SOMETHING WRONG WITH initGameScene()");
+            return;
+        }
+        gameSceneController = gameSceneLoader.getController();
+        gameSceneController.controller = controller;
+        //System.out.println(gameSceneController);
+        gameScene = new Scene(gamePane);
+        canvas = gameSceneController.canvas;
         initDraw(canvas.getGraphicsContext2D());
         controller.getReadyToWritePoints();
 
-        colorPicker = new ColorPicker(Color.BLACK);
-        colorPicker.setStyle("-fx-color-label-visible: false;");
-        colorPicker.setOnAction(ActionEvent -> {
-            controller.setColor(new MyColor(colorPicker.getValue()));
-            controller.setLineWidth(3);
-        });
+        colorPicker = gameSceneController.colorPicker;
         colorPicker.setVisible(false);
+        setDefaultPickerColor();
+        setDefaultLineWidth();
 
-        chat = new TextArea();
-        chat.setEditable(false);
-        chat.setWrapText(true);
-        chat.setMinHeight(200);
-        chat.setMaxHeight(200);
-        chat.setMinWidth(200);
-        chat.setMaxWidth(200);
+        chat = gameSceneController.chat;
 
-        leaderBoard = new ListView<>();
-        leaderBoard.setMinHeight(50);
-        leaderBoard.setMaxHeight(50);
-        leaderBoard.setMinWidth(50);
-        leaderBoard.setMaxWidth(50);
+        leaderBoard = gameSceneController.leaderBoard;
 
-        TextField enterMessage = new TextField();
-        enterMessage.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER){
-                controller.sendChatMessage(new ChatMessage(enterMessage.getText() + "\n"));
-                enterMessage.clear();
-            }
-        });
+        eraser = gameSceneController.eraser;
 
-        eraser = new Button();
-        eraser.setOnAction(ActionEvent -> {
-            controller.setColor(new MyColor(Color.web("#f4f4f4")));
-            controller.setLineWidth(10);
-        });
+        gameID = gameSceneController.gameID;
 
+        startGameButton = gameSceneController.startGameButton;
         ImageView eraserIcon = new ImageView(new Image("main/resources/1200px-Eraser_icon.svg.png"));
-        eraserIcon.setFitHeight(10);
-        eraserIcon.setFitWidth(10);
+        eraserIcon.setFitHeight(50);
+        eraserIcon.setFitWidth(50);
         eraser.setGraphic(eraserIcon);
-        eraser.setVisible(false);
+        //eraser.setVisible(false);
 
-        tools.getChildren().addAll(returnToMenuButton, gameID, startGameButton, colorPicker, eraser, chat, enterMessage, leaderBoard);
-        game.getChildren().addAll(tools, canvas);
-        gameScene = new Scene(game, 800, 800);
-        gameScene.getStylesheets().add("main/resources/fxml/chat.css");
-        gameScene.getStylesheets().add("main/resources/fxml/entermessage.css");
+
+        brush = gameSceneController.brush;
+        ImageView brushIcon = new ImageView(new Image("brush.png"));
+        brushIcon.setFitHeight(50);
+        brushIcon.setFitWidth(50);
+        brush.setGraphic(brushIcon);
 
         stage.setTitle("Charades");
     }
@@ -170,7 +159,8 @@ public class View extends Application {
 
     }
     private static void drawPoint(double x, double y){
-        //System.out.println("draw Point");
+
+        System.out.println("draw Point");
         x = x - lineWidth / 2.0;
         y = y - lineWidth / 2.0;
         System.out.println("COLOR IS " + color.getColor());
@@ -198,9 +188,9 @@ public class View extends Application {
             Platform.runLater(() -> drawLine(x, y));
         }
     }
-    private static void changeColor(MyColor cl){
+    /*private static void changeColor(MyColor cl){
         color = cl;
-    }
+    }*/
     public void newColor(Object obj){
         MyColor cl = (MyColor)obj;
         Platform.runLater(() -> color = cl);
@@ -255,6 +245,8 @@ public class View extends Application {
     public void setDefaultPickerColor(){
         color = new MyColor(Color.BLACK);
         colorPicker.setValue(Color.BLACK);
+        brushColor = color;
+        isBrush = true;
     }
     public void setDefaultLineWidth(){
         lineWidth = 3;
@@ -289,5 +281,24 @@ public class View extends Application {
     public void newLineWidth(Object obj) {
         Integer lineWidth = (Integer)obj;
         Platform.runLater(() -> View.lineWidth = lineWidth);
+    }
+
+    public void setBrushVisible(boolean b) {
+        Platform.runLater(() -> brush.setVisible(b));
+    }
+
+    public void setIsBrash(boolean b) {
+        isBrush = b;
+    }
+    public boolean isBrash(){
+        return isBrush;
+    }
+
+    public void setBrushColor(MyColor myColor) {
+        brushColor = myColor;
+    }
+
+    public MyColor getBrushColor() {
+        return brushColor;
     }
 }

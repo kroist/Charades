@@ -17,7 +17,7 @@
 	-fx-font-size: 14;
 	-fx-background-radius: 4;
 	-fx-border-radius: 4;
-	-fx-pref-height: 30;
+	-fx-min-height: 30;
 	-fx-min-width: 30;
 }
 .button,.menu-button,.split-menu-button,.toggle-button,.number-button {
