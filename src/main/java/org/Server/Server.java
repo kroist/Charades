@@ -1,183 +1,116 @@
 package main.java.org.Server;
 
-import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.MyColor;
-import main.java.org.Tools.Point;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Server {
-
-    //private static ArrayList<ConnectionThread> connections = new ArrayList<>();
-    private static CopyOnWriteArrayList<Game> games = new CopyOnWriteArrayList<>();
-    private static ConcurrentHashMap<Integer, Game> gameIDs = new ConcurrentHashMap<>();
-    private static int freeIDs;
-    private static ConnectionThread host;
-    private static final Object lock = new Object();
+    private static final ConcurrentHashMap<String, Lobby> lobbyIDs = new ConcurrentHashMap<>();
+    private static final CopyOnWriteArraySet<String> usernames = new CopyOnWriteArraySet<>();
 
     private static Random random;
 
     public static class ConnectionThread extends Thread {
-
         private final Socket socket;
         private final ObjectInputStream in;
         private final ObjectOutputStream out;
-        private String username;
-        private boolean inGame;
-        Player player;
-        private Game game;
-        private boolean isHost;
+        private Player player;
 
         public ConnectionThread(Socket socket) throws IOException {
             this.socket = socket;
             this.in = new ObjectInputStream(this.socket.getInputStream());
             this.out = new ObjectOutputStream(this.socket.getOutputStream());
-            inGame = false;
-            isHost = false;
-            game = null;
-            username = null;
         }
 
         @Override
         public void run() {
+            Object obj;
             try {
+                obj  = readObject();
+                if (!(obj instanceof String))return;
+                String username = (String)obj;
+                if (usernames.contains(username)){
+                    return; // TODO: 13.05.2020
+                }
+                usernames.add(username);
+                player = new Player(this, username);
+                sendObject(ConnectionMessage.CONNECTED);
                 while (true) {
-                    if (socket.isClosed()) {
-                        System.out.println("Socket is closed");
-                        break;
+                    obj = readObject();
+                    System.out.println("received " + obj);
+                    if (obj.equals(ConnectionMessage.RETURN_TO_MENU)){
+                        player.reset();
+                        continue;
                     }
-                    try {
-                        Object receivedObject = in.readObject();
-                        System.out.println(receivedObject);
-                        if (receivedObject == null){
-                            System.out.println("Disconnected: NullMessage");
+                    if (!player.inLobby()){
+                        if (!(obj instanceof ConnectionMessage)){
+                            System.out.println("not get ConnectionMessage");
                             break;
                         }
-                        if (!inGame){
-                            if (!(receivedObject instanceof String))break;
-                            username = (String)receivedObject;
-                            sendObject(ConnectionMessage.LOGGED_IN);
-                            receivedObject = in.readObject();
-                            if (!(receivedObject instanceof ConnectionMessage))break;
-                            if (receivedObject.equals(ConnectionMessage.CREATE_NEW_GAME)){
-                                if (freeIDs == 0){
-                                    System.out.println("Maximum number of lobbies exceeded");
-                                    out.writeObject(ConnectionMessage.MAX_NUM_LOBBY);
-                                }
-                                try {
-                                    Object nextEvent = in.readObject();
-                                    if(!(nextEvent instanceof Boolean)) break;
-                                    boolean isPrivate = (boolean)nextEvent;
-                                    isHost = true;
-                                    Integer ID;
-                                    while (true) {
-                                        ID = random.nextInt(10000);
-                                        if (gameIDs.containsKey(ID))
-                                            continue;
-                                        break;
-                                    }
-                                    --freeIDs;
-                                    game = new Game(ID, isPrivate);
-                                    games.add(game);
-                                    gameIDs.put(ID, game);
-                                    game.start();
-                                    System.out.println("New game started with ID: " + ID + " and isPrivate is " + game.isPrivate());
-
-                                    player = new Player(this, game, username);
-                                    game.addPlayer(player);
-                                    System.out.println("Player-host " + username + " connected to game with ID: " + ID);
-                                    inGame = true;
-                                    out.writeObject(ID);
-                                }catch (IOException | ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else if (receivedObject.equals(ConnectionMessage.CONN_TO_GAME)) {
-                                try {
-                                    Object nextEvent = in.readObject();
-                                    if (!(nextEvent instanceof Integer)) break;
-                                    int ID = (int) nextEvent;
-                                    if (gameIDs.containsKey(ID)) {
-                                        Game game = gameIDs.get(ID);
-                                        if (game.isStarted()) {
-                                            sendObject(ConnectionMessage.GAME_ALREADY_STARTED);
-                                            continue;
-                                        }
-                                        player = new Player(this, game, username);
-                                        game.addPlayer(player);
-                                        System.out.println("Player " + username + " connected to game with ID: " + ID);
-                                        inGame = true;
-                                        sendObject(ConnectionMessage.CONNECTED);
-                                    } else {
-                                        sendObject(ConnectionMessage.BAD_ID);
-                                    }
-                                } catch (IOException | ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else break;
-
+                        ConnectionMessage msg = (ConnectionMessage)obj;
+                        if (msg.equals(ConnectionMessage.CREATE_NEW_LOBBY)){
+                            Server.createNewLobby(player);
                         }
-                        else {
-                            if (receivedObject instanceof Point) {
-                                if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
+                        if (msg.equals(ConnectionMessage.CONNECT_TO_LOBBY)){
+                            obj = readObject();
+                            if (!(obj instanceof String)){
+                                System.out.println("not get String");
+                                break;
                             }
-                            if (receivedObject instanceof MyColor){
-                                player.getGame().writeEvent(receivedObject);
+                            String ID = (String)obj;
+                            if (!lobbyIDs.contains(ID)){
+                                sendObject(ConnectionMessage.BAD_ID);
+                                continue;
                             }
-                            if (receivedObject instanceof ConnectionMessage){
-                                if (receivedObject.equals(ConnectionMessage.START_GAME)){
-                                    synchronized (game){
-                                        game.notify();
-                                    }
-                                }
-                            }
-                            if (receivedObject instanceof ChatMessage){
-                                ((ChatMessage)receivedObject).setText("[" + username + "]: " + ((ChatMessage) receivedObject).getText());
-                                player.getGame().writeEvent(receivedObject);
-                            }
-                            if (receivedObject instanceof Integer){
-                                if (player.isDrawing()) player.getGame().writeEvent(receivedObject);
-                            }
-                            //System.out.println("We got object from: " + username);
-                            //System.out.println(player.isDrawing());
-                            //if (player.isDrawing())player.getGame().writeEvent(receivedObject);
-
+                            lobbyIDs.get(ID).addPlayer(player);
                         }
-                    } catch (IOException e) {
-                        System.out.println("Disconnected + IOException");
-                        break;
+                        if (msg.equals(ConnectionMessage.BROWSE_GAMES)){
+                            // TODO: 13.05.2020 assign to Zub
+                            int x = 0;
+                        }
+                    }else {
+                        player.getLobby().handleMessage(obj, player);
                     }
                 }
-            }catch(Exception notignored){
-                System.out.println("Ignored " + notignored);
-                notignored.printStackTrace();
+            } catch(IOException e){
+                System.out.println("client disconnected");
             } finally{
-                game.removePlayer(player);
-                if (isHost){
-                    game.sendAll(ConnectionMessage.GAME_ENDED);
-                    games.remove(game);
-                    gameIDs.remove(game.getGameID(), game);
-                    ++freeIDs;
+                if (player != null){
+                    if (player.inLobby()){
+                        player.getLobby().removePlayer(player);
+                        if (player.getLobby().empty()){
+                            lobbyIDs.remove(player.getLobby());
+                        }
+                    }
                 }
                 try {
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println(username + " is disconnected");
+                System.out.println(player + " is disconnected");
             }
         }
 
         public void sendObject(Object o) throws IOException {
             System.out.println("Something sent " + o);
             out.writeObject(o);
+        }
+        public Object readObject() throws IOException {
+            try {
+                return in.readObject();
+            } catch (IOException e) {
+                throw e;
+            } catch (ClassNotFoundException e) {
+                System.out.println("bad class impossible");
+                e.printStackTrace();
+                return null;
+            }
         }
 
         /*private void sendToAnyone(Object o) throws IOException {
@@ -186,6 +119,16 @@ public class Server {
             }
         }*/
 
+    }
+
+    private static void createNewLobby(Player player) throws IOException{
+        String ID = String.format("%06d", random.nextInt(10000000));
+        while(lobbyIDs.contains(ID)){
+            ID = String.format("%06d", random.nextInt(10000000));
+        }
+        Lobby lobby = new Lobby(ID, player);
+        lobbyIDs.put(ID, lobby);
+        //lobby.addPlayer(player);
     }
 
     public static void main(String[] args) throws IOException {
@@ -204,15 +147,13 @@ public class Server {
             portNumber = Integer.parseInt(stdIn.readLine());
         } catch (IOException e){
         }*/
-        freeIDs = 10;
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber)
         ) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("accepted");
-                ConnectionThread service = new ConnectionThread(socket);
-                service.start();
+                 new ConnectionThread(socket).start();
             }
         } catch (IOException e) {
             System.out.println("Exception caught while listening on port " + portNumber + " or listening for a connection");

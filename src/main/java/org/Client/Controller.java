@@ -24,7 +24,7 @@ public class Controller {
             returnToMenu("Cannot connect");
             return;
         }
-        if (!model.sendObject(ConnectionMessage.CREATE_NEW_GAME)) {
+        if (!model.sendObject(ConnectionMessage.CREATE_NEW_LOBBY)) {
             System.out.println("Cannot start new game");
             returnToMenu("Cannot start new game");
             return;
@@ -93,7 +93,7 @@ public class Controller {
             returnToMenu("Cannot connect to server?");
             return;
         }
-        if (!model.sendObject(ConnectionMessage.CONN_TO_GAME)){
+        if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
             returnToMenu("Cannot connect to game");
             return;
         }

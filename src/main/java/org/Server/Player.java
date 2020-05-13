@@ -1,30 +1,20 @@
 package main.java.org.Server;
 
-import java.net.Socket;
-
 public class Player {
     private Server.ConnectionThread conn;
-    private boolean isDrawing;
-    private Game game;
+    private Lobby lobby;
     private String username;
+    private boolean inGame;
     private int score;
-    public Player(Server.ConnectionThread conn, Game game, String username){
+    public Player(Server.ConnectionThread conn, String username){
         this.conn = conn;
-        this.game = game;
         this.username = username;
         this.score = 0;
     }
+
+
     Server.ConnectionThread getConn(){
         return conn;
-    }
-    public void setIsDrawing(boolean a){
-        isDrawing = a;
-    }
-    public boolean isDrawing(){
-        return isDrawing;
-    }
-    public Game getGame(){
-        return game;
     }
     public String getUsername(){
         return username;
@@ -37,5 +27,43 @@ public class Player {
         if (obj == null)return false;
         if (!(obj instanceof Player))return false;
         return conn.equals(((Player) obj).conn);
+    }
+
+    public boolean inLobby() {
+        return lobby == null;
+    }
+
+    public boolean inGame() {
+        return inGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
+    public Lobby getLobby() {
+        return lobby;
+    }
+
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }
+
+    public void reset() {
+        if (inLobby()){
+            lobby.removePlayer(this);
+        }
+        inGame = false;
+        lobby = null;
+        score = 0;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return username;
     }
 }
