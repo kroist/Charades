@@ -32,6 +32,7 @@ public class Server {
             Object obj;
             try {
                 obj  = readObject();
+                System.out.println(obj);
                 if (!(obj instanceof String))return;
                 String username = (String)obj;
                 if (usernames.contains(username)){
@@ -40,6 +41,7 @@ public class Server {
                 usernames.add(username);
                 player = new Player(this, username);
                 sendObject(ConnectionMessage.CONNECTED);
+                //System.out.println("i am here");
                 while (true) {
                     obj = readObject();
                     System.out.println("received " + obj);
@@ -54,6 +56,7 @@ public class Server {
                         }
                         ConnectionMessage msg = (ConnectionMessage)obj;
                         if (msg.equals(ConnectionMessage.CREATE_NEW_LOBBY)){
+                            System.out.println("i am here");
                             Server.createNewLobby(player);
                         }
                         if (msg.equals(ConnectionMessage.CONNECT_TO_LOBBY)){
@@ -87,6 +90,7 @@ public class Server {
                             lobbyIDs.remove(player.getLobby());
                         }
                     }
+                    usernames.remove(player.getUsername());
                 }
                 try {
                     socket.close();
@@ -122,12 +126,12 @@ public class Server {
     }
 
     private static void createNewLobby(Player player) throws IOException{
-        String ID = String.format("%06d", random.nextInt(10000000));
+        String ID = String.format("%04d", random.nextInt(10000));
         while(lobbyIDs.contains(ID)){
-            ID = String.format("%06d", random.nextInt(10000000));
+            ID = String.format("%04d", random.nextInt(10000));
         }
-        Lobby lobby = new Lobby(ID, player);
-        lobbyIDs.put(ID, lobby);
+        //player.getConn().sendObject(ID);
+        lobbyIDs.put(ID, new Lobby(ID, player));
         //lobby.addPlayer(player);
     }
 

@@ -17,44 +17,58 @@ public class Controller {
         this.view = view;
         this.model = model;
     }
-    public void createNewGame(boolean isPrivate, String nickname){
-        System.out.println(Thread.currentThread());
+    public void login(String nickname){
         if (!model.connect(nickname)){
-            System.out.println("Cannot connect");
             returnToMenu("Cannot connect");
             return;
         }
+    }
+
+    public void createNewGame(boolean isPrivate, String nickname){
+        // TODO: 14.05.2020
+        //System.out.println(Thread.currentThread());
+        login(nickname);
         if (!model.sendObject(ConnectionMessage.CREATE_NEW_LOBBY)) {
-            System.out.println("Cannot start new game");
-            returnToMenu("Cannot start new game");
-            return;
-        }
-        if(!model.sendObject(isPrivate)){
-            System.out.println("Cannot start new private/public game");
-            returnToMenu("Cannot start new game");
+            returnToMenu("Cannot create new lobby");
             return;
         }
         Object o = model.getObject();
-        if (o instanceof ConnectionMessage){
-            if (o.equals(ConnectionMessage.MAX_NUM_LOBBY)){
-                System.out.println("Maximum number of lobbies exceeded");
-                returnToMenu("Maximum number of lobbies exceeded");
-            }
+        if (!ConnectionMessage.CONNECTED_TO_LOBBY.equals(o)){
+            returnToMenu("cannot connect to lobby");
+            return;
         }
-        int ID;
-        if (o instanceof Integer){
-            ID = (int)o;
-            System.out.println("Your game ID is: " + ID);
-            view.setGameID("" + ID);
+        o = model.getObject();
+        if (o instanceof String){
+            String ID = (String)o;
+            System.out.println("Your lobby ID is: " + ID);
+            view.setGameID(ID);
+        }else {
+            returnToMenu("cannot receive ID");
+            return;
         }
-        //getReadyToWritePoints();
-        model.setInGame(true);
+        model.setInLobby(true);
         model.setIsSpectator(false);
+        //setDrawer(false);
         view.getCanvas().setDisable(false);
         view.setVisibleStartGameButton(true);
         view.setGameScene();
-        System.out.println("I believe");
         model.startReadingObjects();
+    }
+
+    public void setDrawer(boolean isDrawer){
+        view.setDefaultLineWidth();
+        view.setDefaultPickerColor();
+        if (isDrawer){
+            view.getCanvas().setDisable(false);
+            view.setColorPickerVisible(true);
+            view.setEraserVisible(true);
+            view.setBrushVisible(true);
+        }else {
+            view.getCanvas().setDisable(true);
+            view.setColorPickerVisible(false);
+            view.setEraserVisible(false);
+            view.setBrushVisible(false);
+        }
     }
 
     public void getReadyToWritePoints() {
@@ -77,22 +91,8 @@ public class Controller {
                 });
     }
 
-    public void connectToTheExistingGame(String stringID, String nickname) {
-        int ID;
-        try {
-            if (stringID == null){
-                returnToMenu("Game ID should be an integer between 0 and 9999");
-                return;
-            }
-            ID = Integer.parseInt(stringID);
-        } catch (NumberFormatException e) {
-            returnToMenu("Game ID should be an integer between 0 and 9999");
-            return;
-        }
-        if (!model.connect(nickname)){
-            returnToMenu("Cannot connect to server?");
-            return;
-        }
+    public void connectToTheExistingGame(String ID, String nickname) {
+        login(nickname);
         if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
             returnToMenu("Cannot connect to game");
             return;
@@ -101,18 +101,27 @@ public class Controller {
             returnToMenu("Cannot send ID");
             return;
         }
-        Object msg = model.getObject();
-        System.out.println(msg);
-        if (!(msg instanceof ConnectionMessage)){
-            returnToMenu("It should not happened. Wow!!! You found the bug!!!");
+        Object o = model.getObject();
+        System.out.println(o);
+        if (ConnectionMessage.BAD_ID.equals(o)){
+            returnToMenu("bad id");
             return;
         }
-        if (!msg.equals(ConnectionMessage.CONNECTED)){
-            returnToMenu(msg.toString());
+        if (!ConnectionMessage.CONNECTED_TO_LOBBY.equals(o)){
+            returnToMenu("cannot connect to lobby");
             return;
         }
-        view.setGameID(stringID);
-        model.setInGame(true);
+        o = model.getObject();
+        if (o instanceof String && ID.equals(o)){
+            System.out.println("Your lobby ID is: " + ID);
+            view.setGameID(ID);
+        }else {
+            returnToMenu("cannot receive ID");
+            return;
+        }
+        setDrawer(false);
+        view.setGameID(ID);
+        model.setInLobby(true);
         model.setIsSpectator(true);
         view.setVisibleStartGameButton(false);
         view.setGameScene();
@@ -120,10 +129,10 @@ public class Controller {
     }
 
     public void returnToMenu(String message) {
+        System.out.println("I returned to menu with " + message);
         finishWritePoints();
         model.disconnect();
-        model.setInGame(false);
-        System.out.println("I returned to menu");
+        model.setInLobby(false);
         view.setColorPickerVisible(false);
         view.setEraserVisible(false);
         view.setBrushVisible(false);
@@ -209,5 +218,9 @@ public class Controller {
     public void setBrushColor(MyColor myColor) {
         view.setBrushColor(myColor);
         if (view.isBrash())setColor(view.getBrushColor());
+    }
+
+    public void newWaitingList() {
+        // TODO: 14.05.2020  
     }
 }

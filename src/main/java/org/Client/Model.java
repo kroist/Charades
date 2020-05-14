@@ -11,12 +11,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Model {
     private static Socket clientSocket;
     private static String hostName = "localhost";
     private static int portNumber = 4000;
-    private static boolean inGame;
+    private static boolean inLobby;
     private static boolean gameStarted;
     private static boolean isSpectator;
     private static Controller controller;
@@ -25,8 +26,8 @@ public class Model {
     public void setController(Controller c){
         controller = c;
     }
-    public void setInGame(boolean b){
-        inGame = b;
+    public void setInLobby(boolean b){
+        inLobby = b;
     }
     public void setIsSpectator(boolean b){
         isSpectator = b;
@@ -39,7 +40,7 @@ public class Model {
             in = new ObjectInputStream(clientSocket.getInputStream());
             sendObject(nickname);
             Object o = getObject();
-            if (o instanceof ConnectionMessage && o.equals(ConnectionMessage.LOGGED_IN)){
+            if (o instanceof ConnectionMessage && o.equals(ConnectionMessage.CONNECTED)){
                 System.out.println("Established connection");
                 return true;
             }else {
@@ -84,23 +85,24 @@ public class Model {
     }
 
     public void objectReader(){
-        System.out.println(inGame);
-        while (inGame) {
+        System.out.println(inLobby);
+        while (inLobby) {
             try {
-                System.out.println("Something received");
+                System.out.println("start receiving");
                 Object obj = getObject();
-                System.out.println("really received");
-                System.out.println(obj);
-                if (obj instanceof Point) {
-                    controller.newPoint(obj);
-                }
-                else if (obj instanceof ConnectionMessage) {
+                System.out.println("really received " + obj);
+                if (obj instanceof ConnectionMessage) {
+                    if (obj.equals(ConnectionMessage.NEW_DRAWER))
+                        controller.setDrawer(true);
                     if (obj.equals(ConnectionMessage.GAME_STARTED)) {
                         controller.startGame();
                     }
                     if (obj.equals(ConnectionMessage.GAME_ENDED)) {
                         controller.returnToMenu("Game is ended");
                     }
+                }
+                else if (obj instanceof Point) {
+                    controller.newPoint(obj);
                 }
                 else if (obj instanceof MyColor){
                     controller.newColor(obj);
@@ -113,6 +115,8 @@ public class Model {
                 }
                 else if (obj instanceof Integer){
                     controller.newLineWidth(obj);
+                }else if (obj instanceof HashSet){
+                    controller.newWaitingList();
                 }
                 else {
                     System.out.println(obj);

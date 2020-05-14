@@ -10,19 +10,20 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Lobby {
-    private CopyOnWriteArrayList<Player> gamePlayers;
-    private CopyOnWriteArrayList<Player> lobbyPlayers;
+    private final CopyOnWriteArrayList<Player> gamePlayers = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Player> lobbyPlayers = new CopyOnWriteArrayList<>();
     private boolean gameStarted;
     private final String ID;
     private Game game;
     private Player drawer;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public Lobby(String id, Player player) throws IOException {
         ID = id;
         addPlayer(player);
         drawer = player;
         player.getConn().sendObject(ConnectionMessage.NEW_DRAWER);
+        gameStarted = false;
     }
     public ArrayList<Pair<String, Integer>> createLeaderBoard(CopyOnWriteArrayList<Player> arr){
         ArrayList<Pair<String, Integer>> new_arr = new ArrayList<>();
@@ -69,13 +70,14 @@ public class Lobby {
     }
     public void addPlayer(Player player) throws IOException {
         lobbyPlayers.add(player);
+        player.getConn().sendObject(ConnectionMessage.CONNECTED_TO_LOBBY);
+        player.getConn().sendObject(ID);
+        player.setLobby(this);
         if (gameStarted){
             updateWhaitingList();
         }else {
             sendLobbyAll(createLeaderBoard(lobbyPlayers));
         }
-        player.setLobby(this);
-        player.getConn().sendObject(ConnectionMessage.CONNECTED_TO_LOBBY);
     }
     private void updateWhaitingList() {
         HashSet<String> set = new HashSet<>();

@@ -30,7 +30,7 @@ public class Player {
     }
 
     public boolean inLobby() {
-        return lobby == null;
+        return lobby != null;
     }
 
     public boolean inGame() {

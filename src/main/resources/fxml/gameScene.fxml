@@ -19,13 +19,13 @@
       <ListView fx:id="leaderBoard" layoutX="600.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #2ECC71;" text="Return to menu" />
       <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #2ECC71;" text="Start game" />
-      <Text fx:id="gameID" layoutX="40.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your game id is: 1111" textAlignment="CENTER">
+      <Text fx:id="gameID" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your game id is: 1111" textAlignment="CENTER">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
       <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false;" />
-      <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" visible="false" onMouseClicked="#brushHandler"/>
+      <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
       <Button fx:id="eraser" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
    </children>
 </AnchorPane>
