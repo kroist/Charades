@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 
 public class View extends Application {
+
     public static Controller controller;
 
     private FXMLLoader gameSceneLoader;
@@ -60,6 +61,10 @@ public class View extends Application {
     private static Button startGameButton;
 
     private static boolean isBrush = true;
+
+    FXMLLoader mainMenuLoader;
+    FxmlController fxmlController;
+
     public void setController(Controller c){
         controller = c;
     }
@@ -104,10 +109,13 @@ public class View extends Application {
             mainMenuLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
             Pane mainMenu = mainMenuLoader.load();
             fxmlController = mainMenuLoader.getController();
+            if (fxmlController != null)
+                fxmlController.setVars(controller, this);
             menuScene = new Scene(mainMenu);
         }
         catch (Exception e){
             System.out.println("SOMETHING WRONG WITH initMenuScene()");
+            e.printStackTrace();
         }
 
     }
@@ -156,7 +164,7 @@ public class View extends Application {
 
 
         brush = gameSceneController.brush;
-        ImageView brushIcon = new ImageView(new Image("brush.png"));
+        ImageView brushIcon = new ImageView(new Image("/main/resources/brush.png"));
         brushIcon.setFitHeight(50);
         brushIcon.setFitWidth(50);
         brush.setGraphic(brushIcon);
@@ -180,8 +188,6 @@ public class View extends Application {
         gc.setStroke(color.getColor());
         gc.setLineWidth(lineWidth);
     }
-    FXMLLoader mainMenuLoader;
-    FxmlController fxmlController;
     private static void drawPoint(double x, double y){
 
         System.out.println("draw Point");
@@ -220,7 +226,12 @@ public class View extends Application {
         Platform.runLater(() -> color = cl);
     }
 
+    public void updateMenuScene(){
+        ///TODO update list of lobbies
+        ArrayList<String> lobbies = controller.askForLobbies();
+    }
     public void setMenuScene() {
+        //updateMenuScene();
         Platform.runLater(() -> stage.setScene(menuScene));
     }
     public void setLoginScene() {

@@ -5,12 +5,13 @@ import main.java.org.Tools.ConnectionMessage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Server {
-    private static final ConcurrentHashMap<String, Lobby> lobbyIDs = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<String, Lobby> lobbyIDs = new ConcurrentHashMap<>();
     private static final CopyOnWriteArraySet<String> usernames = new CopyOnWriteArraySet<>();
 
     private static Random random;
@@ -80,6 +81,12 @@ public class Server {
                             // TODO: 13.05.2020 assign to Zub
                             int x = 0;
                         }
+                        if (msg.equals(ConnectionMessage.LOBBY_LIST)){
+                            sendObject(lobbyIDs.size());
+                            for (Lobby lobby : lobbyIDs.values()){
+                                sendObject(lobby.getMetadata());
+                            }
+                        }
                     }else {
                         player.getLobby().handleMessage(obj, player);
                     }
@@ -88,6 +95,7 @@ public class Server {
                 System.out.println("client disconnected");
             } finally{
                 if (player != null){
+                    //System.out.println("CLOSING LOBBY " + player.getLobby().empty());
                     if (player.inLobby()){
                         player.getLobby().removePlayer(player);
                         if (player.getLobby().empty()){

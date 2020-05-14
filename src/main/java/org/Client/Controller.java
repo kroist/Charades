@@ -13,6 +13,9 @@ import main.java.org.Tools.Point;
 
 import java.util.HashSet;
 
+import javax.print.DocFlavor;
+import java.util.ArrayList;
+
 
 public class Controller {
     private View view;
@@ -232,4 +235,31 @@ public class Controller {
         resetPlayer();
         view.setLobbyScene();
     }
+
+
+    public ArrayList<String> askForLobbies(){
+        model.sendObject(ConnectionMessage.LOBBY_LIST);
+        Object o = model.getObject();
+        if (o instanceof Integer){
+            int lobbiesNumber = (Integer)o;
+            ArrayList<String> arr = new ArrayList<String>();
+            for (int i = 0; i < lobbiesNumber; i++){
+                Object ostr = model.getObject();
+                if (ostr instanceof String){
+                    String str = (String)ostr;
+                    arr.add(str);
+                }
+                else {
+                    System.out.println("CANNOT GET LOBBY");
+                    break;
+                }
+            }
+            return arr;
+        }
+        else {
+            System.out.println("CANNOT GET NUMBER OF LOBBIES");
+            return null;
+        }
+    }
+
 }

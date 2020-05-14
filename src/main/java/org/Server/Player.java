@@ -52,6 +52,9 @@ public class Player {
     public void reset() {
         if (inLobby()){
             lobby.removePlayer(this);
+            if (lobby.empty()){
+                Server.lobbyIDs.remove(lobby.getID());
+            }
         }
         inGame = false;
         lobby = null;

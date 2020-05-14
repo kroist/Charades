@@ -21,7 +21,7 @@
             <VBox layoutX="464.0" layoutY="32.0" prefHeight="93.0" prefWidth="122.0" />
             <VBox alignment="CENTER" layoutX="191.0" layoutY="100.0" prefHeight="192.0" prefWidth="252.0" spacing="35.0">
                <children>
-                  <Button id="browseGames" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="213.0" styleClass="success" text="Browse games" />
+                  <Button id="browseGames" fx:id="browseGamesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#browseGamesClick" prefHeight="38.0" prefWidth="213.0" styleClass="success" text="Browse games" />
                   <Button id="startNewGame" fx:id="createNewGameButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#createNewGameFXML" prefHeight="38.0" prefWidth="213.0" styleClass="warning" text="Start new game" />
                </children>
                <opaqueInsets>
