@@ -36,7 +36,8 @@ public class Server {
                 if (!(obj instanceof String))return;
                 String username = (String)obj;
                 if (usernames.contains(username)){
-                    return; // TODO: 13.05.2020
+                    sendObject(ConnectionMessage.BUSY_NICKNAME);
+                    return;
                 }
                 usernames.add(username);
                 player = new Player(this, username);

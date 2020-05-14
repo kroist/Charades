@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 
 public class FxmlController {
 
-    @FXML private TextField nicknameField;
     @FXML private Button connectButton;
     @FXML private TextField ipAndPortField;
     @FXML private Label connectionOutputLabel;
@@ -24,11 +23,11 @@ public class FxmlController {
     public void createNewGameFXML() {
         ///SHOULD LOOK LIKE THIS BUT I HAVEN'T ADDED PRIVATEGAME
         //View.controller.createNewGame(privateGame.isSelected()));
-        View.controller.createNewGame(false);
+        View.controller.createNewLobby(false);
         //System.out.println(textField.getCharacters().toString());
     }
     public void connectToExistingGameFXML() {
-        View.controller.connectToTheExistingGame(gameIdField.getCharacters().toString());
+        View.controller.connectToTheExistingLobby(gameIdField.getCharacters().toString());
     }
 
 }

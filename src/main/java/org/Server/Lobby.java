@@ -73,8 +73,10 @@ public class Lobby {
         player.getConn().sendObject(ConnectionMessage.CONNECTED_TO_LOBBY);
         player.getConn().sendObject(ID);
         player.setLobby(this);
+        System.out.println(gameStarted);
         if (gameStarted){
             updateWhaitingList();
+            player.getConn().sendObject(createLeaderBoard(gamePlayers));
         }else {
             sendLobbyAll(createLeaderBoard(lobbyPlayers));
         }
@@ -98,9 +100,10 @@ public class Lobby {
             if (player.inGame()){
                 game.remove(player);
                 sendGameAll(createLeaderBoard(gamePlayers));
+                sendLobbyAll(createLeaderBoard(gamePlayers));
             }else {
                 lobbyPlayers.remove(player);
-                sendLobbyAll(createLeaderBoard(lobbyPlayers));
+                updateWhaitingList();
             }
         }
     }

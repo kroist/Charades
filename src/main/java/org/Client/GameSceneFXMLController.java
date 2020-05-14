@@ -16,7 +16,7 @@ import main.java.org.Tools.MyColor;
 public class GameSceneFXMLController {
 
     @FXML public Canvas canvas;
-    @FXML public TextArea chat;
+    @FXML public TextArea gameChat;
     @FXML public TextField enterMessage;
     @FXML public ListView<Pair<String, Integer>> leaderBoard;
     @FXML public Button returnToMenuButton;
@@ -26,6 +26,7 @@ public class GameSceneFXMLController {
     @FXML public Button brush;
     @FXML public Button eraser;
     public Controller controller;
+    @FXML public ListView<String> whaitingList;
 
     @FXML
     public void returnToMenuHandler(MouseEvent mouseEvent) {
@@ -46,7 +47,7 @@ public class GameSceneFXMLController {
     }
 
     @FXML
-    public void enterMessageHAndler(KeyEvent keyEvent) {
+    public void enterMessageHandler(KeyEvent keyEvent) {
         if(keyEvent.getCode() == KeyCode.ENTER){
             controller.sendChatMessage(new ChatMessage(enterMessage.getText() + "\n"));
             enterMessage.clear();

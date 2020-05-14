@@ -9,10 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -31,30 +28,38 @@ import java.util.ArrayList;
 
 
 public class View extends Application {
-    private static double prevX, prevY, x, y;
-    private static MyColor color = new MyColor(Color.BLACK);
-    private static MyColor brushColor = new MyColor(Color.BLACK);
-    private static boolean isBrush = true;
-    private static Scene menuScene;
-    private static Scene gameScene;
-    private static Scene loginScene;
-    private static Text messageText;
     public static Controller controller;
-    private static Stage stage;
-    private static Canvas canvas;
-    private static TextArea chat;
-    private static ListView<Pair<String, Integer>> leaderBoard;
-    private static int lineWidth = 3;
-    private static Text gameID;
-    private static Button startGameButton;
-    private static ColorPicker colorPicker;
-    private static Button eraser;
-    private static Button brush;
+
     private FXMLLoader gameSceneLoader;
     private GameSceneFXMLController gameSceneController;
     private FXMLLoader loginSceneLoader;
     private LoginSceneFXMLController loginSceneFXMLController;
 
+    private static Stage stage;
+
+    private static Scene menuScene;
+    private static Scene gameScene;
+    private static Scene loginScene;
+
+    private static double prevX, prevY, x, y;
+    private static MyColor color = new MyColor(Color.BLACK);
+    private static MyColor brushColor = new MyColor(Color.BLACK);
+    private static int lineWidth = 3;
+
+    private static Canvas canvas;
+    private static ColorPicker colorPicker;
+    private static Button eraser;
+    private static Button brush;
+    private static TextArea gameChat;
+    private static TextField enterMessage;
+    private static Text messageText;
+    private static ListView<Pair<String, Integer>> leaderBoard;
+    private static ListView<String > whaitingList;
+
+    private static Text gameID;
+    private static Button startGameButton;
+
+    private static boolean isBrush = true;
     public void setController(Controller c){
         controller = c;
     }
@@ -129,9 +134,14 @@ public class View extends Application {
         setDefaultPickerColor();
         setDefaultLineWidth();
 
-        chat = gameSceneController.chat;
+        gameChat = gameSceneController.gameChat;
+        gameChat.setEditable(false);
+        enterMessage = gameSceneController.enterMessage;
+        enterMessage.setEditable(true);
+
 
         leaderBoard = gameSceneController.leaderBoard;
+        whaitingList = gameSceneController.whaitingList;
 
         eraser = gameSceneController.eraser;
 
@@ -210,14 +220,62 @@ public class View extends Application {
         Platform.runLater(() -> color = cl);
     }
 
-    public void setGameScene() {
-        Platform.runLater(() -> stage.setScene(gameScene));
-    }
     public void setMenuScene() {
         Platform.runLater(() -> stage.setScene(menuScene));
     }
     public void setLoginScene() {
         Platform.runLater(()->stage.setScene(loginScene));
+    }
+    public void setGameScene() {
+        Platform.runLater(() -> {
+            stage.setScene(gameScene);
+            gameChat.setMaxWidth(400);
+            gameChat.setMinWidth(400);
+            gameChat.prefWidth(400);
+            gameChat.setMaxHeight(170);
+            gameChat.setMinHeight(170);
+            gameChat.prefHeight(170);
+            gameChat.setLayoutX(200);
+            gameChat.setLayoutY(0);
+            gameChat.clear();
+
+            enterMessage.maxWidth(400);
+            enterMessage.minWidth(400);
+            enterMessage.prefWidth(400);
+            enterMessage.setLayoutX(200);
+            enterMessage.setLayoutY(170);
+            enterMessage.clear();
+
+            whaitingList.setVisible(false);
+        });
+
+
+        // TODO: 14.05.2020
+    }
+    public void setLobbyScene() {
+        Platform.runLater(() -> {
+            stage.setScene(gameScene);
+            gameChat.setMaxWidth(600);
+            gameChat.setMinWidth(600);
+            gameChat.prefWidth(600);
+            gameChat.setMaxHeight(570);
+            gameChat.setMinHeight(570);
+            gameChat.prefHeight(570);
+            gameChat.setLayoutX(0);
+            gameChat.setLayoutY(200);
+            gameChat.clear();
+
+            enterMessage.maxWidth(600);
+            enterMessage.minWidth(600);
+            enterMessage.prefWidth(600);
+            enterMessage.setLayoutX(0);
+            enterMessage.setLayoutY(770);
+            enterMessage.clear();
+
+            whaitingList.setVisible(true);
+        });
+
+        // TODO: 14.05.2020
     }
 
     public Canvas getCanvas() { return canvas; }
@@ -269,15 +327,15 @@ public class View extends Application {
         lineWidth = 3;
     }
     private static void addMessage(ChatMessage msg){
-        chat.appendText(msg.getText());
+        gameChat.appendText(msg.getText());
     }
     public void newChatMessage(Object obj) {
         ChatMessage msg = (ChatMessage)obj;
-        Platform.runLater(() -> chat.appendText(msg.getText()));
+        Platform.runLater(() -> gameChat.appendText(msg.getText()));
     }
 
     public void clearChat() {
-        Platform.runLater(() -> chat.clear());
+        Platform.runLater(() -> gameChat.clear());
     }
 
     private static void addLeaderBoard(ObservableList<Pair<String, Integer>> arr) {
@@ -317,5 +375,12 @@ public class View extends Application {
 
     public MyColor getBrushColor() {
         return brushColor;
+    }
+
+    public void setWhaitingList(ObservableList<String> arr) {
+        Platform.runLater(() -> whaitingList.setItems(arr));
+    }
+    public void clearWhaitingList() {
+        Platform.runLater(() -> whaitingList.getItems().clear());
     }
 }

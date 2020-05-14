@@ -80,9 +80,9 @@ public class Model {
         try{
             return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             controller.returnToLogin("cannot receive object");
-            System.exit(0);
+            //System.exit(0);
         }
         return null;
     }
@@ -110,7 +110,7 @@ public class Model {
                             controller.startGame();
                         }
                         if (obj.equals(ConnectionMessage.GAME_ENDED)) {
-                            controller.returnToMenu("Game is ended");
+                            controller.returnToLobby("Game is ended");
                         }
                     } else if (obj instanceof Point) {
                         controller.newPoint(obj);
@@ -123,7 +123,7 @@ public class Model {
                     } else if (obj instanceof Integer) {
                         controller.newLineWidth(obj);
                     } else if (obj instanceof HashSet) {
-                        controller.newWaitingList();
+                        controller.newWaitingList(obj);
                     } else {
                         System.out.println(obj);
                         System.out.println("IMPOSSIBLE");

@@ -14,8 +14,8 @@
       <Line endX="800.0" endY="200.0" startY="200.0" />
       <Line endX="800.0" endY="800.0" startX="800.0" startY="200.0" />
       <Line endY="800.0" startX="800.0" startY="800.0" />
-      <TextArea fx:id="chat" editable="false" layoutX="200.0" prefHeight="170.0" prefWidth="400.0" wrapText="true" />
-      <TextField fx:id="enterMessage" layoutX="200.0" layoutY="169.0" onKeyPressed="#enterMessageHAndler" prefHeight="25.0" prefWidth="400.0" />
+      <TextArea fx:id="gameChat" wrapText="true" />
+      <TextField fx:id="enterMessage" onKeyPressed="#enterMessageHandler" prefWidth="400.0" />
       <ListView fx:id="leaderBoard" layoutX="600.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #2ECC71;" text="Return to menu" />
       <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #2ECC71;" text="Start game" />
@@ -27,5 +27,6 @@
       <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false;" />
       <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
       <Button fx:id="eraser" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
+      <ListView fx:id="whaitingList" layoutX="600.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

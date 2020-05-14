@@ -1,6 +1,8 @@
 package main.java.org.Client;
 
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -8,6 +10,8 @@ import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
+
+import java.util.HashSet;
 
 
 public class Controller {
@@ -19,13 +23,14 @@ public class Controller {
     }
     public void login(String username){
         if (!model.connect(username)){
-            returnToLogin("Cannot connect");
+            returnToLogin("Busy nickname");
+            return;
         }
         view.setMenuScene();
     }
 
 
-    public void createNewGame(boolean isPrivate){
+    public void createNewLobby(boolean isPrivate){
         // TODO: 14.05.2020
         //System.out.println(Thread.currentThread());
         if (!model.sendObject(ConnectionMessage.CREATE_NEW_LOBBY)) {
@@ -48,12 +53,10 @@ public class Controller {
         }
         resetPlayer();
         model.setInLobby(true);
-        //setDrawer(false);
-        //view.setVisibleStartGameButton(true);
-        view.setGameScene();
+        view.setLobbyScene();
         model.startReadingObjects();
     }
-    public void connectToTheExistingGame(String ID) {
+    public void connectToTheExistingLobby(String ID) {
         if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
             returnToMenu("Cannot connect to game");
             return;
@@ -83,11 +86,11 @@ public class Controller {
         resetPlayer();
         view.setGameID(ID);
         model.setInLobby(true);
-        view.setVisibleStartGameButton(false);
-        view.setGameScene();
+        view.setLobbyScene();
         model.startReadingObjects();
     }
     public void resetPlayer(){
+        view.setVisibleStartGameButton(false);
         view.setDefaultLineWidth();
         view.setDefaultPickerColor();
         view.getCanvas().setDisable(true);
@@ -131,6 +134,7 @@ public class Controller {
         view.clearCanvas();
         view.clearChat();
         view.clearLeaderBoard();
+        view.clearWhaitingList();
         model.setIsDrawer(false);
     }
 
@@ -162,6 +166,7 @@ public class Controller {
     }
 
     public void startGame() {
+        view.setGameScene();
         if (model.isDrawer()){
             //getReadyToWritePoints();
             view.getCanvas().setDisable(false);
@@ -210,8 +215,10 @@ public class Controller {
         if (view.isBrash())setColor(view.getBrushColor());
     }
 
-    public void newWaitingList() {
-        // TODO: 14.05.2020  
+    public void newWaitingList(Object obj) {
+        @SuppressWarnings("unchecked")
+        ObservableList<String> arr = FXCollections.observableArrayList((HashSet<String>)obj);
+        view.setWhaitingList(arr);
     }
 
     public void setDrawer() {
@@ -220,5 +227,9 @@ public class Controller {
         view.setEraserVisible(true);
         view.setBrushVisible(true);*/
         view.setVisibleStartGameButton(true);
+    }
+    public void returnToLobby(String game_is_ended) {
+        resetPlayer();
+        view.setLobbyScene();
     }
 }

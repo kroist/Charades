@@ -17,7 +17,8 @@ public class Game implements Runnable{
         }
         lobby.sendGameAll(ConnectionMessage.GAME_STARTED);
         lobby.sendGameAll(lobby.createLeaderBoard(lobby.getGamePlayers()));
-        run();
+        //run();
+        // TODO: 14.05.2020
     }
     @Override
     public void run() {

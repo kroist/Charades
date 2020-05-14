@@ -359,10 +359,10 @@ VBox > .split-menu-button.last > .arrow-button {
 	-fx-background-color: #333333;
 }
 
-.check-menu-item:checked:hover > .left-container > .check,
-.check-menu-item:checked:focused > .left-container > .check,
-.radio-menu-item:checked:hover > .left-container > .radio,
-.radio-menu-item:checked:focused > .left-container > .radio {
+.check-menu-item:hover > .left-container > .check,
+.check-menu-item:focused > .left-container > .check,
+.radio-menu-item:hover > .left-container > .radio,
+.radio-menu-item:focused > .left-container > .radio {
 	-fx-background-color: #333333;
 }
 
@@ -380,9 +380,6 @@ VBox > .split-menu-button.last > .arrow-button {
 	-fx-padding: 5 0 5 0;
 }
 
-.text-field {
-	-fx-pref-height: 30;
-}
 
 .combo-box, .choice-box {
 	-fx-background-insets: 0;
