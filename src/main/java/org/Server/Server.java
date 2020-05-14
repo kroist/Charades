@@ -46,6 +46,7 @@ public class Server {
                     obj = readObject();
                     System.out.println("received " + obj);
                     if (obj.equals(ConnectionMessage.RETURN_TO_MENU)){
+                        sendObject(ConnectionMessage.STOP_READING);
                         player.reset();
                         continue;
                     }
@@ -58,6 +59,7 @@ public class Server {
                         if (msg.equals(ConnectionMessage.CREATE_NEW_LOBBY)){
                             System.out.println("i am here");
                             Server.createNewLobby(player);
+                            continue;
                         }
                         if (msg.equals(ConnectionMessage.CONNECT_TO_LOBBY)){
                             obj = readObject();
@@ -66,7 +68,8 @@ public class Server {
                                 break;
                             }
                             String ID = (String)obj;
-                            if (!lobbyIDs.contains(ID)){
+                            System.out.println(ID);
+                            if (!lobbyIDs.containsKey(ID)){
                                 sendObject(ConnectionMessage.BAD_ID);
                                 continue;
                             }
@@ -87,7 +90,7 @@ public class Server {
                     if (player.inLobby()){
                         player.getLobby().removePlayer(player);
                         if (player.getLobby().empty()){
-                            lobbyIDs.remove(player.getLobby());
+                            lobbyIDs.remove(player.getLobby().getID());
                         }
                     }
                     usernames.remove(player.getUsername());
@@ -127,7 +130,7 @@ public class Server {
 
     private static void createNewLobby(Player player) throws IOException{
         String ID = String.format("%04d", random.nextInt(10000));
-        while(lobbyIDs.contains(ID)){
+        while(lobbyIDs.containsKey(ID)){
             ID = String.format("%04d", random.nextInt(10000));
         }
         //player.getConn().sendObject(ID);

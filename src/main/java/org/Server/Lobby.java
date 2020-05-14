@@ -97,6 +97,7 @@ public class Lobby {
         }else {
             if (player.inGame()){
                 game.remove(player);
+                sendGameAll(createLeaderBoard(gamePlayers));
             }else {
                 lobbyPlayers.remove(player);
                 sendLobbyAll(createLeaderBoard(lobbyPlayers));
@@ -146,6 +147,7 @@ public class Lobby {
     public void handleMessage(Object obj, Player player) {
         if (obj instanceof ChatMessage){
             sendChatMessage((ChatMessage)obj, player);
+            return;
         }
         if (obj.equals(ConnectionMessage.START_GAME)){
             if (gameStarted){
@@ -153,6 +155,7 @@ public class Lobby {
                 return;
             }
             startGame(player);
+            return;
         }
         if (!gameStarted){
             System.out.println("i do not want receive it");
@@ -175,5 +178,9 @@ public class Lobby {
 
     public boolean empty() {
         return gamePlayers.isEmpty() && lobbyPlayers.isEmpty();
+    }
+
+    public String getID() {
+        return ID;
     }
 }

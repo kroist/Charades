@@ -19,7 +19,7 @@ public class Model {
     private static int portNumber = 4000;
     private static boolean inLobby;
     private static boolean gameStarted;
-    private static boolean isSpectator;
+    private static boolean isDrawer;
     private static Controller controller;
     ObjectInputStream in;
     ObjectOutputStream out;
@@ -30,7 +30,7 @@ public class Model {
         inLobby = b;
     }
     public void setIsSpectator(boolean b){
-        isSpectator = b;
+        isDrawer = b;
     }
     public boolean connect(String nickname) {
         try{
@@ -66,6 +66,7 @@ public class Model {
     public boolean sendObject(Object o){
         if (clientSocket == null || out == null)return false;
         try{
+            System.out.println("sent " + o);
             out.writeObject(o);
             return true;
         } catch (IOException e) {
@@ -79,65 +80,81 @@ public class Model {
         try{
             return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
+            controller.returnToLogin("cannot receive object");
+            System.exit(0);
         }
         return null;
     }
 
-    public void objectReader(){
-        System.out.println(inLobby);
-        while (inLobby) {
-            try {
-                System.out.println("start receiving");
-                Object obj = getObject();
-                System.out.println("really received " + obj);
-                if (obj instanceof ConnectionMessage) {
-                    if (obj.equals(ConnectionMessage.NEW_DRAWER))
-                        controller.setDrawer(true);
-                    if (obj.equals(ConnectionMessage.GAME_STARTED)) {
-                        controller.startGame();
+    public void setIsDrawer(boolean isDrawer) {
+        Model.isDrawer = isDrawer;
+        if (isDrawer)controller.setDrawer();
+    }
+
+
+    public class ObjectReader extends Thread {
+        @Override
+        public void run() {
+            System.out.println(inLobby);
+            while (inLobby) {
+                try {
+                    System.out.println("start receiving");
+                    Object obj = getObject();
+                    System.out.println("really received " + obj);
+                    if (obj instanceof ConnectionMessage) {
+                        if (obj.equals(ConnectionMessage.STOP_READING))break;
+                        if (obj.equals(ConnectionMessage.NEW_DRAWER))
+                            setIsDrawer(true);
+                        if (obj.equals(ConnectionMessage.GAME_STARTED)) {
+                            controller.startGame();
+                        }
+                        if (obj.equals(ConnectionMessage.GAME_ENDED)) {
+                            controller.returnToMenu("Game is ended");
+                        }
+                    } else if (obj instanceof Point) {
+                        controller.newPoint(obj);
+                    } else if (obj instanceof MyColor) {
+                        controller.newColor(obj);
+                    } else if (obj instanceof ChatMessage) {
+                        controller.newChatMessage(obj);
+                    } else if (obj instanceof ArrayList) {
+                        controller.newLeaderBoard(obj);
+                    } else if (obj instanceof Integer) {
+                        controller.newLineWidth(obj);
+                    } else if (obj instanceof HashSet) {
+                        controller.newWaitingList();
+                    } else {
+                        System.out.println(obj);
+                        System.out.println("IMPOSSIBLE");
                     }
-                    if (obj.equals(ConnectionMessage.GAME_ENDED)) {
-                        controller.returnToMenu("Game is ended");
-                    }
+                } catch (Exception e) {
+                    System.out.println("SERVER DOWN");
+                    Platform.runLater(() -> controller.returnToMenu("SERVER DOWN"));
                 }
-                else if (obj instanceof Point) {
-                    controller.newPoint(obj);
-                }
-                else if (obj instanceof MyColor){
-                    controller.newColor(obj);
-                }
-                else if (obj instanceof ChatMessage){
-                    controller.newChatMessage(obj);
-                }
-                else if (obj instanceof ArrayList){
-                    controller.newLeaderBoard(obj);
-                }
-                else if (obj instanceof Integer){
-                    controller.newLineWidth(obj);
-                }else if (obj instanceof HashSet){
-                    controller.newWaitingList();
-                }
-                else {
-                    System.out.println(obj);
-                    System.out.println("IMPOSSIBLE");
-                }
-            } catch (Exception e) {
-                System.out.println("SERVER DOWN");
-                Platform.runLater(() -> controller.returnToMenu("SERVER DOWN"));
             }
         }
     }
+    private ObjectReader reader = null;
 
     public void startReadingObjects() {
-        new Thread(this::objectReader).start();
+        reader = new ObjectReader();
+        reader.start();
     }
 
     public void setGameStarted(boolean b) {
         gameStarted = b;
     }
 
-    public boolean isSpectator() {
-        return isSpectator;
+    public boolean isDrawer() {
+        return isDrawer;
+    }
+
+    public void stopReading() {
+        if (reader != null && !reader.isInterrupted()) {
+            reader.interrupt();
+            System.out.println("reader not received STOP_READING");
+        }
+        //System.out.println("interrupted");
     }
 }

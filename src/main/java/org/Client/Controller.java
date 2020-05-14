@@ -17,17 +17,17 @@ public class Controller {
         this.view = view;
         this.model = model;
     }
-    public void login(String nickname){
-        if (!model.connect(nickname)){
-            returnToMenu("Cannot connect");
-            return;
+    public void login(String username){
+        if (!model.connect(username)){
+            returnToLogin("Cannot connect");
         }
+        view.setMenuScene();
     }
 
-    public void createNewGame(boolean isPrivate, String nickname){
+
+    public void createNewGame(boolean isPrivate){
         // TODO: 14.05.2020
         //System.out.println(Thread.currentThread());
-        login(nickname);
         if (!model.sendObject(ConnectionMessage.CREATE_NEW_LOBBY)) {
             returnToMenu("Cannot create new lobby");
             return;
@@ -46,53 +46,14 @@ public class Controller {
             returnToMenu("cannot receive ID");
             return;
         }
+        resetPlayer();
         model.setInLobby(true);
-        model.setIsSpectator(false);
         //setDrawer(false);
-        view.getCanvas().setDisable(false);
-        view.setVisibleStartGameButton(true);
+        //view.setVisibleStartGameButton(true);
         view.setGameScene();
         model.startReadingObjects();
     }
-
-    public void setDrawer(boolean isDrawer){
-        view.setDefaultLineWidth();
-        view.setDefaultPickerColor();
-        if (isDrawer){
-            view.getCanvas().setDisable(false);
-            view.setColorPickerVisible(true);
-            view.setEraserVisible(true);
-            view.setBrushVisible(true);
-        }else {
-            view.getCanvas().setDisable(true);
-            view.setColorPickerVisible(false);
-            view.setEraserVisible(false);
-            view.setBrushVisible(false);
-        }
-    }
-
-    public void getReadyToWritePoints() {
-        Canvas canvas = view.getCanvas();
-        System.out.println(canvas);
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                event -> {
-                    //view.mousePressed(event);
-                    System.out.println("hah");
-                    model.sendObject(new Point(event.getX(), event.getY(), true));
-                });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                event -> {
-                    //view.mouseDragged(event);
-                    model.sendObject(new Point(event.getX(), event.getY(), false));
-                });
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
-                event -> {
-                });
-    }
-
-    public void connectToTheExistingGame(String ID, String nickname) {
-        login(nickname);
+    public void connectToTheExistingGame(String ID) {
         if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
             returnToMenu("Cannot connect to game");
             return;
@@ -119,19 +80,47 @@ public class Controller {
             returnToMenu("cannot receive ID");
             return;
         }
-        setDrawer(false);
+        resetPlayer();
         view.setGameID(ID);
         model.setInLobby(true);
-        model.setIsSpectator(true);
         view.setVisibleStartGameButton(false);
         view.setGameScene();
         model.startReadingObjects();
     }
+    public void resetPlayer(){
+        view.setDefaultLineWidth();
+        view.setDefaultPickerColor();
+        view.getCanvas().setDisable(true);
+        view.setColorPickerVisible(false);
+        view.setEraserVisible(false);
+        view.setBrushVisible(false);
+        model.setIsDrawer(false);
+    }
 
-    public void returnToMenu(String message) {
-        System.out.println("I returned to menu with " + message);
+    public void getReadyToWritePoints() {
+        Canvas canvas = view.getCanvas();
+        System.out.println(canvas);
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                event -> {
+                    //view.mousePressed(event);
+                    System.out.println("hah");
+                    model.sendObject(new Point(event.getX(), event.getY(), true));
+                });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                event -> {
+                    //view.mouseDragged(event);
+                    model.sendObject(new Point(event.getX(), event.getY(), false));
+                });
+        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                event -> {
+                });
+    }
+
+    private void reset(String message){
+        System.out.println(message);
+        model.stopReading();
         finishWritePoints();
-        model.disconnect();
         model.setInLobby(false);
         view.setColorPickerVisible(false);
         view.setEraserVisible(false);
@@ -139,28 +128,29 @@ public class Controller {
         view.setDefaultLineWidth();
         view.setDefaultPickerColor();
         view.setMessageText(message);
-        view.setMenuScene();
-        view.clearChat();
         view.clearCanvas();
+        view.clearChat();
         view.clearLeaderBoard();
+        model.setIsDrawer(false);
+    }
+
+    public void returnToLogin(String message) {
+        finishWritePoints();
+        model.disconnect();
+        view.setLoginScene();
+        reset(message + " returnToLogin");
+    }
+
+    public void returnToMenu(String message) {
+        model.sendObject(ConnectionMessage.RETURN_TO_MENU);
+        finishWritePoints();
+        view.setMenuScene();
+        reset(message + " returnToMenu");
     }
 
     private void finishWritePoints() {
         Canvas canvas = view.getCanvas();
         canvas.setDisable(true);
-        /*
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                event -> {
-                });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                event -> {
-                });
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
-                event -> {
-                });
-
-         */
     }
 
     public void newPoint(Object obj) {
@@ -172,7 +162,7 @@ public class Controller {
     }
 
     public void startGame() {
-        if (!model.isSpectator()){
+        if (model.isDrawer()){
             //getReadyToWritePoints();
             view.getCanvas().setDisable(false);
             view.setVisibleStartGameButton(false);
@@ -222,5 +212,13 @@ public class Controller {
 
     public void newWaitingList() {
         // TODO: 14.05.2020  
+    }
+
+    public void setDrawer() {
+        /*view.getCanvas().setDisable(false);
+        view.setColorPickerVisible(true);
+        view.setEraserVisible(true);
+        view.setBrushVisible(true);*/
+        view.setVisibleStartGameButton(true);
     }
 }

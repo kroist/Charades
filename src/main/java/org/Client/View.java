@@ -31,18 +31,13 @@ import java.util.ArrayList;
 
 
 public class View extends Application {
-
-    public static final int size = 300;
-
-    public View(){
-        //launch();
-    }
     private static double prevX, prevY, x, y;
     private static MyColor color = new MyColor(Color.BLACK);
     private static MyColor brushColor = new MyColor(Color.BLACK);
     private static boolean isBrush = true;
     private static Scene menuScene;
     private static Scene gameScene;
+    private static Scene loginScene;
     private static Text messageText;
     public static Controller controller;
     private static Stage stage;
@@ -50,35 +45,67 @@ public class View extends Application {
     private static TextArea chat;
     private static ListView<Pair<String, Integer>> leaderBoard;
     private static int lineWidth = 3;
+    private static Text gameID;
+    private static Button startGameButton;
+    private static ColorPicker colorPicker;
+    private static Button eraser;
+    private static Button brush;
+    private FXMLLoader gameSceneLoader;
+    private GameSceneFXMLController gameSceneController;
+    private FXMLLoader loginSceneLoader;
+    private LoginSceneFXMLController loginSceneFXMLController;
+
     public void setController(Controller c){
         controller = c;
     }
     public void startLaunch(){
         launch();
     }
+
     @Override
     public void start(Stage stage){
         View.stage = stage;
         createContent();
 
-        stage.setMinHeight(400);
-        stage.setMinWidth(600);
+        stage.setMinHeight(800);
+        stage.setMinWidth(800);
         stage.setResizable(false);
-        stage.setScene(menuScene);
+        stage.setScene(loginScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
         stage.show();
     }
     private void createContent(){
+        initLoginScene();
         initMenuScene();
         initGameScene();
     }
-    private static Text gameID;
-    private static Button startGameButton;
-    private static ColorPicker colorPicker;
-    private static Button eraser;
-    private static Button brush;
-    FXMLLoader gameSceneLoader;
-    GameSceneFXMLController gameSceneController;
+    private void initLoginScene(){
+        loginSceneLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/loginScene.fxml"));
+        Pane loginPane;
+        try {
+            loginPane = loginSceneLoader.load();
+        } catch (IOException e) {
+            //e.printStackTrace();
+            System.out.println("SOMETHING WRONG WITH initLoginScene()");
+            return;
+        }
+        loginSceneFXMLController = loginSceneLoader.getController();
+        loginScene = new Scene(loginPane);
+        loginSceneFXMLController.controller = controller;
+    }
+    private void initMenuScene() {
+        messageText = new Text();
+        try {
+            mainMenuLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
+            Pane mainMenu = mainMenuLoader.load();
+            fxmlController = mainMenuLoader.getController();
+            menuScene = new Scene(mainMenu);
+        }
+        catch (Exception e){
+            System.out.println("SOMETHING WRONG WITH initMenuScene()");
+        }
+
+    }
     private void initGameScene() {
         gameSceneLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/gameScene.fxml"));
         Pane gamePane;
@@ -145,19 +172,6 @@ public class View extends Application {
     }
     FXMLLoader mainMenuLoader;
     FxmlController fxmlController;
-    private void initMenuScene() {
-        messageText = new Text();
-        try {
-            mainMenuLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
-            fxmlController = mainMenuLoader.getController();
-            Pane mainMenu = mainMenuLoader.load();
-            menuScene = new Scene(mainMenu);
-        }
-        catch (Exception e){
-            System.out.println("SOMETHING WRONG WITH initMenuScene()");
-        }
-
-    }
     private static void drawPoint(double x, double y){
 
         System.out.println("draw Point");
@@ -201,6 +215,9 @@ public class View extends Application {
     }
     public void setMenuScene() {
         Platform.runLater(() -> stage.setScene(menuScene));
+    }
+    public void setLoginScene() {
+        Platform.runLater(()->stage.setScene(loginScene));
     }
 
     public Canvas getCanvas() { return canvas; }
