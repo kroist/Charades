@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -78,7 +79,7 @@ public class FxmlController {
         for (String string : arr){
             items.add(new HBoxButton(string, controller));
         }
-        listOfLobbies.setItems(items);
+        Platform.runLater(() -> listOfLobbies.setItems(items));
     }
 
 }

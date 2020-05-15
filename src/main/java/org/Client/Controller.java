@@ -11,10 +11,8 @@ import main.java.org.Tools.ConnectionMessage;
 import main.java.org.Tools.MyColor;
 import main.java.org.Tools.Point;
 
-import java.util.HashSet;
-
-import javax.print.DocFlavor;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class Controller {
@@ -258,7 +256,8 @@ public class Controller {
         }
         else {
             System.out.println("CANNOT GET NUMBER OF LOBBIES");
-            return null;
+            System.out.println(o);
+            return new ArrayList<>();
         }
     }
 

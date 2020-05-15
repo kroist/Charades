@@ -78,6 +78,22 @@ public class Model {
     public Object getObject() {
         if (clientSocket == null || in == null)return null;
         try{
+            Object o = in.readObject();
+            while (ConnectionMessage.STOP_READING.equals(o)){
+                o = in.readObject();
+            }
+            return o;
+        } catch (IOException | ClassNotFoundException e) {
+            //e.printStackTrace();
+            controller.returnToLogin("cannot receive object");
+            //System.exit(0);
+        }
+        return null;
+    }
+
+    public Object getObjectForReader() {
+        if (clientSocket == null || in == null)return null;
+        try{
             return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
@@ -97,10 +113,11 @@ public class Model {
         @Override
         public void run() {
             System.out.println(inLobby);
+            System.out.println("STARTED READING");
             while (inLobby) {
                 try {
                     System.out.println("start receiving");
-                    Object obj = getObject();
+                    Object obj = getObjectForReader();
                     System.out.println("really received " + obj);
                     if (obj instanceof ConnectionMessage) {
                         if (obj.equals(ConnectionMessage.STOP_READING))break;
@@ -133,6 +150,7 @@ public class Model {
                     Platform.runLater(() -> controller.returnToMenu("SERVER DOWN"));
                 }
             }
+            System.out.println("STOPPED READING");
         }
     }
     private ObjectReader reader = null;
