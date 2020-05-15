@@ -164,9 +164,10 @@ public class Server {
                 ServerSocket serverSocket = new ServerSocket(portNumber)
         ) {
             while (true) {
+                System.out.println("SOSI");
                 Socket socket = serverSocket.accept();
                 System.out.println("accepted");
-                 new ConnectionThread(socket).start();
+                new ConnectionThread(socket).start();
             }
         } catch (IOException e) {
             System.out.println("Exception caught while listening on port " + portNumber + " or listening for a connection");

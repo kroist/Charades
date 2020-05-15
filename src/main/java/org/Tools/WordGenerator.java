@@ -4,6 +4,7 @@ package main.java.org.Tools;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,18 +33,14 @@ public class WordGenerator {
     private static ArrayList<String> loadWords(String difficulty){
         ArrayList<String> words = new ArrayList<>();
         try {
-
-            ClassLoader loader = ClassLoader.getSystemClassLoader();
-            Path path = Paths.get("/main/resources/word-lists/" + difficulty + ".txt");
-            System.out.println(path);
-            File file = new File(loader.getResource("word-lists/" + difficulty + ".txt").getFile());
-            BufferedReader reader = Files.newBufferedReader(path);
-            FileReader fileReader = new FileReader(file.getAbsolutePath());
-            Scanner sc = new Scanner(fileReader);
-            String word;
-            while(sc.hasNext()){
-                word = sc.nextLine();
-                words.add(word);
+            Path path = Paths.get(WordGenerator.class.getResource("/word-lists/easy.txt").toURI());
+            try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(path)))) {
+                String word;
+                while ((word = br.readLine()) != null) {
+                    words.add(word);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return words;
         } catch(Exception e){
