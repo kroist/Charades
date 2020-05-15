@@ -190,7 +190,7 @@ public class Lobby {
     public String getMetadata(){
         int numberOfPlayers = gamePlayers.size() + lobbyPlayers.size();
         String drawerName = drawer.getUsername();
-        return ((Integer)numberOfPlayers).toString() + " " + (gameStarted ? "S" : "N") + " " + drawerName;
+        return ((Integer)numberOfPlayers).toString() + ":" + (gameStarted ? "S" : "N") + ":" + drawerName + ":" + ID;
     }
 
 }
