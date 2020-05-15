@@ -77,10 +77,6 @@ public class Server {
                             }
                             lobbyIDs.get(ID).addPlayer(player);
                         }
-                        if (msg.equals(ConnectionMessage.BROWSE_GAMES)){
-                            // TODO: 13.05.2020 assign to Zub
-                            int x = 0;
-                        }
                         if (msg.equals(ConnectionMessage.LOBBY_LIST)){
                             sendObject(lobbyIDs.size());
                             for (Lobby lobby : lobbyIDs.values()){
