@@ -25,8 +25,11 @@ public class GameSceneFXMLController {
     @FXML public ColorPicker colorPicker;
     @FXML public Button brush;
     @FXML public Button eraser;
-    public Controller controller;
     @FXML public ListView<String> whaitingList;
+    @FXML public Text gameTimer;
+
+    public Controller controller;
+    @FXML public Text gameWord;
 
     @FXML
     public void returnToMenuHandler(MouseEvent mouseEvent) {

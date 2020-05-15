@@ -91,6 +91,8 @@ public class Controller {
         model.startReadingObjects();
     }
     public void resetPlayer(){
+        model.setIsDrawer(false);
+        model.setGameStarted(false);
         view.setVisibleStartGameButton(false);
         view.setDefaultLineWidth();
         view.setDefaultPickerColor();
@@ -98,7 +100,10 @@ public class Controller {
         view.setColorPickerVisible(false);
         view.setEraserVisible(false);
         view.setBrushVisible(false);
-        model.setIsDrawer(false);
+        view.clearCanvas();
+        view.setVisibleGameTimer(false);
+        view.setEnterMessageVisible(true);
+        view.setGameWordVisible(false);
     }
 
     public void getReadyToWritePoints() {
@@ -114,7 +119,9 @@ public class Controller {
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 event -> {
                     //view.mouseDragged(event);
-                    model.sendObject(new Point(event.getX(), event.getY(), false));
+                    if (model.isGameStarted()){
+                        model.sendObject(new Point(event.getX(), event.getY(), false));
+                    }
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 event -> {
@@ -168,6 +175,7 @@ public class Controller {
 
     public void startGame() {
         view.setGameScene();
+        model.setGameStarted(true);
         if (model.isDrawer()){
             //getReadyToWritePoints();
             view.getCanvas().setDisable(false);
@@ -175,7 +183,9 @@ public class Controller {
             view.setColorPickerVisible(true);
             view.setEraserVisible(true);
             view.setBrushVisible(true);
+            view.setEnterMessageVisible(false);
         }
+        //view.setVisibleGameTimer(true);
     }
     public void setColor(MyColor color){
         model.sendObject(color);
@@ -194,6 +204,9 @@ public class Controller {
     }
     public void newChatMessage(Object msg){
         view.newChatMessage(msg);
+    }
+    public void newTime(Object obj) {
+        view.setNewTime(obj);
     }
 
     public void newLeaderBoard(Object obj) {
@@ -232,6 +245,7 @@ public class Controller {
     public void returnToLobby(String game_is_ended) {
         resetPlayer();
         view.setLobbyScene();
+        view.setVisibleGameTimer(false);
     }
 
 
@@ -261,4 +275,7 @@ public class Controller {
         }
     }
 
+    public void newWord(Object obj) {
+        view.setNewWord(obj);
+    }
 }

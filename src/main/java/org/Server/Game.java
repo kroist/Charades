@@ -1,15 +1,18 @@
 package main.java.org.Server;
 
-import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.MyColor;
-import main.java.org.Tools.Point;
+import main.java.org.Tools.*;
+
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game implements Runnable{
     private String word;
     private Lobby lobby;
+    private Timer timer;
     public Game(Lobby lobby, String word) {
         this.lobby = lobby;
-        this.word = word;
+        this.word = word + '\n';
     }
     public void startGame(){
         for (Player player : lobby.getGamePlayers()){
@@ -17,19 +20,49 @@ public class Game implements Runnable{
         }
         lobby.sendGameAll(ConnectionMessage.GAME_STARTED);
         lobby.sendGameAll(lobby.createLeaderBoard(lobby.getGamePlayers()));
+        lobby.sendGameAll(new ChatMessage("New drawer is " + lobby.getDrawer().getUsername() + "\n"));
+        try {
+            lobby.getDrawer().getConn().sendObject(new GameWord(word));
+        } catch (IOException ignored) {
+        }
+
+        startTimer();
+
         //run();
         // TODO: 14.05.2020
     }
+
+    private void startTimer() {
+        if (timer != null)timer.cancel();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            private int counter = 10;
+            @Override
+            public void run() {
+                    //System.out.println("counter = " + counter);
+                if (counter > 0){
+                    lobby.sendAll(new GameTime(counter--));
+                }
+                else {
+                    endGame(null);
+                    timer.cancel();
+                }
+            }
+        }, 0,1000);
+    }
+
     @Override
     public void run() {
 
     }
 
-    public void endGame(Player winner) {
+    public synchronized void endGame(Player winner) {
+        if (!lobby.isGameStarted())return;
+        if (timer != null)timer.cancel();
         for (Player player : lobby.getGamePlayers()){
             player.setInGame(false);
         }
-        lobby.sendGameAll(ConnectionMessage.GAME_ENDED);
+        lobby.sendAll(ConnectionMessage.GAME_ENDED);// TODO: 15.05.2020
         lobby.endGame(winner);
     }
 
@@ -40,6 +73,7 @@ public class Game implements Runnable{
             endGame(null);
         }else{
             lobby.getGamePlayers().remove(player);
+            lobby.sendAll(lobby.createLeaderBoard(lobby.getGamePlayers()));
             if (lobby.getGamePlayers().size() == 0)endGame(null);
         }
     }
@@ -52,5 +86,11 @@ public class Game implements Runnable{
         if (obj instanceof Point)lobby.sendGameAll(obj);
         if (obj instanceof MyColor)lobby.sendGameAll(obj);
         if (obj instanceof Integer)lobby.sendGameAll(obj);
+    }
+
+    public void handleAnswer(String msg, Player player) {
+        System.out.println(msg);
+        System.out.println(word);
+        if (word.equals(msg))endGame(player);
     }
 }

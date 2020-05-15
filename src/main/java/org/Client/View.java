@@ -19,9 +19,7 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import main.java.org.Tools.ChatMessage;
-import main.java.org.Tools.MyColor;
-import main.java.org.Tools.Point;
+import main.java.org.Tools.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,11 +51,13 @@ public class View extends Application {
     private static Button brush;
     private static TextArea gameChat;
     private static TextField enterMessage;
+    private static Text gameTimer;
     private static Text messageText;
     private static ListView<Pair<String, Integer>> leaderBoard;
     private static ListView<String > whaitingList;
 
     private static Text gameID;
+    private static Text gameWord;
     private static Button startGameButton;
 
     private static boolean isBrush = true;
@@ -147,11 +147,18 @@ public class View extends Application {
         enterMessage = gameSceneController.enterMessage;
         enterMessage.setEditable(true);
 
+        gameTimer = gameSceneController.gameTimer;
+        gameTimer.setVisible(false);
+
+        gameWord = gameSceneController.gameWord;
+        gameWord.setVisible(false);
+
 
         leaderBoard = gameSceneController.leaderBoard;
         whaitingList = gameSceneController.whaitingList;
 
         eraser = gameSceneController.eraser;
+        gameTimer.setVisible(false);
 
         gameID = gameSceneController.gameID;
 
@@ -257,6 +264,8 @@ public class View extends Application {
             enterMessage.setLayoutY(170);
             enterMessage.clear();
 
+            //gameTimer.setVisible(true);
+
             whaitingList.setVisible(false);
         });
 
@@ -282,6 +291,8 @@ public class View extends Application {
             enterMessage.setLayoutX(0);
             enterMessage.setLayoutY(770);
             enterMessage.clear();
+
+            //gameTimer.setVisible(false);
 
             whaitingList.setVisible(true);
         });
@@ -393,5 +404,34 @@ public class View extends Application {
     }
     public void clearWhaitingList() {
         Platform.runLater(() -> whaitingList.getItems().clear());
+    }
+
+    public void setNewTime(Object obj) {
+        int time = ((GameTime)obj).getTime();
+        Platform.runLater(() -> {
+            gameTimer.setText(String.valueOf(time));
+            gameTimer.setVisible(true);
+        });
+    }
+
+    public void setVisibleGameTimer(boolean b) {
+        System.out.println("set visible game timer " + b);
+        Platform.runLater(() -> gameTimer.setVisible(b));
+    }
+
+    public void setEnterMessageVisible(boolean b) {
+        enterMessage.setVisible(b);
+    }
+
+    public void setGameWordVisible(boolean b){
+        gameWord.setVisible(b);
+    }
+
+    public void setNewWord(Object obj) {
+        String msg = ((GameWord)obj).getWord();
+        Platform.runLater(() -> {
+            gameWord.setText(msg);
+            gameWord.setVisible(true);
+        });
     }
 }

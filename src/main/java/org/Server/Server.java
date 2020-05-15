@@ -1,6 +1,7 @@
 package main.java.org.Server;
 
 import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.WordGenerator;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -151,6 +152,7 @@ public class Server {
         }
         int portNumber = Integer.parseInt(args[0]);
          */
+        WordGenerator.getRandomWord("easy");
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         int portNumber = 4000;
         /*try {

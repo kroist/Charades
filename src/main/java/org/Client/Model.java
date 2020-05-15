@@ -1,10 +1,7 @@
 package main.java.org.Client;
 
 import javafx.application.Platform;
-import main.java.org.Tools.ChatMessage;
-import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.MyColor;
-import main.java.org.Tools.Point;
+import main.java.org.Tools.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -82,6 +79,7 @@ public class Model {
             while (ConnectionMessage.STOP_READING.equals(o)){
                 o = in.readObject();
             }
+            System.out.println("FDSSADSFD " + o);
             return o;
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
@@ -120,7 +118,7 @@ public class Model {
                     Object obj = getObjectForReader();
                     System.out.println("really received " + obj);
                     if (obj instanceof ConnectionMessage) {
-                        if (obj.equals(ConnectionMessage.STOP_READING))break;
+                        if (obj.equals(ConnectionMessage.STOP_READING)) break;
                         if (obj.equals(ConnectionMessage.NEW_DRAWER))
                             setIsDrawer(true);
                         if (obj.equals(ConnectionMessage.GAME_STARTED)) {
@@ -129,6 +127,10 @@ public class Model {
                         if (obj.equals(ConnectionMessage.GAME_ENDED)) {
                             controller.returnToLobby("Game is ended");
                         }
+                    } else if (obj instanceof GameWord){
+                        controller.newWord(obj);
+                    } else if (obj instanceof GameTime){
+                        controller.newTime(obj);
                     } else if (obj instanceof Point) {
                         controller.newPoint(obj);
                     } else if (obj instanceof MyColor) {
@@ -160,9 +162,6 @@ public class Model {
         reader.start();
     }
 
-    public void setGameStarted(boolean b) {
-        gameStarted = b;
-    }
 
     public boolean isDrawer() {
         return isDrawer;
@@ -174,5 +173,12 @@ public class Model {
             System.out.println("reader not received STOP_READING");
         }
         //System.out.println("interrupted");
+    }
+
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+    public void setGameStarted(boolean b) {
+        gameStarted = b;
     }
 }

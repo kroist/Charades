@@ -40,13 +40,14 @@ public class Lobby {
         }
         gamePlayers.addAll(lobbyPlayers);
         lobbyPlayers.clear();
-        game = new Game(this, "abacaba");// TODO: 13.05.2020
+        game = new Game(this, WordGenerator.getRandomWord("easy"));// TODO: 13.05.2020
         gameStarted = true;
         game.startGame();
     }
     public void endGame(Player winner){
         lobbyPlayers.addAll(gamePlayers);
         gamePlayers.clear();
+        gameStarted = false;
         game = null;
 
         if (winner != null){
@@ -66,7 +67,6 @@ public class Lobby {
                 System.out.println("NEW_DRAWER impossible");
             }
         }else generateDrawer();
-        gameStarted = false;
     }
     public void addPlayer(Player player) throws IOException {
         lobbyPlayers.add(player);
@@ -99,8 +99,6 @@ public class Lobby {
         }else {
             if (player.inGame()){
                 game.remove(player);
-                sendGameAll(createLeaderBoard(gamePlayers));
-                sendLobbyAll(createLeaderBoard(gamePlayers));
             }else {
                 lobbyPlayers.remove(player);
                 updateWhaitingList();
@@ -123,9 +121,13 @@ public class Lobby {
 
     public void sendChatMessage(ChatMessage msg, Player player) {
         if (!player.inGame()){
+            msg.setText("[" + player.getUsername() + "]: " + msg.getText());
             sendLobbyAll(msg);
         }else {
+            String word = msg.getText();
+            msg.setText("[" + player.getUsername() + "]: " + msg.getText());
             sendGameAll(msg);
+            game.handleAnswer(word, player);
         }
     }
     public void sendGameAll(Object obj) {
@@ -147,6 +149,10 @@ public class Lobby {
             }
         }
     }
+    public void sendAll(Object obj) {
+        sendGameAll(obj);
+        sendLobbyAll(obj);
+    }
     public void handleMessage(Object obj, Player player) {
         if (obj instanceof ChatMessage){
             sendChatMessage((ChatMessage)obj, player);
@@ -165,7 +171,7 @@ public class Lobby {
         }
 
 
-        game.handleMessage(obj, player);
+        if (game != null)game.handleMessage(obj, player);
     }
     public CopyOnWriteArrayList<Player> getGamePlayers() {
         return gamePlayers;
@@ -191,6 +197,10 @@ public class Lobby {
         int numberOfPlayers = gamePlayers.size() + lobbyPlayers.size();
         String drawerName = drawer.getUsername();
         return ((Integer)numberOfPlayers).toString() + ":" + (gameStarted ? "S" : "N") + ":" + drawerName + ":" + ID;
+    }
+
+    public boolean isGameStarted() {
+        return gameStarted;
     }
 
 }
