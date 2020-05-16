@@ -284,29 +284,27 @@ public class Controller {
     }
 
 
-    public ArrayList<String> askForLobbies(){
-        synchronized (model) {
-            model.sendObject(ConnectionMessage.LOBBY_LIST);
-            Object o = model.getObject();
-            if (o instanceof Integer) {
-                int lobbiesNumber = (Integer) o;
-                ArrayList<String> arr = new ArrayList<String>();
-                for (int i = 0; i < lobbiesNumber; i++) {
-                    Object ostr = model.getObject();
-                    if (ostr instanceof String) {
-                        String str = (String) ostr;
-                        arr.add(str);
-                    } else {
-                        System.out.println("CANNOT GET LOBBY");
-                        break;
-                    }
+    public synchronized ArrayList<String> askForLobbies(){
+        model.sendObject(ConnectionMessage.LOBBY_LIST);
+        Object o = model.getObject();
+        if (o instanceof Integer) {
+            int lobbiesNumber = (Integer) o;
+            ArrayList<String> arr = new ArrayList<String>();
+            for (int i = 0; i < lobbiesNumber; i++) {
+                Object ostr = model.getObject();
+                if (ostr instanceof String) {
+                    String str = (String) ostr;
+                    arr.add(str);
+                } else {
+                    System.out.println("CANNOT GET LOBBY");
+                    break;
                 }
-                return arr;
-            } else {
-                System.out.println("CANNOT GET NUMBER OF LOBBIES");
-                System.out.println(o);
-                return new ArrayList<>();
             }
+            return arr;
+        } else {
+            System.out.println("CANNOT GET NUMBER OF LOBBIES");
+            System.out.println(o);
+            return new ArrayList<>();
         }
     }
 

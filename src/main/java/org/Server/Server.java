@@ -109,13 +109,17 @@ public class Server {
             }
         }
 
-        public synchronized void sendObject(Object o) throws IOException {
+        public void sendObject(Object o) throws IOException {
             System.out.println("Something sent " + o);
-            out.writeObject(o);
+            synchronized (out){
+                out.writeObject(o);
+            }
         }
         public Object readObject() throws IOException {
             try {
-                return in.readObject();
+                synchronized (in){
+                    return in.readObject();
+                }
             } catch (IOException e) {
                 throw e;
             } catch (ClassNotFoundException e) {

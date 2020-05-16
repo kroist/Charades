@@ -64,7 +64,9 @@ public class Model {
     public boolean sendObject(Object o){
         if (clientSocket == null || out == null)return false;
         try{
-            out.writeObject(o);
+            synchronized (out){
+                out.writeObject(o);
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,11 +77,13 @@ public class Model {
     public Object getObject() {
         if (clientSocket == null || in == null)return null;
         try{
-            Object o = in.readObject();
-            while (ConnectionMessage.STOP_READING.equals(o)){
-                o = in.readObject();
+            synchronized (in) {
+                Object o = in.readObject();
+                while (ConnectionMessage.STOP_READING.equals(o)) {
+                    o = in.readObject();
+                }
+                return o;
             }
-            return o;
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
             controller.returnToLogin("cannot receive object");
@@ -91,7 +95,9 @@ public class Model {
     public Object getObjectForReader() {
         if (clientSocket == null || in == null) return null;
         try {
-            return in.readObject();
+            synchronized (in){
+                return in.readObject();
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             controller.returnToLogin("cannot receive object");
@@ -114,7 +120,11 @@ public class Model {
             while (inLobby) {
                 try {
                     System.out.println("start receiving");
-                    Object obj = getObjectForReader();
+                    //Object obj = getObjectForReader();
+                    Object obj;
+                    synchronized (in){
+                        obj = getObjectForReader();
+                    }
                     System.out.println("really received " + obj);
                     if (obj instanceof ConnectionMessage) {
                         if (obj.equals(ConnectionMessage.STOP_READING)) break;

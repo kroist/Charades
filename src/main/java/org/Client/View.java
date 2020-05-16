@@ -242,7 +242,6 @@ public class View extends Application {
     public void setMenuScene() {
         //updateMenuScene();
         Platform.runLater(() -> stage.setScene(menuScene));
-        Platform.runLater(() -> fxmlController.refreshList());
     }
     public void setLoginScene() {
         Platform.runLater(()->stage.setScene(loginScene));
