@@ -95,7 +95,7 @@ public class Server {
                     if (player.inLobby()){
                         player.getLobby().removePlayer(player);
                         if (player.getLobby().empty()){
-                            lobbyIDs.remove(player.getLobby().getID());
+                            player.getLobby().closeLobby();
                         }
                     }
                     usernames.remove(player.getUsername());

@@ -72,14 +72,18 @@ public class FxmlController {
         }
     }
 
-    @FXML
-    public void refreshListClick(){
+    public void refreshList(){
         ObservableList<HBoxButton> items = FXCollections.observableArrayList();
         ArrayList<String> arr = controller.askForLobbies();
         for (String string : arr){
             items.add(new HBoxButton(string, controller));
         }
         Platform.runLater(() -> listOfLobbies.setItems(items));
+    }
+
+    @FXML
+    public void refreshListClick(){
+        refreshList();
     }
 
 }

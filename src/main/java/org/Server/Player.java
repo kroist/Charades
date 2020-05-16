@@ -54,6 +54,7 @@ public class Player {
             lobby.removePlayer(this);
             if (lobby.empty()){
                 Server.lobbyIDs.remove(lobby.getID());
+                lobby.closeLobby();
             }
         }
         inGame = false;

@@ -28,10 +28,36 @@ public class Controller {
             return;
         }
         view.setMenuScene();
+        askingThread = new AskingThread();
+        askingThread.start();
     }
+
+    public class AskingThread extends Thread {
+        @Override
+        public void run(){
+            boolean running = true;
+            System.out.println("Starting to refresh lobbies");
+            while(running){
+                try {
+                    View.fxmlController.refreshList();
+                    Thread.sleep(2000);
+                } catch (InterruptedException e){
+                    System.out.println("Stopped refreshing lobbies");
+                    running = false;
+                }
+            }
+        }
+    }
+    AskingThread askingThread;
 
 
     public void createNewLobby(boolean isPrivate){
+        askingThread.interrupt();
+        try {
+            askingThread.join();
+        } catch (Exception e){
+            System.out.println(e);
+        }
         // TODO: 14.05.2020
         //System.out.println(Thread.currentThread());
         if (!model.sendObject(ConnectionMessage.CREATE_NEW_LOBBY)) {
@@ -58,6 +84,13 @@ public class Controller {
         model.startReadingObjects();
     }
     public void connectToTheExistingLobby(String ID) {
+        askingThread.interrupt();
+        try {
+            askingThread.join();
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
         if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
             returnToMenu("Cannot connect to game");
             return;
@@ -158,6 +191,8 @@ public class Controller {
         finishWritePoints();
         view.setMenuScene();
         reset(message + " returnToMenu");
+        askingThread = new AskingThread();
+        askingThread.start();
     }
 
     private void finishWritePoints() {
@@ -250,28 +285,28 @@ public class Controller {
 
 
     public ArrayList<String> askForLobbies(){
-        model.sendObject(ConnectionMessage.LOBBY_LIST);
-        Object o = model.getObject();
-        if (o instanceof Integer){
-            int lobbiesNumber = (Integer)o;
-            ArrayList<String> arr = new ArrayList<String>();
-            for (int i = 0; i < lobbiesNumber; i++){
-                Object ostr = model.getObject();
-                if (ostr instanceof String){
-                    String str = (String)ostr;
-                    arr.add(str);
+        synchronized (model) {
+            model.sendObject(ConnectionMessage.LOBBY_LIST);
+            Object o = model.getObject();
+            if (o instanceof Integer) {
+                int lobbiesNumber = (Integer) o;
+                ArrayList<String> arr = new ArrayList<String>();
+                for (int i = 0; i < lobbiesNumber; i++) {
+                    Object ostr = model.getObject();
+                    if (ostr instanceof String) {
+                        String str = (String) ostr;
+                        arr.add(str);
+                    } else {
+                        System.out.println("CANNOT GET LOBBY");
+                        break;
+                    }
                 }
-                else {
-                    System.out.println("CANNOT GET LOBBY");
-                    break;
-                }
+                return arr;
+            } else {
+                System.out.println("CANNOT GET NUMBER OF LOBBIES");
+                System.out.println(o);
+                return new ArrayList<>();
             }
-            return arr;
-        }
-        else {
-            System.out.println("CANNOT GET NUMBER OF LOBBIES");
-            System.out.println(o);
-            return new ArrayList<>();
         }
     }
 

@@ -64,7 +64,6 @@ public class Model {
     public boolean sendObject(Object o){
         if (clientSocket == null || out == null)return false;
         try{
-            System.out.println("sent " + o);
             out.writeObject(o);
             return true;
         } catch (IOException e) {
@@ -80,7 +79,6 @@ public class Model {
             while (ConnectionMessage.STOP_READING.equals(o)){
                 o = in.readObject();
             }
-            System.out.println("FDSSADSFD " + o);
             return o;
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();

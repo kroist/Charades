@@ -32,7 +32,7 @@ public class View extends Application {
     private FXMLLoader gameSceneLoader;
     private GameSceneFXMLController gameSceneController;
     private FXMLLoader loginSceneLoader;
-    private LoginSceneFXMLController loginSceneFXMLController;
+    static private LoginSceneFXMLController loginSceneFXMLController;
 
     private static Stage stage;
 
@@ -62,8 +62,8 @@ public class View extends Application {
 
     private static boolean isBrush = true;
 
-    FXMLLoader mainMenuLoader;
-    FxmlController fxmlController;
+    static FXMLLoader mainMenuLoader;
+    static FxmlController fxmlController;
 
     public void setController(Controller c){
         controller = c;
@@ -109,8 +109,10 @@ public class View extends Application {
             mainMenuLoader = new FXMLLoader(getClass().getResource("/main/resources/fxml/mainMenu.fxml"));
             Pane mainMenu = mainMenuLoader.load();
             fxmlController = mainMenuLoader.getController();
-            if (fxmlController != null)
+            //if (fxmlController != null){
+                System.out.println("FXMLCONTROLLER IS NOT NULL");
                 fxmlController.setVars(controller, this);
+            //}
             menuScene = new Scene(mainMenu);
         }
         catch (Exception e){
@@ -240,6 +242,7 @@ public class View extends Application {
     public void setMenuScene() {
         //updateMenuScene();
         Platform.runLater(() -> stage.setScene(menuScene));
+        Platform.runLater(() -> fxmlController.refreshList());
     }
     public void setLoginScene() {
         Platform.runLater(()->stage.setScene(loginScene));

@@ -203,4 +203,8 @@ public class Lobby {
         return gameStarted;
     }
 
+    public void closeLobby(){
+        Server.lobbyIDs.remove(getID());
+    }
+
 }
