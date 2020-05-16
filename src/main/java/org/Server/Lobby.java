@@ -1,5 +1,6 @@
 package main.java.org.Server;
 
+import com.sun.javafx.image.IntPixelGetter;
 import javafx.util.Pair;
 import main.java.org.Tools.*;
 
@@ -17,13 +18,17 @@ public class Lobby {
     private Game game;
     private Player drawer;
     private final Random random = new Random();
+    private final boolean isPrivate;
+    private final int maxPlayers;
 
-    public Lobby(String id, Player player) throws IOException {
+    public Lobby(String id, Player player, boolean isPrivate, int maxPlayers) throws IOException {
         ID = id;
         addPlayer(player);
         drawer = player;
         player.getConn().sendObject(ConnectionMessage.NEW_DRAWER);
         gameStarted = false;
+        this.isPrivate = isPrivate;
+        this.maxPlayers = maxPlayers;
     }
     public ArrayList<Pair<String, Integer>> createLeaderBoard(CopyOnWriteArrayList<Player> arr){
         ArrayList<Pair<String, Integer>> new_arr = new ArrayList<>();
@@ -196,7 +201,11 @@ public class Lobby {
     public String getMetadata(){
         int numberOfPlayers = gamePlayers.size() + lobbyPlayers.size();
         String drawerName = drawer.getUsername();
-        return ((Integer)numberOfPlayers).toString() + ":" + (gameStarted ? "S" : "N") + ":" + drawerName + ":" + ID;
+        return ((Integer)numberOfPlayers).toString() + "/" + ((Integer)maxPlayers).toString() + ":" + (gameStarted ? "S" : "N") + ":" + drawerName + ":" + ID;
+    }
+
+    public boolean isPrivate(){
+        return this.isPrivate;
     }
 
     public boolean isGameStarted() {

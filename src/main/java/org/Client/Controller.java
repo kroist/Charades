@@ -51,7 +51,7 @@ public class Controller {
     AskingThread askingThread;
 
 
-    public void createNewLobby(boolean isPrivate){
+    public void createNewLobby(boolean isPrivate, int maxPlayers){
         askingThread.interrupt();
         try {
             askingThread.join();
@@ -60,7 +60,9 @@ public class Controller {
         }
         // TODO: 14.05.2020
         //System.out.println(Thread.currentThread());
-        if (!model.sendObject(ConnectionMessage.CREATE_NEW_LOBBY)) {
+        /// maxPlayers * 2 + private
+        int lobbyMessage = maxPlayers*2 + (isPrivate ? 1 : 0);
+        if (!model.sendObject(lobbyMessage)) {
             returnToMenu("Cannot create new lobby");
             return;
         }
@@ -103,6 +105,10 @@ public class Controller {
         System.out.println(o);
         if (ConnectionMessage.BAD_ID.equals(o)){
             returnToMenu("bad id");
+            return;
+        }
+        if (ConnectionMessage.LOBBY_FULL.equals(o)){
+            returnToMenu("lobby is full");
             return;
         }
         if (!ConnectionMessage.CONNECTED_TO_LOBBY.equals(o)){

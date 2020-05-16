@@ -6,6 +6,7 @@ import main.java.org.Tools.WordGenerator;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -53,16 +54,19 @@ public class Server {
                         continue;
                     }
                     if (!player.inLobby()){
+                        if (obj instanceof Integer){
+                            System.out.println("i am here");
+                            int msg = (Integer)obj;
+                            int maxPlayers = msg/2;
+                            boolean isPrivate = (msg%2 == 1);
+                            Server.createNewLobby(player, isPrivate, maxPlayers);
+                            continue;
+                        }
                         if (!(obj instanceof ConnectionMessage)){
                             System.out.println("not get ConnectionMessage");
                             break;
                         }
                         ConnectionMessage msg = (ConnectionMessage)obj;
-                        if (msg.equals(ConnectionMessage.CREATE_NEW_LOBBY)){
-                            System.out.println("i am here");
-                            Server.createNewLobby(player);
-                            continue;
-                        }
                         if (msg.equals(ConnectionMessage.CONNECT_TO_LOBBY)){
                             obj = readObject();
                             if (!(obj instanceof String)){
@@ -78,9 +82,15 @@ public class Server {
                             lobbyIDs.get(ID).addPlayer(player);
                         }
                         if (msg.equals(ConnectionMessage.LOBBY_LIST)){
-                            sendObject(lobbyIDs.size());
+                            ArrayList<String> arr = new ArrayList<>();
                             for (Lobby lobby : lobbyIDs.values()){
-                                sendObject(lobby.getMetadata());
+                                if (!lobby.isPrivate()){
+                                    arr.add(lobby.getMetadata());
+                                }
+                            }
+                            sendObject(arr.size());
+                            for (String metadata : arr){
+                                sendObject(metadata);
                             }
                         }
                     }else {
@@ -137,13 +147,13 @@ public class Server {
 
     }
 
-    private static void createNewLobby(Player player) throws IOException{
+    private static void createNewLobby(Player player, boolean isPrivate, int maxPlayers) throws IOException{
         String ID = String.format("%04d", random.nextInt(10000));
         while(lobbyIDs.containsKey(ID)){
             ID = String.format("%04d", random.nextInt(10000));
         }
         //player.getConn().sendObject(ID);
-        lobbyIDs.put(ID, new Lobby(ID, player));
+        lobbyIDs.put(ID, new Lobby(ID, player, isPrivate, maxPlayers));
         //lobby.addPlayer(player);
     }
 

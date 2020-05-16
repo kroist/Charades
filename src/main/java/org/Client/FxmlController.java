@@ -10,19 +10,19 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
 
 public class FxmlController {
 
-    @FXML private Button connectButton;
-    @FXML private TextField ipAndPortField;
-    @FXML private Label connectionOutputLabel;
-    @FXML private Button connectToLobbyButton;
-    @FXML private Button createNewLobbyButton;
     @FXML private TextField gameIdField;
     @FXML private ListView<HBoxButton> listOfLobbies;
+    @FXML private Pane createLobbyPanel;
+    @FXML private CheckBox privateLobbyCheckbox;
+    @FXML private TextField maxPlayersInLobby;
+    @FXML private Label numOfPlayersAlarm;
 
     Controller controller;
     View view;
@@ -32,15 +32,8 @@ public class FxmlController {
     }
 
     @FXML
-    public void onClickMethod(){
-        connectionOutputLabel.setText("TI CHE DALBAEB?)))))");
-    }
-    @FXML
-    public void createNewGameFXML() {
-        ///SHOULD LOOK LIKE THIS BUT I HAVEN'T ADDED PRIVATEGAME
-        //View.controller.createNewGame(privateGame.isSelected()));
-        controller.createNewLobby(false);
-        //System.out.println(textField.getCharacters().toString());
+    public void createNewLobbyButton() {
+        createLobbyPanel.setVisible(true);
     }
     @FXML
     public void connectToExistingLobby() {
@@ -84,6 +77,28 @@ public class FxmlController {
     @FXML
     public void refreshListClick(){
         refreshList();
+    }
+
+    public void resetCreateLobbyPanel(){
+        createLobbyPanel.setVisible(false);
+        privateLobbyCheckbox.setSelected(false);
+        maxPlayersInLobby.setText("10");
+        numOfPlayersAlarm.setText("");
+    }
+
+    @FXML
+    public void createLobbyPanelConfirm(){
+        int maxPlayers = Integer.parseInt(maxPlayersInLobby.getText());
+        if (2 <= maxPlayers && maxPlayers <= 99){
+            controller.createNewLobby(privateLobbyCheckbox.isSelected(), maxPlayers);
+        }
+        else {
+            numOfPlayersAlarm.setText("Enter correct number of players!");
+        }
+    }
+    @FXML
+    public void closeCreateLobbyPanel(){
+        resetCreateLobbyPanel();
     }
 
 }

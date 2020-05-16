@@ -2,7 +2,7 @@ package main.java.org.Tools;
 
 public enum ConnectionMessage {
     GAME_ENDED, GAME_STARTED,
-    CONNECT_TO_LOBBY, CREATE_NEW_LOBBY, CONNECTED_TO_LOBBY, LOBBY_LIST,
+    CONNECT_TO_LOBBY, CONNECTED_TO_LOBBY, LOBBY_LIST, LOBBY_FULL,
     BAD_ID {
         @Override
         public String toString(){
