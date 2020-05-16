@@ -184,6 +184,12 @@ public class Controller {
         model.disconnect();
         view.setLoginScene();
         reset(message + " returnToLogin");
+        if (message != null && message.equals("Busy nickname")){
+            View.loginSceneFXMLController.nicknameTakenBox.setText("username is already taken");
+        }
+        else {
+            View.loginSceneFXMLController.nicknameTakenBox.setText("");
+        }
     }
 
     public void returnToMenu(String message) {

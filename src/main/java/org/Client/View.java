@@ -32,7 +32,7 @@ public class View extends Application {
     private FXMLLoader gameSceneLoader;
     private GameSceneFXMLController gameSceneController;
     private FXMLLoader loginSceneLoader;
-    static private LoginSceneFXMLController loginSceneFXMLController;
+    static public LoginSceneFXMLController loginSceneFXMLController;
 
     private static Stage stage;
 
