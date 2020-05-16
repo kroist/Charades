@@ -109,7 +109,7 @@ public class Server {
             }
         }
 
-        public void sendObject(Object o) throws IOException {
+        public synchronized void sendObject(Object o) throws IOException {
             System.out.println("Something sent " + o);
             out.writeObject(o);
         }

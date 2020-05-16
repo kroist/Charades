@@ -89,11 +89,11 @@ public class Model {
     }
 
     public Object getObjectForReader() {
-        if (clientSocket == null || in == null)return null;
-        try{
+        if (clientSocket == null || in == null) return null;
+        try {
             return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             controller.returnToLogin("cannot receive object");
             //System.exit(0);
         }
