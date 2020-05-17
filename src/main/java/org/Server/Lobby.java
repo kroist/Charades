@@ -1,6 +1,6 @@
 package main.java.org.Server;
 
-import com.sun.javafx.image.IntPixelGetter;
+
 import javafx.util.Pair;
 import main.java.org.Tools.*;
 
@@ -72,7 +72,7 @@ public class Lobby {
             drawer = winner;
             try {
                 drawer.getConn().sendObject(ConnectionMessage.NEW_DRAWER);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("NEW_DRAWER impossible");
             }
         }else generateDrawer();

@@ -79,9 +79,6 @@ public class Model {
         try{
             synchronized (in) {
                 Object o = in.readObject();
-                while (ConnectionMessage.STOP_READING.equals(o)) {
-                    o = in.readObject();
-                }
                 return o;
             }
         } catch (IOException | ClassNotFoundException e) {

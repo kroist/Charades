@@ -327,7 +327,7 @@ public class View extends Application {
     }
 
     public void clearCanvas() {
-        Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(1, 2, canvas.getWidth() - 2, canvas.getHeight() - 3));
+        Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight()));
         canvas.getGraphicsContext2D().beginPath();
     }
     public void setGameID(String s){
