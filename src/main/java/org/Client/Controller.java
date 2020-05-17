@@ -51,7 +51,7 @@ public class Controller {
     AskingThread askingThread;
 
 
-    public void createNewLobby(boolean isPrivate, int maxPlayers){
+    public void createNewLobby(boolean isPrivate, int maxPlayers, String lobbyName, String difficulty){
         askingThread.interrupt();
         try {
             askingThread.join();
@@ -61,7 +61,7 @@ public class Controller {
         // TODO: 14.05.2020
         //System.out.println(Thread.currentThread());
         /// maxPlayers * 2 + private
-        int lobbyMessage = maxPlayers*2 + (isPrivate ? 1 : 0);
+        String lobbyMessage = ((Integer)maxPlayers).toString() + ":" + ((Integer)(isPrivate ? 1 : 0)).toString() + ":" + lobbyName + ":" + difficulty;
         if (!model.sendObject(lobbyMessage)) {
             returnToMenu("Cannot create new lobby");
             return;

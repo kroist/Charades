@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -23,6 +24,8 @@ public class FxmlController {
     @FXML private CheckBox privateLobbyCheckbox;
     @FXML private TextField maxPlayersInLobby;
     @FXML private Label numOfPlayersAlarm;
+    @FXML private TextField nameOfLobby;
+    @FXML private ChoiceBox<String> selectDifficulty;
 
     Controller controller;
     View view;
@@ -41,15 +44,24 @@ public class FxmlController {
     }
 
     public static class HBoxButton extends HBox {
-        Label label = new Label();
+        Label name = new Label();
+        Label players = new Label();
+        Label difficulty = new Label();
         Button button = new Button();
         HBoxButton(String text, Controller controller){
             ///TODO don't forget to ban sign ':' from the nickname!
             super();
             String[] split = text.split(":");
-            label.setText(text);
-            label.setMaxWidth(Double.MAX_VALUE);
-            HBox.setHgrow(label, Priority.ALWAYS);
+            name.setText(split[2]);
+            name.setAlignment(Pos.CENTER);
+            name.setMaxWidth(130);
+            name.setPrefWidth(130);
+            players.setPadding(new Insets(0, 0, 0, 35));
+            players.setText(split[0]);
+            difficulty.setPadding(new Insets(0, 0, 0, 50));
+            difficulty.setText(split[1]);
+            difficulty.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(difficulty, Priority.ALWAYS);
             this.setAlignment(Pos.CENTER);
             button.setText("Connect");
             //button.getStylesheets().add("/main/resources/boostrap3.css");
@@ -61,7 +73,7 @@ public class FxmlController {
                     controller.connectToTheExistingLobby(split[3]);
                 }
             });
-            this.getChildren().addAll(label, button);
+            this.getChildren().addAll(name, players, difficulty, button);
         }
     }
 
@@ -84,13 +96,20 @@ public class FxmlController {
         privateLobbyCheckbox.setSelected(false);
         maxPlayersInLobby.setText("10");
         numOfPlayersAlarm.setText("");
+        nameOfLobby.setText("");
+        selectDifficulty.getItems().setAll("easy", "medium", "hard", "objects", "verbs");
+        selectDifficulty.setValue("easy");
     }
 
     @FXML
     public void createLobbyPanelConfirm(){
         int maxPlayers = Integer.parseInt(maxPlayersInLobby.getText());
+        String lobbyName = nameOfLobby.getText();
+        if (lobbyName.equals(""))
+            lobbyName = "Lobby";
         if (2 <= maxPlayers && maxPlayers <= 99){
-            controller.createNewLobby(privateLobbyCheckbox.isSelected(), maxPlayers);
+            System.out.println(selectDifficulty.getValue());
+            controller.createNewLobby(privateLobbyCheckbox.isSelected(), maxPlayers, lobbyName, selectDifficulty.getValue());
         }
         else {
             numOfPlayersAlarm.setText("Enter correct number of players!");

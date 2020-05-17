@@ -20,7 +20,6 @@ public class WordGenerator {
         difficulties.add("easy");
         difficulties.add("medium");
         difficulties.add("hard");
-        difficulties.add("persons");
         difficulties.add("verbs");
         difficulties.add("objects");
     }
@@ -33,7 +32,7 @@ public class WordGenerator {
     private static ArrayList<String> loadWords(String difficulty){
         ArrayList<String> words = new ArrayList<>();
         try {
-            Path path = Paths.get(WordGenerator.class.getResource("/word-lists/easy.txt").toURI());
+            Path path = Paths.get(WordGenerator.class.getResource("/word-lists/" + difficulty + ".txt").toURI());
             try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(path)))) {
                 String word;
                 while ((word = br.readLine()) != null) {

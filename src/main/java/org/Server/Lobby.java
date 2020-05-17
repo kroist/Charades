@@ -20,8 +20,10 @@ public class Lobby {
     private final Random random = new Random();
     private final boolean isPrivate;
     private final int maxPlayers;
+    private final String lobbyName;
+    private final String difficulty;
 
-    public Lobby(String id, Player player, boolean isPrivate, int maxPlayers) throws IOException {
+    public Lobby(String id, Player player, boolean isPrivate, int maxPlayers, String lobbyName, String difficulty) throws IOException {
         ID = id;
         addPlayer(player);
         drawer = player;
@@ -29,6 +31,8 @@ public class Lobby {
         gameStarted = false;
         this.isPrivate = isPrivate;
         this.maxPlayers = maxPlayers;
+        this.lobbyName = lobbyName;
+        this.difficulty = difficulty;
     }
     public ArrayList<Pair<String, Integer>> createLeaderBoard(CopyOnWriteArrayList<Player> arr){
         ArrayList<Pair<String, Integer>> new_arr = new ArrayList<>();
@@ -45,7 +49,7 @@ public class Lobby {
         }
         gamePlayers.addAll(lobbyPlayers);
         lobbyPlayers.clear();
-        game = new Game(this, WordGenerator.getRandomWord("easy"));// TODO: 13.05.2020
+        game = new Game(this, WordGenerator.getRandomWord(difficulty));
         gameStarted = true;
         game.startGame();
     }
@@ -201,7 +205,7 @@ public class Lobby {
     public String getMetadata(){
         int numberOfPlayers = gamePlayers.size() + lobbyPlayers.size();
         String drawerName = drawer.getUsername();
-        return ((Integer)numberOfPlayers).toString() + "/" + ((Integer)maxPlayers).toString() + ":" + (gameStarted ? "S" : "N") + ":" + drawerName + ":" + ID;
+        return ((Integer)numberOfPlayers).toString() + "/" + ((Integer)maxPlayers).toString() + ":" + difficulty+ ":" + lobbyName + ":" + ID;
     }
 
     public boolean isPrivate(){

@@ -54,12 +54,12 @@ public class Server {
                         continue;
                     }
                     if (!player.inLobby()){
-                        if (obj instanceof Integer){
+                        if (obj instanceof String){
                             System.out.println("i am here");
-                            int msg = (Integer)obj;
-                            int maxPlayers = msg/2;
-                            boolean isPrivate = (msg%2 == 1);
-                            Server.createNewLobby(player, isPrivate, maxPlayers);
+                            String[] msg = ((String)obj).split(":");
+                            int maxPlayers = Integer.parseInt(msg[0]);
+                            boolean isPrivate = (Integer.parseInt(msg[1])%2 == 1);
+                            Server.createNewLobby(player, isPrivate, maxPlayers, msg[2], msg[3]);
                             continue;
                         }
                         if (!(obj instanceof ConnectionMessage)){
@@ -147,13 +147,13 @@ public class Server {
 
     }
 
-    private static void createNewLobby(Player player, boolean isPrivate, int maxPlayers) throws IOException{
+    private static void createNewLobby(Player player, boolean isPrivate, int maxPlayers, String lobbyName, String difficulty) throws IOException{
         String ID = String.format("%04d", random.nextInt(10000));
         while(lobbyIDs.containsKey(ID)){
             ID = String.format("%04d", random.nextInt(10000));
         }
         //player.getConn().sendObject(ID);
-        lobbyIDs.put(ID, new Lobby(ID, player, isPrivate, maxPlayers));
+        lobbyIDs.put(ID, new Lobby(ID, player, isPrivate, maxPlayers, lobbyName, difficulty));
         //lobby.addPlayer(player);
     }
 
