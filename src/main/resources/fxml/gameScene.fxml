@@ -21,7 +21,7 @@
       <Line endX="800.0" endY="800.0" startX="800.0" startY="200.0" />
       <Line endY="800.0" startX="800.0" startY="800.0" />
       <TextArea fx:id="gameChat" wrapText="true" />
-      <TextField fx:id="enterMessage" onKeyPressed="#enterMessageHandler" prefWidth="400.0" />
+      <TextField fx:id="enterMessage" onKeyPressed="#enterMessageHandler" maxWidth="800.0" />
       <ListView fx:id="leaderBoard" layoutX="600.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #2ECC71;" text="Return to menu" />
       <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #2ECC71;" text="Start game" />

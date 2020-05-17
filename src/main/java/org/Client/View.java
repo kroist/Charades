@@ -161,6 +161,7 @@ public class View extends Application {
         gameChat.setEditable(false);
         enterMessage = gameSceneController.enterMessage;
         enterMessage.setEditable(true);
+        enterMessage.setPrefWidth(600);
         enterMessage.setOnKeyTyped(event -> {
             String string = enterMessage.getText();
 
@@ -295,8 +296,6 @@ public class View extends Application {
             gameChat.setLayoutY(0);
             gameChat.clear();
 
-            enterMessage.maxWidth(400);
-            enterMessage.minWidth(400);
             enterMessage.prefWidth(400);
             enterMessage.setLayoutX(200);
             enterMessage.setLayoutY(170);
@@ -325,8 +324,6 @@ public class View extends Application {
             gameChat.setLayoutY(200);
             gameChat.clear();
 
-            enterMessage.maxWidth(600);
-            enterMessage.minWidth(600);
             enterMessage.prefWidth(600);
             enterMessage.setLayoutX(0);
             enterMessage.setLayoutY(770);
