@@ -16,7 +16,7 @@ public class Comparators {
     public static Comparator<String> pairComparator = (t1, t2) -> {
         String[] s1 = t1.split(":");
         String[] s2 = t2.split(":");
-        int val = Integer.compare(Integer.parseInt(s1[1]), Integer.parseInt(s2[1]));
+        int val = Integer.compare(Integer.parseInt(s2[1]), Integer.parseInt(s1[1]));
         if (val == 0){
             return s1[0].compareTo(s2[0]);
         }

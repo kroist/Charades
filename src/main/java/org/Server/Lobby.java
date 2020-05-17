@@ -36,7 +36,7 @@ public class Lobby {
         //ArrayList<Pair<String, Integer>> new_arr = new ArrayList<>();
         ArrayList<String> new_arr = new ArrayList<>();
         for(Player p : arr){
-            new_arr.add(p.getUsername() + ":" + ":" + Integer.toString(p.getScore()));
+            new_arr.add(p.getUsername() + ":" + Integer.toString(p.getScore()));
             //new_arr.add(new Pair<>(p.getUsername(), p.getScore()));
         }
         new_arr.sort(Comparators.pairComparator);
