@@ -77,10 +77,16 @@ public class Model {
     public Object getObject() {
         if (clientSocket == null || in == null)return null;
         try{
+            Object o;
             synchronized (in) {
-                Object o = in.readObject();
+                o = in.readObject();
                 return o;
             }
+            /*while (ConnectionMessage.STOP_READING.equals(o)){
+                synchronized (in) {
+                    o = in.readObject();
+                }
+            }*/
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
             controller.returnToLogin("cannot receive object");
@@ -108,13 +114,17 @@ public class Model {
         if (isDrawer)controller.setDrawer();
     }
 
+    public boolean inLobby() {
+        return inLobby;
+    }
+
 
     public class ObjectReader extends Thread {
         @Override
         public void run() {
             System.out.println(inLobby);
             System.out.println("STARTED READING");
-            while (inLobby) {
+            while (true) {
                 try {
                     System.out.println("start receiving");
                     //Object obj = getObjectForReader();

@@ -60,6 +60,7 @@ public class Controller {
 
     public void createNewLobby(boolean isPrivate, int maxPlayers, String lobbyName, String difficulty){
         askingThread.interrupt();
+        System.out.println(askingThread.isInterrupted());
         try {
             askingThread.join();
         } catch (Exception e){
@@ -70,12 +71,13 @@ public class Controller {
         /// maxPlayers * 2 + private
         String lobbyMessage = ((Integer)maxPlayers).toString() + ":" + ((Integer)(isPrivate ? 1 : 0)).toString() + ":" + lobbyName + ":" + difficulty;
         if (!model.sendObject(lobbyMessage)) {
-            returnToMenu("Cannot create new lobby");
+            updateMenu("Cannot create new lobby");
             return;
         }
         Object o = model.getObject();
+        System.out.println(o);
         if (!ConnectionMessage.CONNECTED_TO_LOBBY.equals(o)){
-            returnToMenu("cannot connect to lobby");
+            updateMenu("Cannot connect to lobby");
             return;
         }
         o = model.getObject();
@@ -101,25 +103,25 @@ public class Controller {
         }
 
         if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
-            returnToMenu("Cannot connect to game");
+            updateMenu("Cannot connect to game");
             return;
         }
         if (!model.sendObject(ID)){
-            returnToMenu("Cannot send ID");
+            updateMenu("Cannot send ID");
             return;
         }
         Object o = model.getObject();
         System.out.println(o);
         if (ConnectionMessage.BAD_ID.equals(o)){
-            returnToMenu("bad id");
+            updateMenu("bad id");
             return;
         }
         if (ConnectionMessage.LOBBY_FULL.equals(o)){
-            returnToMenu("lobby is full");
+            updateMenu("lobby is full");
             return;
         }
         if (!ConnectionMessage.CONNECTED_TO_LOBBY.equals(o)){
-            returnToMenu("cannot connect to lobby");
+            updateMenu("cannot connect to lobby");
             return;
         }
         o = model.getObject();
@@ -135,21 +137,6 @@ public class Controller {
         model.setInLobby(true);
         view.setLobbyScene();
         model.startReadingObjects();
-    }
-    public void resetPlayer(){
-        model.setIsDrawer(false);
-        model.setGameStarted(false);
-        view.setVisibleStartGameButton(false);
-        view.setDefaultLineWidth();
-        view.setDefaultPickerColor();
-        view.getCanvas().setDisable(true);
-        view.setColorPickerVisible(false);
-        view.setEraserVisible(false);
-        view.setBrushVisible(false);
-        view.clearCanvas();
-        view.setVisibleGameTimer(false);
-        view.setEnterMessageVisible(true);
-        view.setGameWordVisible(false);
     }
 
     public void getReadyToWritePoints() {
@@ -173,30 +160,41 @@ public class Controller {
                 event -> {
                 });
     }
-
-    private void reset(String message){
-        System.out.println(message);
-        model.stopReading();
-        finishWritePoints();
-        model.setInLobby(false);
+    public void resetPlayer(){
+        model.setIsDrawer(false);
+        model.setGameStarted(false);
+        view.setVisibleStartGameButton(false);
+        view.setDefaultLineWidth();
+        view.setDefaultPickerColor();
+        view.getCanvas().setDisable(true);
         view.setColorPickerVisible(false);
         view.setEraserVisible(false);
         view.setBrushVisible(false);
-        view.setDefaultLineWidth();
-        view.setDefaultPickerColor();
-        view.setMessageText(message);
         view.clearCanvas();
+        view.setVisibleGameTimer(false);
+        view.setEnterMessageVisible(true);
+        view.setGameWordVisible(false);
+    }
+
+    private void resetFromLobby(String message){
+        System.out.println(message);
+        model.stopReading();
+        model.setInLobby(false);
+        finishWritePoints();
+
+        resetPlayer();
+
         view.clearChat();
         view.clearLeaderBoard();
         view.clearWhaitingList();
-        model.setIsDrawer(false);
+
+        view.setMessageText(message);
     }
 
     public void returnToLogin(String message) {
-        finishWritePoints();
         model.disconnect();
         view.setLoginScene();
-        reset(message + " returnToLogin");
+        resetFromLobby(message + " returnToLogin");
         if (message != null){
             if(message.equals("Busy nickname")) {
                 View.loginSceneFXMLController.nicknameTakenBox.setText("This username is already taken");
@@ -215,12 +213,21 @@ public class Controller {
     }
 
     public void returnToMenu(String message) {
-        model.sendObject(ConnectionMessage.RETURN_TO_MENU);
-        finishWritePoints();
+        // TODO: 17.05.2020 comments
+        if (model.inLobby())model.sendObject(ConnectionMessage.RETURN_TO_MENU);
+        model.setInLobby(false);
+
         view.setMenuScene();
-        reset(message + " returnToMenu");
+        resetFromLobby(message + " returnToMenu");
         askingThread = new AskingThread();
         askingThread.start();
+    }
+    public void updateMenu(String message){
+        askingThread = new AskingThread();
+        askingThread.start();
+
+        System.out.println("Updated menu with: " + message);
+        view.setMessageText(message);
     }
 
     private void finishWritePoints() {

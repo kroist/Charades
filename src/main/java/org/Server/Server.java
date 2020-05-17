@@ -79,6 +79,10 @@ public class Server {
                                 sendObject(ConnectionMessage.BAD_ID);
                                 continue;
                             }
+                            if (lobbyIDs.get(ID).isFull()){
+                                sendObject(ConnectionMessage.LOBBY_FULL);
+                                continue;
+                            }
                             lobbyIDs.get(ID).addPlayer(player);
                         }
                         if (msg.equals(ConnectionMessage.LOBBY_LIST)){

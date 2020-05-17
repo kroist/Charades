@@ -2,7 +2,10 @@ package main.java.org.Server;
 
 
 import javafx.util.Pair;
-import main.java.org.Tools.*;
+import main.java.org.Tools.ChatMessage;
+import main.java.org.Tools.Comparators;
+import main.java.org.Tools.ConnectionMessage;
+import main.java.org.Tools.WordGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -220,4 +223,8 @@ public class Lobby {
         Server.lobbyIDs.remove(getID());
     }
 
+    public boolean isFull() {
+        //System.out.println(gamePlayers.size() + lobbyPlayers.size() + " " + maxPlayers);
+        return gamePlayers.size() + lobbyPlayers.size() >= maxPlayers;
+    }
 }
