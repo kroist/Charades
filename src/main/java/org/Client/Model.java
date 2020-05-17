@@ -13,7 +13,7 @@ import java.util.HashSet;
 
 public class Model {
     private static Socket clientSocket;
-    private static String hostName = "localhost";
+    private static String hostName = "192.168.137.1";
     private static int portNumber = 4000;
     private static boolean inLobby;
     private static boolean gameStarted;
@@ -142,8 +142,9 @@ public class Model {
                             controller.startGame();
                         }
                         if (obj.equals(ConnectionMessage.GAME_ENDED)) {
-                            controller.returnToLobby("Game is ended");
+                            controller.returnToLobby();
                         }
+                        if (obj.equals(ConnectionMessage.CLEAR_CANVAS))controller.clearCanvas();
                     } else if (obj instanceof GameResult){
                         controller.newGameResult(obj);
                     } else if (obj instanceof GameWord){

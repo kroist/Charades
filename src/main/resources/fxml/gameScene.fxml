@@ -32,7 +32,7 @@
       </Text>
       <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false;" />
       <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
-      <Button fx:id="eraser" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
+      <Button fx:id="eraser" layoutX="50.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
       <ListView fx:id="whaitingList" layoutX="600.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" />
       <Text fx:id="gameTimer" layoutX="75.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
          <font>
@@ -64,5 +64,6 @@
             </Label>
          </children>
       </Pane>
+      <Button fx:id="clearAllButton" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#clearAllHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
    </children>
 </AnchorPane>

@@ -49,6 +49,7 @@ public class View extends Application {
     private static ColorPicker colorPicker;
     private static Button eraser;
     private static Button brush;
+    private static Button clearAllButton;
     private static TextArea gameChat;
     private static TextField enterMessage;
     private static Text gameTimer;
@@ -175,11 +176,9 @@ public class View extends Application {
         gameWord = gameSceneController.gameWord;
         gameWord.setVisible(false);
 
-
         leaderBoard = gameSceneController.leaderBoard;
         whaitingList = gameSceneController.whaitingList;
 
-        eraser = gameSceneController.eraser;
         gameTimer.setVisible(false);
 
         gameEndMessage = gameSceneController.gameEndMessage;
@@ -191,6 +190,8 @@ public class View extends Application {
         gameID = gameSceneController.gameID;
 
         startGameButton = gameSceneController.startGameButton;
+
+        eraser = gameSceneController.eraser;
         ImageView eraserIcon = new ImageView(new Image("main/resources/1200px-Eraser_icon.svg.png"));
         eraserIcon.setFitHeight(50);
         eraserIcon.setFitWidth(50);
@@ -203,6 +204,12 @@ public class View extends Application {
         brushIcon.setFitHeight(50);
         brushIcon.setFitWidth(50);
         brush.setGraphic(brushIcon);
+
+        clearAllButton = gameSceneController.clearAllButton;
+        ImageView clearAllIcon = new ImageView(new Image("/main/resources/clearall-icon.png"));
+        clearAllIcon.setFitHeight(50);
+        clearAllIcon.setFitWidth(50);
+        clearAllButton.setGraphic(clearAllIcon);
 
         stage.setTitle("Charades");
     }
@@ -351,7 +358,8 @@ public class View extends Application {
     }
 
     public void setMessageText(String message) {
-        messageText.setText(message);
+        //messageText.setText(message);
+        fxmlController.updateLobbyMessage(message);
     }
 
     public void clearCanvas() {
@@ -371,6 +379,9 @@ public class View extends Application {
     }
     public void setEraserVisible(boolean b){
         Platform.runLater(() -> eraser.setVisible(b));
+    }
+    public void setClearAllButtonVisible(boolean b){
+        Platform.runLater(() -> clearAllButton.setVisible(b));
     }
     public void setDefaultPickerColor(){
         color = new MyColor(Color.BLACK);
@@ -480,5 +491,9 @@ public class View extends Application {
             hiddenWord.setText("Hidden word: " + result.getHiddenWord());
             gameEndPanel.setVisible(true);
         });
+    }
+
+    public void clearGameIdField() {
+        fxmlController.clearGameIdField();
     }
 }

@@ -13,11 +13,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
 public class FxmlController {
 
+    @FXML public Text lobbyMessage;
     @FXML private TextField gameIdField;
     @FXML private ListView<HBoxButton> listOfLobbies;
     @FXML private Pane createLobbyPanel;
@@ -118,6 +120,13 @@ public class FxmlController {
     @FXML
     public void closeCreateLobbyPanel(){
         resetCreateLobbyPanel();
+    }
+
+    public void clearGameIdField(){
+        gameIdField.clear();
+    }
+    public void updateLobbyMessage(String s){
+        lobbyMessage.setText(s);
     }
 
 }

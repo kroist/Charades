@@ -36,9 +36,11 @@ public class GameSceneFXMLController {
 
 
     public Controller controller;
+    @FXML public Button clearAllButton;
+
     @FXML
     public void returnToMenuHandler(MouseEvent mouseEvent) {
-        controller.returnToMenu("You asked me to return you to menu");
+        controller.returnToMenu("");
     }
 
     @FXML
@@ -77,5 +79,9 @@ public class GameSceneFXMLController {
 
     public void closeRoundEndPanel(ActionEvent actionEvent) {
         gameEndPanel.setVisible(false);
+    }
+
+    public void clearAllHandler(MouseEvent mouseEvent) {
+        controller.clearAllButton();
     }
 }

@@ -1,7 +1,6 @@
 package main.java.org.Server;
 
 import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.WordGenerator;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -161,7 +160,7 @@ public class Server {
         //lobby.addPlayer(player);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         random = new Random();
         /*
         if (args.length != 1) {

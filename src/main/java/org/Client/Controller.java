@@ -13,8 +13,8 @@ import java.util.HashSet;
 
 
 public class Controller {
-    private View view;
-    private Model model;
+    private final View view;
+    private final Model model;
     public Controller(View view, Model model) {
         this.view = view;
         this.model = model;
@@ -39,7 +39,12 @@ public class Controller {
         askingThread.start();
     }
 
-    public class AskingThread extends Thread {
+    public void clearCanvas() {
+        view.clearCanvas();
+    }
+
+
+    public static class AskingThread extends Thread {
         @Override
         public void run(){
             boolean running = true;
@@ -103,7 +108,7 @@ public class Controller {
         }
 
         if (!model.sendObject(ConnectionMessage.CONNECT_TO_LOBBY)){
-            updateMenu("Cannot connect to game");
+            updateMenu("Cannot connect to server");
             return;
         }
         if (!model.sendObject(ID)){
@@ -112,16 +117,17 @@ public class Controller {
         }
         Object o = model.getObject();
         System.out.println(o);
+        System.out.println(o);
         if (ConnectionMessage.BAD_ID.equals(o)){
-            updateMenu("bad id");
+            updateMenu("You entered bad id");
             return;
         }
         if (ConnectionMessage.LOBBY_FULL.equals(o)){
-            updateMenu("lobby is full");
+            updateMenu("Lobby is full");
             return;
         }
         if (!ConnectionMessage.CONNECTED_TO_LOBBY.equals(o)){
-            updateMenu("cannot connect to lobby");
+            updateMenu("Cannot connect to lobby");
             return;
         }
         o = model.getObject();
@@ -169,6 +175,7 @@ public class Controller {
         view.getCanvas().setDisable(true);
         view.setColorPickerVisible(false);
         view.setEraserVisible(false);
+        view.setClearAllButtonVisible(false);
         view.setBrushVisible(false);
         view.clearCanvas();
         view.setVisibleGameTimer(false);
@@ -188,7 +195,7 @@ public class Controller {
         view.clearLeaderBoard();
         view.clearWhaitingList();
 
-        view.setMessageText(message);
+        //view.setMessageText(message);
     }
 
     public void returnToLogin(String message) {
@@ -196,15 +203,18 @@ public class Controller {
         view.setLoginScene();
         resetFromLobby(message + " returnToLogin");
         if (message != null){
-            if(message.equals("Busy nickname")) {
-                View.loginSceneFXMLController.nicknameTakenBox.setText("This username is already taken");
-            } else if (message.equals("Bad nickname")) {
-                View.loginSceneFXMLController.nicknameTakenBox.setText(
-                        "Username must have length from 1 to 16, consist of Latin letters, digits, spaces, characters '_' and '-'"
-                );
-            }
-            else if (message.equals("Server offline")){
-                View.loginSceneFXMLController.nicknameTakenBox.setText("Server is offline");
+            switch (message) {
+                case "Busy nickname":
+                    View.loginSceneFXMLController.nicknameTakenBox.setText("This username is already taken");
+                    break;
+                case "Bad nickname":
+                    View.loginSceneFXMLController.nicknameTakenBox.setText(
+                            "Username must have length from 1 to 16, consist of Latin letters, digits, spaces, characters '_' and '-'"
+                    );
+                    break;
+                case "Server offline":
+                    View.loginSceneFXMLController.nicknameTakenBox.setText("Server is offline");
+                    break;
             }
         }
         else {
@@ -221,6 +231,8 @@ public class Controller {
         resetFromLobby(message + " returnToMenu");
         askingThread = new AskingThread();
         askingThread.start();
+        view.clearGameIdField();
+        view.setMessageText("");
     }
     public void updateMenu(String message){
         askingThread = new AskingThread();
@@ -228,6 +240,8 @@ public class Controller {
 
         System.out.println("Updated menu with: " + message);
         view.setMessageText(message);
+
+        view.clearGameIdField();
     }
 
     private void finishWritePoints() {
@@ -252,6 +266,7 @@ public class Controller {
             view.setVisibleStartGameButton(false);
             view.setColorPickerVisible(true);
             view.setEraserVisible(true);
+            view.setClearAllButtonVisible(true);
             view.setBrushVisible(true);
             view.setEnterMessageVisible(false);
         }
@@ -277,6 +292,9 @@ public class Controller {
     }
     public void newTime(Object obj) {
         view.setNewTime(obj);
+    }
+    public void clearAllButton() {
+        model.sendObject(ConnectionMessage.CLEAR_CANVAS);
     }
 
     public void newLeaderBoard(Object obj) {
@@ -312,7 +330,7 @@ public class Controller {
         view.setBrushVisible(true);*/
         view.setVisibleStartGameButton(true);
     }
-    public void returnToLobby(String game_is_ended) {
+    public void returnToLobby() {
         resetPlayer();
         view.setLobbyScene();
         view.setVisibleGameTimer(false);
@@ -324,7 +342,7 @@ public class Controller {
         Object o = model.getObject();
         if (o instanceof Integer) {
             int lobbiesNumber = (Integer) o;
-            ArrayList<String> arr = new ArrayList<String>();
+            ArrayList<String> arr = new ArrayList<>();
             for (int i = 0; i < lobbiesNumber; i++) {
                 Object ostr = model.getObject();
                 if (ostr instanceof String) {
