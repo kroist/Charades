@@ -37,7 +37,7 @@ public class Model {
             in = new ObjectInputStream(clientSocket.getInputStream());
             sendObject(nickname);
             Object o = getObject();
-            System.out.println("WTF " + o);
+            System.out.println("Object is " + o);
             if (o instanceof ConnectionMessage && o.equals(ConnectionMessage.CONNECTED)){
                 System.out.println("Established connection");
                 return true;

@@ -178,7 +178,7 @@ public class Server {
                 ServerSocket serverSocket = new ServerSocket(portNumber)
         ) {
             while (true) {
-                System.out.println("SOSI");
+                //System.out.println("SOSI");
                 Socket socket = serverSocket.accept();
                 System.out.println("accepted");
                 new ConnectionThread(socket).start();
