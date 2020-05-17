@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 import javafx.application.Platform;
+import javafx.util.Pair;
 import main.java.org.Tools.*;
 
 import java.io.IOException;
@@ -144,7 +145,13 @@ public class Model {
                     } else if (obj instanceof ChatMessage) {
                         controller.newChatMessage(obj);
                     } else if (obj instanceof ArrayList) {
-                        controller.newLeaderBoard(obj);
+                        ArrayList<Pair<String, Integer>> arr = new ArrayList<>();
+                        ArrayList<String> arr2 = (ArrayList<String>) obj;
+                        for (String string : arr2){
+                            String[] strings = string.split(":");
+                            arr.add(new Pair<String, Integer>(strings[0], Integer.parseInt(strings[1])));
+                        }
+                        controller.newLeaderBoard(arr);
                     } else if (obj instanceof Integer) {
                         controller.newLineWidth(obj);
                     } else if (obj instanceof HashSet) {
