@@ -144,6 +144,8 @@ public class Model {
                         if (obj.equals(ConnectionMessage.GAME_ENDED)) {
                             controller.returnToLobby("Game is ended");
                         }
+                    } else if (obj instanceof GameResult){
+                        controller.newGameResult(obj);
                     } else if (obj instanceof GameWord){
                         controller.newWord(obj);
                     } else if (obj instanceof GameTime){

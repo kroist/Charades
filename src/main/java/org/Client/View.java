@@ -60,6 +60,10 @@ public class View extends Application {
     private static Text gameWord;
     private static Button startGameButton;
 
+    private static Label gameEndMessage;
+    private static  Label hiddenWord;
+    private static Pane gameEndPanel;
+
     private static boolean isBrush = true;
 
     static FXMLLoader mainMenuLoader;
@@ -170,6 +174,11 @@ public class View extends Application {
         eraser = gameSceneController.eraser;
         gameTimer.setVisible(false);
 
+        gameEndMessage = gameSceneController.gameEndMessage;
+        hiddenWord = gameSceneController.hiddenWord;
+        gameEndPanel = gameSceneController.gameEndPanel;
+        gameEndPanel.setVisible(false);
+
         gameID = gameSceneController.gameID;
 
         startGameButton = gameSceneController.startGameButton;
@@ -276,6 +285,8 @@ public class View extends Application {
             enterMessage.setLayoutX(200);
             enterMessage.setLayoutY(170);
             enterMessage.clear();
+
+            gameEndPanel.setVisible(false);
 
             //gameTimer.setVisible(true);
 
@@ -445,6 +456,20 @@ public class View extends Application {
         Platform.runLater(() -> {
             gameWord.setText(msg);
             gameWord.setVisible(true);
+        });
+    }
+
+    public void newGameResult(GameResult result) {
+        String msg;
+        if (result.getWinnerNickname() == null){
+            msg = "The round is over";
+        }else {
+            msg = "The winner is: " + result.getWinnerNickname();
+        }
+        Platform.runLater(() -> {
+            gameEndMessage.setText(msg);
+            hiddenWord.setText("Hidden word: " + result.getHiddenWord());
+            gameEndPanel.setVisible(true);
         });
     }
 }

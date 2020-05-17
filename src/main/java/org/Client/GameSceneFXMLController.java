@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import main.java.org.Tools.ChatMessage;
@@ -27,10 +28,14 @@ public class GameSceneFXMLController {
     @FXML public Button eraser;
     @FXML public ListView<String> whaitingList;
     @FXML public Text gameTimer;
-
-    public Controller controller;
     @FXML public Text gameWord;
 
+    @FXML public Label gameEndMessage;
+    @FXML public Label hiddenWord;
+    @FXML public Pane gameEndPanel;
+
+
+    public Controller controller;
     @FXML
     public void returnToMenuHandler(MouseEvent mouseEvent) {
         controller.returnToMenu("You asked me to return you to menu");
@@ -70,4 +75,7 @@ public class GameSceneFXMLController {
         //controller.setLineWidth(10);
     }
 
+    public void closeRoundEndPanel(ActionEvent actionEvent) {
+        gameEndPanel.setVisible(false);
+    }
 }

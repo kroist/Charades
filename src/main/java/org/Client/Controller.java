@@ -346,4 +346,7 @@ public class Controller {
     public void newWord(Object obj) {
         view.setNewWord(obj);
     }
+    public void newGameResult(Object obj){
+        view.newGameResult((GameResult)obj);
+    }
 }

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@bootstrap3.css, @chat.css, @entermessage.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.Client.GameSceneFXMLController">
    <children>
@@ -38,5 +44,25 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Text>
+      <Pane fx:id="gameEndPanel" layoutX="225.0" layoutY="25.0" prefHeight="150.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;">
+         <children>
+            <Label fx:id="gameEndMessage" layoutX="71.0" layoutY="39.0" text="The round is over">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Button layoutX="315.0" layoutY="5.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#closeRoundEndPanel" prefHeight="30.0" prefWidth="30.0" style="-fx-text-fill: transparent;" text="Button" />
+            <ImageView disable="true" fitHeight="30.0" fitWidth="30.0" layoutX="315.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../close-icon.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="hiddenWord" layoutX="74.0" layoutY="75.0" text="Hidden word:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

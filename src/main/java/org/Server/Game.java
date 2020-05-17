@@ -63,6 +63,11 @@ public class Game implements Runnable{
             player.setInGame(false);
         }
         lobby.sendAll(ConnectionMessage.GAME_ENDED);// TODO: 15.05.2020
+        if (winner == null){
+            lobby.sendAll(new GameResult(null, word));
+        }else {
+            lobby.sendAll(new GameResult(winner.getUsername(), word));
+        }
         lobby.endGame(winner);
     }
 
