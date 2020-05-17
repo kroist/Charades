@@ -160,6 +160,14 @@ public class View extends Application {
         gameChat.setEditable(false);
         enterMessage = gameSceneController.enterMessage;
         enterMessage.setEditable(true);
+        enterMessage.setOnKeyTyped(event -> {
+            String string = enterMessage.getText();
+
+            if (string.length() > 70) {
+                enterMessage.setText(string.substring(0, 70));
+                enterMessage.positionCaret(string.length());
+            }
+        });
 
         gameTimer = gameSceneController.gameTimer;
         gameTimer.setVisible(false);
@@ -175,6 +183,7 @@ public class View extends Application {
         gameTimer.setVisible(false);
 
         gameEndMessage = gameSceneController.gameEndMessage;
+        gameEndMessage.setWrapText(true);
         hiddenWord = gameSceneController.hiddenWord;
         gameEndPanel = gameSceneController.gameEndPanel;
         gameEndPanel.setVisible(false);

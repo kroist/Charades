@@ -290,7 +290,7 @@ public class Controller {
             setLineWidth(3);
         }else {
             setColor(new MyColor(Color.web("#f4f4f4")));
-            setLineWidth(10);
+            setLineWidth(25);
         }
     }
 

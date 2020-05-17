@@ -170,7 +170,7 @@ public class Server {
         }
         int portNumber = Integer.parseInt(args[0]);
          */
-        WordGenerator.getRandomWord("easy");
+        //WordGenerator.getRandomWord("easy");
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         int portNumber = 4000;
         /*try {
