@@ -29,7 +29,7 @@ public class Model {
     public void setIsSpectator(boolean b){
         isDrawer = b;
     }
-    public boolean connect(String nickname) {
+    public int connect(String nickname) {
         try{
             clientSocket = new Socket(hostName, portNumber);
             System.out.println(clientSocket.isConnected());
@@ -40,16 +40,16 @@ public class Model {
             System.out.println("Object is " + o);
             if (o instanceof ConnectionMessage && o.equals(ConnectionMessage.CONNECTED)){
                 System.out.println("Established connection");
-                return true;
+                return 1;
             }else {
                 disconnect();
-                return false;
+                return -1;
             }
         } catch (IOException e) {
             //e.printStackTrace();
             System.out.println("cannot connect");
+            return -2;
         }
-        return false;
     }
     public void disconnect() {
         try{

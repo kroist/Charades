@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import main.java.org.Tools.ChatMessage;
-import main.java.org.Tools.ConnectionMessage;
-import main.java.org.Tools.MyColor;
-import main.java.org.Tools.Point;
+import main.java.org.Tools.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,8 +20,18 @@ public class Controller {
         this.model = model;
     }
     public void login(String username){
-        if (!model.connect(username)){
-            returnToLogin("Busy nickname");
+        if(!CheckUsername.check(username)){
+            returnToLogin("Bad nickname");
+            return;
+        }
+        int msg = model.connect(username);
+        if(msg != 1){
+            if(msg == -1) {
+                returnToLogin("Busy nickname");
+            }
+            else{
+                returnToLogin("Server offline");
+            }
             return;
         }
         view.setMenuScene();
@@ -190,8 +197,17 @@ public class Controller {
         model.disconnect();
         view.setLoginScene();
         reset(message + " returnToLogin");
-        if (message != null && message.equals("Busy nickname")){
-            View.loginSceneFXMLController.nicknameTakenBox.setText("username is already taken");
+        if (message != null){
+            if(message.equals("Busy nickname")) {
+                View.loginSceneFXMLController.nicknameTakenBox.setText("This username is already taken");
+            } else if (message.equals("Bad nickname")) {
+                View.loginSceneFXMLController.nicknameTakenBox.setText(
+                        "Username must have length from 1 to 16, consist of Latin letters, digits, spaces, characters '_' and '-'"
+                );
+            }
+            else if (message.equals("Server offline")){
+                View.loginSceneFXMLController.nicknameTakenBox.setText("Server is offline");
+            }
         }
         else {
             View.loginSceneFXMLController.nicknameTakenBox.setText("");

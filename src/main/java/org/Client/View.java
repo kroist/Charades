@@ -102,6 +102,14 @@ public class View extends Application {
         loginSceneFXMLController = loginSceneLoader.getController();
         loginScene = new Scene(loginPane);
         loginSceneFXMLController.controller = controller;
+        loginSceneFXMLController.nicknameField.setOnKeyTyped(event -> {
+            String string = loginSceneFXMLController.nicknameField.getText();
+
+            if (string.length() > 16) {
+                loginSceneFXMLController.nicknameField.setText(string.substring(0, 16));
+                loginSceneFXMLController.nicknameField.positionCaret(string.length());
+            }
+        });
     }
     private void initMenuScene() {
         messageText = new Text();
@@ -127,7 +135,7 @@ public class View extends Application {
         try {
             gamePane = gameSceneLoader.load();
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
             System.out.println("SOMETHING WRONG WITH initGameScene()");
             return;
         }
