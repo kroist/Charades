@@ -13,7 +13,7 @@ import java.util.HashSet;
 
 public class Model {
     private static Socket clientSocket;
-    private static String hostName = "192.168.137.1";
+    private static String hostName = "localhost";
     private static int portNumber = 4000;
     private static boolean inLobby;
     private static boolean gameStarted;
