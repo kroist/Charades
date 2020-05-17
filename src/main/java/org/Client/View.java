@@ -490,6 +490,10 @@ public class View extends Application {
         });
     }
 
+    public void setVisibleGameEndPanel(boolean b){
+        Platform.runLater(() -> gameEndPanel.setVisible(b));
+    }
+
     public void clearGameIdField() {
         fxmlController.clearGameIdField();
     }

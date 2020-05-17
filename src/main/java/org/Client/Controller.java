@@ -96,6 +96,7 @@ public class Controller {
         }
         resetPlayer();
         model.setInLobby(true);
+        view.setVisibleGameEndPanel(false);
         view.setLobbyScene();
         model.startReadingObjects();
     }
@@ -141,6 +142,7 @@ public class Controller {
         resetPlayer();
         view.setGameID(ID);
         model.setInLobby(true);
+        view.setVisibleGameEndPanel(false);
         view.setLobbyScene();
         model.startReadingObjects();
     }
