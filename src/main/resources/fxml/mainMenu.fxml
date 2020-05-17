@@ -115,20 +115,17 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <Button layoutX="352.0" layoutY="14.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#closeCreateLobbyPanel" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: transparent; -fx-text-fill: transparent;" text="Button">
-                     <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" scaleZ="3.0">
-                           <image>
-                              <Image url="@../close-icon.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
+                  <Button layoutX="352.0" layoutY="14.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#closeCreateLobbyPanel" prefHeight="30.0" prefWidth="30.0" style="-fx-text-fill: transparent;" text="Button" />
                   <Label fx:id="numOfPlayersAlarm" layoutX="77.0" layoutY="357.0" textFill="#ff1919">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
+                  <ImageView disable="true" fitHeight="30.0" fitWidth="30.0" layoutX="352.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../close-icon.png" />
+                     </image>
+                  </ImageView>
                </children>
             </Pane>
          </children>
