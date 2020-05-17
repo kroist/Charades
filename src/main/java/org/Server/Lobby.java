@@ -1,7 +1,6 @@
 package main.java.org.Server;
 
 
-import javafx.util.Pair;
 import main.java.org.Tools.ChatMessage;
 import main.java.org.Tools.Comparators;
 import main.java.org.Tools.ConnectionMessage;
@@ -37,10 +36,12 @@ public class Lobby {
         this.lobbyName = lobbyName;
         this.difficulty = difficulty;
     }
-    public ArrayList<Pair<String, Integer>> createLeaderBoard(CopyOnWriteArrayList<Player> arr){
-        ArrayList<Pair<String, Integer>> new_arr = new ArrayList<>();
+    public ArrayList<String> createLeaderBoard(CopyOnWriteArrayList<Player> arr){
+        //ArrayList<Pair<String, Integer>> new_arr = new ArrayList<>();
+        ArrayList<String> new_arr = new ArrayList<>();
         for(Player p : arr){
-            new_arr.add(new Pair<>(p.getUsername(), p.getScore()));
+            new_arr.add(p.getUsername() + ":" + Integer.toString(p.getScore()));
+            //new_arr.add(new Pair<>(p.getUsername(), p.getScore()));
         }
         new_arr.sort(Comparators.pairComparator);
         return new_arr;
