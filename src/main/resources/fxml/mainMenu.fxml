@@ -42,7 +42,7 @@
             <Button layoutX="603.0" layoutY="507.0" mnemonicParsing="false" onAction="#refreshListClick" styleClass="info" text="refresh list" />
             <Button disable="true" layoutX="56.0" layoutY="124.0" maxWidth="150.0" minWidth="160.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" style="-fx-font-weight: bold; -fx-opacity: 1;" styleClass="first" text="Lobby name" />
             <Button disable="true" layoutX="205.0" layoutY="124.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" style="-fx-font-weight: bold; -fx-opacity: 1;" styleClass="middle" text="Players" />
-            <Button layoutX="287.0" layoutY="124.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="106.0" style="-fx-font-weight: bold;" styleClass="last" text="Difficulty" />
+            <Button disable="true" layoutX="287.0" layoutY="124.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="106.0" style="-fx-font-weight: bold; -fx-opacity: 1;" styleClass="last" text="Difficulty" />
             <Pane fx:id="createLobbyPanel" layoutX="200.0" layoutY="150.0" prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10 10 10 10; -fx-background-radius: 10 10 10 10;">
                <children>
                   <Label layoutX="94.0" layoutY="59.0" text="Lobby properties">
