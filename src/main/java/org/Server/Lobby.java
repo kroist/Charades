@@ -228,4 +228,8 @@ public class Lobby {
         //System.out.println(gamePlayers.size() + lobbyPlayers.size() + " " + maxPlayers);
         return gamePlayers.size() + lobbyPlayers.size() >= maxPlayers;
     }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
 }
