@@ -36,7 +36,7 @@ public class Game implements Runnable{
         if (timer != null)timer.cancel();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-            private int counter = 90;
+            private int counter = WordGenerator.getTime(lobby.getDifficulty());
             @Override
             public void run() {
                     //System.out.println("counter = " + counter);

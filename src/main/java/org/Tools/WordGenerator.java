@@ -29,6 +29,14 @@ public class WordGenerator {
             words.put(difficulty, loadWords(difficulty));
         }
     }
+    private static final HashMap<String, Integer> times = new HashMap<>();
+    static {
+        times.put("easy", 90);
+        times.put("medium", 120);
+        times.put("hard", 150);
+        times.put("verbs", 135);
+        times.put("objects", 135);
+    }
     private static ArrayList<String> loadWords(String difficulty){
         ArrayList<String> words = new ArrayList<>();
         try {
@@ -50,5 +58,9 @@ public class WordGenerator {
     }
     public static String getRandomWord(String difficulty){
         return words.get(difficulty).get(random.nextInt(words.get(difficulty).size()));
+    }
+
+    public static int getTime(String difficulty) {
+        return times.get(difficulty);
     }
 }
