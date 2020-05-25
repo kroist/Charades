@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import main.java.org.Tools.*;
 
+import javax.sound.sampled.AudioSystem;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -275,6 +276,7 @@ public class View extends Application {
     }
     public void setMenuScene() {
         //updateMenuScene();
+        Sound.stopSound();
         Platform.runLater(() -> {
             fxmlController.resetCreateLobbyPanel();
             stage.setScene(menuScene);
