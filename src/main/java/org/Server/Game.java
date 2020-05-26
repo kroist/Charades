@@ -92,6 +92,7 @@ public class Game implements Runnable{
         if (obj instanceof MyColor)lobby.sendGameAll(obj);
         if (obj instanceof Integer)lobby.sendGameAll(obj);
         if (ConnectionMessage.CLEAR_CANVAS.equals(obj))lobby.sendGameAll(obj);
+        if (ConnectionMessage.MOUSE_RELEASED.equals(obj))lobby.sendGameAll(obj);
     }
 
     public void handleAnswer(String msg, Player player) {

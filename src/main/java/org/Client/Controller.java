@@ -1,6 +1,7 @@
 package main.java.org.Client;
 
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
@@ -166,6 +167,9 @@ public class Controller {
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 event -> {
+                    if (model.isGameStarted()){
+                        model.sendObject(ConnectionMessage.MOUSE_RELEASED);
+                    }
                 });
     }
     public void resetPlayer(){
@@ -183,6 +187,7 @@ public class Controller {
         view.setVisibleGameTimer(false);
         view.setEnterMessageVisible(true);
         view.setGameWordVisible(false);
+        Platform.runLater(Sound::stopSound);
     }
 
     private void resetFromLobby(String message){
@@ -190,6 +195,7 @@ public class Controller {
         model.stopReading();
         model.setInLobby(false);
         finishWritePoints();
+
 
         resetPlayer();
 
@@ -253,6 +259,8 @@ public class Controller {
 
     public void newPoint(Object obj) {
         view.newPoint(obj);
+        Sound.startSound();
+
     }
 
     public void startGameButton() {
@@ -262,6 +270,7 @@ public class Controller {
     public void startGame() {
         view.setGameScene();
         model.setGameStarted(true);
+        Sound.setSound("pencil_try.aiff");
         if (model.isDrawer()){
             //getReadyToWritePoints();
             view.getCanvas().setDisable(false);

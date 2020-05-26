@@ -171,7 +171,7 @@ public class Server {
          */
         //WordGenerator.getRandomWord("easy");
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-        int portNumber = 4000;
+        int portNumber = 4001;
         /*try {
             System.out.println("Enter port number");
             portNumber = Integer.parseInt(stdIn.readLine());

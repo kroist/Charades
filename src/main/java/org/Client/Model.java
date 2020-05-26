@@ -14,7 +14,7 @@ import java.util.HashSet;
 public class Model {
     private static Socket clientSocket;
     private static String hostName = "localhost";
-    private static int portNumber = 4000;
+    private static int portNumber = 4001;
     private static boolean inLobby;
     private static boolean gameStarted;
     private static boolean isDrawer;
@@ -145,6 +145,7 @@ public class Model {
                             controller.returnToLobby();
                         }
                         if (obj.equals(ConnectionMessage.CLEAR_CANVAS))controller.clearCanvas();
+                        if (obj.equals(ConnectionMessage.MOUSE_RELEASED))Sound.stopSound();
                     } else if (obj instanceof GameResult){
                         controller.newGameResult(obj);
                     } else if (obj instanceof GameWord){
