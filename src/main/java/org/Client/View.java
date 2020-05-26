@@ -276,7 +276,7 @@ public class View extends Application {
     }
     public void setMenuScene() {
         //updateMenuScene();
-        Sound.stopSound();
+        //Sound.stopSound();
         Platform.runLater(() -> {
             fxmlController.resetCreateLobbyPanel();
             stage.setScene(menuScene);
