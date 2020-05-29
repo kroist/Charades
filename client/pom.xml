@@ -13,10 +13,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
+            <version>11</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
+            <version>11</version>
         </dependency>
         <dependency>
             <groupId>com.charades.tools</groupId>
@@ -32,13 +34,32 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.charades.client.SuperMain</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
                     <release>11</release>
-                    <mainClass>com.charades.client.Main</mainClass>
+                    <mainClass>com.charades.client.SuperMain</mainClass>
                     <includePathExceptionsInClasspath>true</includePathExceptionsInClasspath>
                 </configuration>
             </plugin>
