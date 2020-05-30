@@ -106,6 +106,12 @@ public class View extends Application {
         loginSceneFXMLController = loginSceneLoader.getController();
         loginScene = new Scene(loginPane);
         loginSceneFXMLController.controller = controller;
+        loginSceneFXMLController.nicknameField.setOnKeyPressed(ke -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                controller.login(loginSceneFXMLController.nicknameField.getCharacters().toString());
+            }
+        });
         loginSceneFXMLController.nicknameField.setOnKeyTyped(event -> {
             String string = loginSceneFXMLController.nicknameField.getText();
 
