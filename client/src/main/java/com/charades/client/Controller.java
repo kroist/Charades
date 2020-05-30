@@ -1,13 +1,31 @@
 package com.charades.client;
 
 import com.charades.tools.*;
+import com.charades.tools.Point;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import org.datavec.image.loader.NativeImageLoader;
+import org.deeplearning4j.nn.modelimport.keras.KerasModelImport;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.impl.indexaccum.IAMax;
+import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.LookupOp;
+import java.awt.image.LookupTable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -15,10 +33,23 @@ import java.util.HashSet;
 public class Controller {
     private final View view;
     private final Model model;
+
+    private MultiLayerNetwork net;
+
     public Controller(View view, Model model) {
         this.view = view;
         this.model = model;
     }
+
+    public void setNet(String modelPath){
+        try {
+            net = KerasModelImport.importKerasSequentialModelAndWeights(modelPath);
+        } catch (Exception e){
+            System.out.println(e.getCause());
+            e.printStackTrace();
+        }
+    }
+
     public void login(String username){
         if(!CheckUsername.check(username)){
             returnToLogin("Bad nickname");
@@ -43,6 +74,9 @@ public class Controller {
         view.clearCanvas();
     }
 
+    public void clearCanvasSP() {
+        view.clearCanvasSP();
+    }
 
     public static class AskingThread extends Thread {
         @Override
@@ -61,6 +95,124 @@ public class Controller {
         }
     }
     AskingThread askingThread;
+
+
+    public static WritableImage getWriteableImage(Canvas canvas){
+        WritableImage writableImage = new WritableImage(256, 256);
+        Platform.runLater(() -> {canvas.snapshot(null, writableImage);});
+        //Image tmp = SwingFXUtils.fromFXImage(writableImage, null).getScaledInstance(28, 28, Image.SCALE_SMOOTH);
+        BufferedImage tmp = SwingFXUtils.fromFXImage(writableImage, null);
+        return SwingFXUtils.toFXImage(tmp, null);
+        //return writableImage;
+    }
+
+    private static BufferedImage getScaledImage(Canvas canvas) {
+        WritableImage writableImage = new WritableImage(256, 256);
+        //Platform.runLater(() -> canvas.snapshot(null, writableImage));
+        canvas.snapshot(null, writableImage);
+        BufferedImage tmpp = SwingFXUtils.fromFXImage(writableImage, null);
+
+        int minX = 255, maxX = 0;
+        for (int i = 0; i < 256; i++){
+            for (int j = 0; j < 256; j++){
+                if (tmpp.getRGB(i, j) != -1){
+                    minX = Math.min(minX, i);
+                    minX = Math.min(minX, j);
+                    maxX = Math.max(maxX, i);
+                    maxX = Math.max(maxX, j);
+                }
+            }
+        }
+
+        if (minX > maxX){
+            minX = 0;
+            maxX = 255;
+        }
+
+
+        tmpp = tmpp.getSubimage(minX, minX, maxX-minX, maxX-minX);
+
+        Image tmp = tmpp.getScaledInstance(28, 28, Image.SCALE_SMOOTH);
+
+        BufferedImage scaledImg = new BufferedImage(28, 28, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics graphics = scaledImg.getGraphics();
+        graphics.drawImage(tmp, 0, 0, null);
+        graphics.dispose();
+
+        LookupTable lookup = new LookupTable(0, 1){
+            @Override
+            public int[] lookupPixel(int[] src, int[] dest){
+                dest[0] = (int)(255-src[0]);
+                return dest;
+            }
+        };
+
+        LookupOp op = new LookupOp(lookup, new RenderingHints(null));
+        scaledImg = op.filter(scaledImg, null);
+
+        return scaledImg;
+    }
+
+
+    public void makeGuess() {
+        BufferedImage scaledImg = getScaledImage(View.getCanvasSP());
+        View.singleplayerController.compressedImage.setImage(SwingFXUtils.toFXImage(scaledImg, null));
+
+        NativeImageLoader loader = new NativeImageLoader(28, 28, 1, true);
+        INDArray image;
+        try {
+            image = loader.asRowVector(scaledImg);
+        } catch (IOException e){
+            System.out.println("somtheing wrong in makeGuess()");
+            return;
+        }
+
+        ImagePreProcessingScaler imageScaler = new ImagePreProcessingScaler();
+        imageScaler.transform(image);
+        image = image.reshape(1, 28, 28, 1);
+
+        INDArray output = net.output(image);
+
+
+
+        System.out.println(output.rank());
+        long[] shp = output.shape();
+        for (int i = 0; i < shp.length; i++)
+            System.out.println(shp[i] + " ");
+        System.out.println();
+
+        int[] arr = net.predict(image);
+
+        System.out.println(arr.length);
+
+
+        int dig1 = Nd4j.getExecutioner().exec(new IAMax(output, 1)).getInt(0);
+        double prob1 = output.getDouble(dig1)*100;
+        output.putScalar(dig1, 0);
+
+        int dig2 = Nd4j.getExecutioner().exec(new IAMax(output, 1)).getInt(0);
+        double prob2 = output.getDouble(dig2)*100;
+        output.putScalar(dig2, 0);
+
+
+        int dig3 = Nd4j.getExecutioner().exec(new IAMax(output, 1)).getInt(0);
+        double prob3 = output.getDouble(dig3)*100;
+        output.putScalar(dig3, 0);
+
+
+        int dig4 = Nd4j.getExecutioner().exec(new IAMax(output, 1)).getInt(0);
+        double prob4 = output.getDouble(dig4)*100;
+        output.putScalar(dig4, 0);
+
+        int dig5 = Nd4j.getExecutioner().exec(new IAMax(output, 1)).getInt(0);
+        double prob5 = output.getDouble(dig5)*100;
+        output.putScalar(dig5, 0);
+
+
+        View.singleplayerController.setNums(dig1, prob1, dig2, prob2, dig3, prob3, dig4, prob4, dig5, prob5);
+
+    }
+
 
 
     public void createNewLobby(boolean isPrivate, int maxPlayers, String lobbyName, String difficulty){
@@ -147,6 +299,10 @@ public class Controller {
         model.startReadingObjects();
     }
 
+    public void startSingleplayer(){
+        view.setSingleplayerScene();
+    }
+
     public void getReadyToWritePoints() {
         Canvas canvas = view.getCanvas();
         System.out.println(canvas);
@@ -171,6 +327,35 @@ public class Controller {
                     }
                 });
     }
+
+    public void getReadyToWritePointsSP() {
+        Canvas canvas = View.getCanvasSP();
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        canvas.setOnMousePressed(e -> {
+            ctx.setStroke(Color.BLACK);
+            ctx.beginPath();
+            ctx.moveTo(e.getX(), e.getY());
+            ctx.stroke();
+        });
+
+        canvas.setOnMouseDragged(e -> {
+            ctx.setStroke(Color.BLACK);
+            ctx.lineTo(e.getX(), e.getY());
+            ctx.stroke();
+        });
+
+        canvas.setOnMouseReleased(e -> {
+            makeGuess();
+        });
+
+        canvas.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                makeGuess();
+            }
+        });
+
+    }
+
     public void resetPlayer(){
         model.setIsDrawer(false);
         model.setGameStarted(false);
@@ -208,6 +393,7 @@ public class Controller {
     public void returnToLogin(String message) {
         model.disconnect();
         view.setLoginScene();
+        askingThread.interrupt();
         resetFromLobby(message + " returnToLogin");
         if (message != null){
             switch (message) {
@@ -227,6 +413,10 @@ public class Controller {
         else {
             View.loginSceneFXMLController.nicknameTakenBox.setText("");
         }
+    }
+
+    public void returnToLoginSP(){
+        view.setLoginScene();
     }
 
     public void returnToMenu(String message) {

@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -19,6 +20,7 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.nd4j.common.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class View extends Application {
     private static Scene menuScene;
     private static Scene gameScene;
     private static Scene loginScene;
+    private static Scene singleplayerScene;
 
     private static double prevX, prevY, x, y;
     private static MyColor color = new MyColor(Color.BLACK);
@@ -69,6 +72,10 @@ public class View extends Application {
     static FXMLLoader mainMenuLoader;
     static FxmlController fxmlController;
 
+    static FXMLLoader singleplayerLoader;
+    static SingleplayerFXMLController singleplayerController;
+    private static Canvas canvasSP;
+
     public void setController(Controller c){
         controller = c;
     }
@@ -92,6 +99,7 @@ public class View extends Application {
         initLoginScene();
         initMenuScene();
         initGameScene();
+        initSingleplayerScene();
     }
     private void initLoginScene(){
         loginSceneLoader = new FXMLLoader(getClass().getResource("/fxml/loginScene.fxml"));
@@ -220,6 +228,34 @@ public class View extends Application {
         stage.setTitle("Charades");
     }
 
+    private void initSingleplayerScene(){
+        singleplayerLoader = new FXMLLoader(getClass().getResource("/fxml/singleplayerScene.fxml"));
+        Pane spPane;
+        try {
+            spPane = singleplayerLoader.load();
+        } catch(Exception e){
+            System.out.println("Something wrong with login scene");
+            e.printStackTrace();
+            return;
+        }
+        singleplayerController = singleplayerLoader.getController();
+        if (singleplayerController != null)
+            singleplayerController.controller = controller;
+        singleplayerScene = new Scene(spPane);
+
+        canvasSP = singleplayerController.microCanvas;
+        initDrawSP(canvasSP.getGraphicsContext2D());
+        controller.getReadyToWritePointsSP();
+        try {
+            controller.setNet(new ClassPathResource("model/keras.h5").getFile().getPath());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        singleplayerController.loadWords();
+
+
+    }
+
     private void initDraw(GraphicsContext gc) {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
@@ -236,6 +272,14 @@ public class View extends Application {
         gc.setStroke(color.getColor());
         gc.setLineWidth(lineWidth);
     }
+
+    private void initDrawSP(GraphicsContext gc) {
+
+        gc.setFill(Color.WHITE);
+        gc.setLineWidth(8);
+
+    }
+
     private static void drawPoint(double x, double y){
 
         System.out.println("draw com.charades.tools.Point");
@@ -343,7 +387,17 @@ public class View extends Application {
         // TODO: 14.05.2020
     }
 
+    public void setSingleplayerScene(){
+        System.out.println("Setting singleplayer scene");
+        Platform.runLater(() -> {
+            stage.setScene(singleplayerScene);
+            clearCanvasSP();
+        });
+    }
+
     public Canvas getCanvas() { return canvas; }
+
+    public static Canvas getCanvasSP() { return canvasSP; }
 
     public void mousePressed(MouseEvent event) {
         prevX = event.getX();
@@ -369,6 +423,13 @@ public class View extends Application {
         Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight()));
         canvas.getGraphicsContext2D().beginPath();
     }
+
+    public void clearCanvasSP() {
+        Platform.runLater(() -> {canvasSP.getGraphicsContext2D().fillRect(0, 0, 256, 256);});
+        //Platform.runLater(() -> canvasSP.getGraphicsContext2D().clearRect(0, 0, canvasSP.getWidth(), canvasSP.getHeight()));
+        //canvasSP.getGraphicsContext2D().beginPath();
+    }
+
     public void setGameID(String s){
         //System.out.println(s + "i am here");
         //if (gameID == null) System.out.println("tou loh");

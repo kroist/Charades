@@ -16,4 +16,10 @@ public class LoginSceneFXMLController {
     public void loginButtonHandler(ActionEvent actionEvent) {
         controller.login(nicknameField.getCharacters().toString());
     }
+
+    @FXML
+    public void singleplayerButtonHandler(){
+        controller.startSingleplayer();
+    }
+
 }

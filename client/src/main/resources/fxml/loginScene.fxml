@@ -20,7 +20,7 @@
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff6a" height="240.0" layoutX="220.0" layoutY="270.0" stroke="TRANSPARENT" strokeType="INSIDE" width="360.0" />
-      <VBox alignment="TOP_CENTER" layoutX="226.0" layoutY="278.0" prefHeight="244.0" prefWidth="349.0">
+      <VBox alignment="TOP_CENTER" layoutX="226.0" layoutY="278.0" prefHeight="283.0" prefWidth="349.0">
          <children>
             <Label alignment="CENTER" prefHeight="55.0" prefWidth="246.0" text="Enter your username" textAlignment="CENTER">
                <font>
@@ -43,6 +43,11 @@
             <Button fx:id="loginButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#loginButtonHandler" prefHeight="70.0" prefWidth="173.0" styleClass="success" text="Login">
                <VBox.margin>
                   <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#singleplayerButtonHandler" prefHeight="70.0" prefWidth="173.0" styleClass="warning" text="Singleplayer">
+               <VBox.margin>
+                  <Insets top="40.0" />
                </VBox.margin>
             </Button>
          </children>
