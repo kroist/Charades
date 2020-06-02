@@ -14,12 +14,14 @@ public class Sound {
                     Main.class.getResourceAsStream("/" + url));
             sound.open(inputStream);
             sound.loop(-1);
+            sound.stop();
             //sound.start();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
     public static void startSound(){
+        System.out.println("START SOUND " + (sound == null));
         if (sound != null){
             sound.loop(-1);
             if (!sound.isRunning())sound.start();
