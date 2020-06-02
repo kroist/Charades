@@ -390,6 +390,9 @@ public class View extends Application {
         System.out.println("Setting singleplayer scene");
         Platform.runLater(() -> {
             stage.setScene(singleplayerScene);
+            singleplayerController.startTimer();
+            singleplayerController.guessCounter = 0;
+            singleplayerController.counterLabel.setText("0");
             clearCanvasSP();
         });
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
@@ -7,28 +8,24 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="800.0" stylesheets="@bootstrap3.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.charades.client.SingleplayerFXMLController">
+<AnchorPane prefHeight="800.0" prefWidth="800.0" style="-fx-background-image: ../pattern.png;" stylesheets="@bootstrap3.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.charades.client.SingleplayerFXMLController">
    <children>
-      <Label layoutX="344.0" layoutY="94.0" text="Draw a:">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
+      <ImageView fitHeight="800.0" fitWidth="800.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pattern.png" />
+         </image>
+      </ImageView>
       <PieChart fx:id="piechart" layoutX="499.0" layoutY="275.0" prefHeight="359.0" prefWidth="251.0" />
-      <Label fx:id="drawthing" layoutX="275.0" layoutY="162.0" text="gomno (what you want)">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
       <Button layoutX="41.0" layoutY="51.0" mnemonicParsing="false" onAction="#retToMenuSp" styleClass="warning" text="Return to menu" />
       <AnchorPane layoutX="145.0" layoutY="324.0" prefHeight="260.0" prefWidth="260.0" style="-fx-background-color: black, white; -fx-background-insets: 0, 3;">
          <children>
             <Canvas fx:id="microCanvas" height="256.0" layoutX="2.0" layoutY="2.0" width="256.0" />
          </children>
       </AnchorPane>
-      <Button layoutX="174.0" layoutY="612.0" mnemonicParsing="false" onAction="#eraserButton" prefHeight="50.0" prefWidth="50.0">
+      <Button layoutX="159.0" layoutY="606.0" mnemonicParsing="false" onAction="#eraserButton" prefHeight="80.0" prefWidth="80.0">
          <graphic>
             <ImageView disable="true" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -37,6 +34,57 @@
             </ImageView>
          </graphic>
       </Button>
-      <ImageView fx:id="compressedImage" fitHeight="100.0" fitWidth="100.0" layoutX="32.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="compressedImage" fitHeight="100.0" fitWidth="100.0" layoutX="32.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <VBox disable="true" layoutX="66.0" layoutY="196.0" prefHeight="92.0" prefWidth="133.0" style="-fx-background-color: white; -fx-opacity: 100;" styleClass="button">
+         <children>
+            <Label alignment="CENTER" prefHeight="25.0" prefWidth="106.0" style="-fx-opacity: 100;" text="Time left:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="timerLabel" alignment="CENTER" prefHeight="29.0" prefWidth="100.0" style="-fx-opacity: 100;">
+               <font>
+                  <Font size="23.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox layoutX="300.0" layoutY="57.0" prefHeight="116.0" prefWidth="210.0" style="-fx-opacity: 100;" styleClass="button">
+         <children>
+            <Label alignment="CENTER" prefHeight="35.0" prefWidth="210.0" style="-fx-opacity: 100;" text="Draw a:">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Label>
+            <Label fx:id="drawthing" alignment="CENTER" prefHeight="26.0" prefWidth="211.0" style="-fx-opacity: 100;">
+               <font>
+                  <Font size="21.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+      <VBox disable="true" layoutX="275.0" layoutY="196.0" prefHeight="92.0" prefWidth="133.0" style="-fx-background-color: white; -fx-opacity: 100;" styleClass="button">
+         <children>
+            <Label alignment="CENTER" prefHeight="25.0" prefWidth="106.0" style="-fx-opacity: 100;" text="Guesses:">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="counterLabel" alignment="CENTER" prefHeight="29.0" prefWidth="100.0" style="-fx-opacity: 100;">
+               <font>
+                  <Font size="23.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
