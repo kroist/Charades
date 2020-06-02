@@ -24,7 +24,7 @@ public class Model {
 
     Model(String[] args){
         if (args.length == 1){
-            String arr[] = args[0].split(":");
+            String[] arr = args[0].split(":");
             hostName = arr[0];
             portNumber = Integer.parseInt(arr[1]);
         }
@@ -184,7 +184,8 @@ public class Model {
                     }
                 } catch (Exception e) {
                     System.out.println("SERVER DOWN");
-                    Platform.runLater(() -> controller.returnToMenu("SERVER DOWN"));
+                    Platform.runLater(() -> controller.returnToLogin("SERVER DOWN"));
+                    break;
                 }
             }
             System.out.println("STOPPED READING");
