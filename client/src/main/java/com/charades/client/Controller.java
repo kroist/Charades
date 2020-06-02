@@ -392,7 +392,7 @@ public class Controller {
     public void returnToLogin(String message) {
         model.disconnect();
         view.setLoginScene();
-        askingThread.interrupt();
+        if(askingThread != null) askingThread.interrupt();
         resetFromLobby(message + " returnToLogin");
         if (message != null){
             switch (message) {
