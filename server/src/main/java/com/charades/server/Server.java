@@ -172,6 +172,10 @@ public class Server {
         //com.charades.tools.WordGenerator.getRandomWord("easy");
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         int portNumber = 4001;
+        if (args.length == 1){
+            portNumber = Integer.parseInt(args[0]);
+        }
+        System.out.println(portNumber);
         /*try {
             System.out.println("Enter port number");
             portNumber = Integer.parseInt(stdIn.readLine());

@@ -6,7 +6,7 @@ public class Main{
         //com.charades.client.Sound.setSound("dot.wav");
         //com.charades.client.Sound.startSound();
         View view = new View();
-        Model model = new Model();
+        Model model = new Model(args);
         Controller controller = new Controller(view, model);
         view.setController(controller);
         model.setController(controller);

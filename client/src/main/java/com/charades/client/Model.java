@@ -21,6 +21,14 @@ public class Model {
     private static Controller controller;
     ObjectInputStream in;
     ObjectOutputStream out;
+
+    Model(String[] args){
+        if (args.length == 1){
+            String arr[] = args[0].split(":");
+            hostName = arr[0];
+            portNumber = Integer.parseInt(arr[1]);
+        }
+    }
     public void setController(Controller c){
         controller = c;
     }

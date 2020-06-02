@@ -1,8 +1,6 @@
 package com.charades.tools;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -36,8 +34,9 @@ public class WordGenerator {
     private static ArrayList<String> loadWords(String difficulty){
         ArrayList<String> words = new ArrayList<>();
         try {
-            Path path = Paths.get(WordGenerator.class.getResource("/word-lists/" + difficulty + ".txt").toURI());
-            try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(path)))) {
+            InputStream in = WordGenerator.class.getResourceAsStream("/word-lists/" + difficulty + ".txt");
+            //Path path = Paths.get(WordGenerator.class.getResource("/word-lists/" + difficulty + ".txt").toURI());
+            try(BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
                 String word;
                 while ((word = br.readLine()) != null) {
                     words.add(word);
