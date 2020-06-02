@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <dependencies>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -46,6 +47,11 @@
             <artifactId>datavec-api</artifactId>
             <version>1.0.0-beta7</version>
         </dependency>
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-data-image</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
 
     </dependencies>
 
@@ -54,6 +60,14 @@
     <packaging>jar</packaging>
 
     <build>
+        <!--
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>../</targetPath>
+            </resource>
+        </resources>
+        -->
         <plugins>
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -84,6 +98,11 @@
                     <mainClass>com.charades.client.Main</mainClass>
                     <includePathExceptionsInClasspath>true</includePathExceptionsInClasspath>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
             </plugin>
         </plugins>
     </build>

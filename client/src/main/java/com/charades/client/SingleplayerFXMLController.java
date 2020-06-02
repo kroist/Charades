@@ -10,12 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class SingleplayerFXMLController {
@@ -34,8 +36,8 @@ public class SingleplayerFXMLController {
 
     public void loadWords(){
         try {
-            Path path = Paths.get(WordGenerator.class.getResource("/model/class_names.txt").toURI());
-            try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(path)))) {
+            InputStream in = getClass().getResourceAsStream("/model/class_names.txt");
+            try(BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
                 String word;
                 while ((word = br.readLine()) != null) {
                     words.add(word);
