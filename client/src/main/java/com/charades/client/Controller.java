@@ -458,7 +458,7 @@ public class Controller {
     public void startGame() {
         view.setGameScene();
         model.setGameStarted(true);
-        Sound.setSound("pencil_try.aiff");
+        Sound.setSound("pencil_sound.aif");
         if (model.isDrawer()){
             //getReadyToWritePoints();
             view.getCanvas().setDisable(false);

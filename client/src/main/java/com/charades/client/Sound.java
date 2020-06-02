@@ -11,7 +11,7 @@ public class Sound {
             if (sound != null)sound.stop();
             sound = AudioSystem.getClip();
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                    Main.class.getResourceAsStream("/main/resources/" + url));
+                    Main.class.getResourceAsStream("/" + url));
             sound.open(inputStream);
             sound.loop(-1);
             //sound.start();

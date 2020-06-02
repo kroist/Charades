@@ -323,8 +323,7 @@ public class View extends Application {
         ArrayList<String> lobbies = controller.askForLobbies();
     }
     public void setMenuScene() {
-        //updateMenuScene();
-        //com.charades.client.Sound.stopSound();
+        Sound.stopSound();
         Platform.runLater(() -> {
             fxmlController.resetCreateLobbyPanel();
             stage.setScene(menuScene);
@@ -431,8 +430,6 @@ public class View extends Application {
     }
 
     public void setGameID(String s){
-        //System.out.println(s + "i am here");
-        //if (gameID == null) System.out.println("tou loh");
         Platform.runLater(() -> gameID.setText("Your game ID is: " + s));
     }
     public void setVisibleStartGameButton(boolean b) {
@@ -456,9 +453,6 @@ public class View extends Application {
     public void setDefaultLineWidth(){
         lineWidth = 3;
     }
-    private static void addMessage(ChatMessage msg){
-        gameChat.appendText(msg.getText());
-    }
     public void newChatMessage(Object obj) {
         ChatMessage msg = (ChatMessage)obj;
         Platform.runLater(() -> gameChat.appendText(msg.getText()));
@@ -480,9 +474,6 @@ public class View extends Application {
         Platform.runLater(() -> leaderBoard.getItems().clear());
     }
 
-    public void changeLineWidth(Integer lineWidth){
-        View.lineWidth = lineWidth;
-    }
     public void newLineWidth(Object obj) {
         Integer lineWidth = (Integer)obj;
         Platform.runLater(() -> View.lineWidth = lineWidth);
