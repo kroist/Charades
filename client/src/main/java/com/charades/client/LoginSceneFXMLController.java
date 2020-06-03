@@ -10,6 +10,7 @@ public class LoginSceneFXMLController {
     @FXML public Button loginButton;
     @FXML public TextField nicknameField;
     @FXML public Text nicknameTakenBox;
+    @FXML public TextField ipField;
     public Controller controller;
 
     @FXML

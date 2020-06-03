@@ -31,8 +31,8 @@ public class GameSceneFXMLController {
     @FXML public Button startGameButton;
     @FXML public Label gameID;
     @FXML public ColorPicker colorPicker;
-    @FXML public Button brush;
-    @FXML public Button eraser;
+    @FXML public ToggleButton brush;
+    @FXML public ToggleButton eraser;
     @FXML public ListView<String> waitingList;
     @FXML public Text gameTimer;
     @FXML public Text gameWord;
@@ -41,6 +41,7 @@ public class GameSceneFXMLController {
     @FXML public Label hiddenWord;
     @FXML public Pane gameEndPanel;
     @FXML public Button waitingListLabel;
+    @FXML public ToggleGroup toggleKek;
 
 
     public Controller controller;
@@ -74,7 +75,7 @@ public class GameSceneFXMLController {
 
     @FXML
     public void brushHandler(MouseEvent actionEven){
-        controller.setIsBrush(true);
+        //controller.setIsBrush(true);
     }
 
     public static class OwnHBox extends HBox {
@@ -82,6 +83,7 @@ public class GameSceneFXMLController {
         Label score = new Label();
         OwnHBox(String playerName, Integer playerScore){
             super();
+            this.setMaxWidth(180);
             name.setText(playerName);
             name.setAlignment(Pos.CENTER);
             name.setPrefWidth(120);
@@ -97,7 +99,7 @@ public class GameSceneFXMLController {
 
     @FXML
     public void eraserHandler(MouseEvent actionEvent) {
-        controller.setIsBrush(false);
+        //controller.setIsBrush(false);
     }
 
     public void closeRoundEndPanel(ActionEvent actionEvent) {

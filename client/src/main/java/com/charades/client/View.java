@@ -53,14 +53,13 @@ public class View extends Application {
 
     private static Canvas canvas;
     private static ColorPicker colorPicker;
-    private static Button eraser;
-    private static Button brush;
+    private static ToggleButton eraser;
+    private static ToggleButton brush;
     private static Button clearAllButton;
     private static TextArea gameChat;
     private static TextField enterMessage;
     private static Text gameTimer;
     private static Text messageText;
-    private static ListView<Pair<String, Integer>> leaderBoard;
     private static ListView<String > waitingList;
 
     private static Label gameID;
@@ -92,8 +91,12 @@ public class View extends Application {
         View.stage = stage;
         createContent();
 
-        stage.setMinHeight(800);
+        stage.setMaxWidth(800);
         stage.setMinWidth(800);
+        stage.setMaxHeight(800);
+        stage.setMinHeight(800);
+        stage.setWidth(800);
+        stage.setHeight(800);
         stage.setResizable(false);
         stage.setScene(loginScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
@@ -223,6 +226,16 @@ public class View extends Application {
         brushIcon.setFitWidth(50);
         brush.setGraphic(brushIcon);
 
+        gameSceneController.toggleKek.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == null){
+                controller.setIsBrush((oldValue == brush));
+                oldValue.setSelected(true);
+            }
+            else {
+                controller.setIsBrush((newValue == brush));
+            }
+        }));
+
         clearAllButton = gameSceneController.clearAllButton;
         ImageView clearAllIcon = new ImageView(new Image("clearall-icon.png"));
         clearAllIcon.setFitHeight(50);
@@ -328,14 +341,37 @@ public class View extends Application {
         Platform.runLater(() -> {
             fxmlController.resetCreateLobbyPanel();
             stage.setScene(menuScene);
+            stage.setMaxWidth(800);
+            stage.setMinWidth(800);
+            stage.setMaxHeight(800);
+            stage.setMinHeight(800);
+            stage.setWidth(800);
+            stage.setHeight(800);
+            stage.sizeToScene();
         });
     }
     public void setLoginScene() {
-        Platform.runLater(()->stage.setScene(loginScene));
+        Platform.runLater(()->{
+            stage.setScene(loginScene);
+            stage.setMaxWidth(800);
+            stage.setMinWidth(800);
+            stage.setMaxHeight(800);
+            stage.setMinHeight(800);
+            stage.setWidth(800);
+            stage.setHeight(800);
+            stage.sizeToScene();
+        });
     }
     public void setGameScene() {
         Platform.runLater(() -> {
             stage.setScene(gameScene);
+            stage.setMaxWidth(800);
+            stage.setMinWidth(800);
+            stage.setMaxHeight(800);
+            stage.setMinHeight(800);
+            stage.setWidth(800);
+            stage.setHeight(800);
+            stage.sizeToScene();
             gameChat.setMaxWidth(400);
             gameChat.setMinWidth(400);
             gameChat.prefWidth(400);
@@ -361,6 +397,8 @@ public class View extends Application {
 
             waitingList.setVisible(false);
             gameSceneController.waitingListLabel.setVisible(false);
+            brush.setSelected(true);
+            controller.setIsBrush(true);
         });
 
 
@@ -369,6 +407,13 @@ public class View extends Application {
     public void setLobbyScene() {
         Platform.runLater(() -> {
             stage.setScene(gameScene);
+            stage.setMaxWidth(800);
+            stage.setMinWidth(800);
+            stage.setMaxHeight(800);
+            stage.setMinHeight(800);
+            stage.setWidth(800);
+            stage.setHeight(800);
+            stage.sizeToScene();
             gameChat.setMaxWidth(600);
             gameChat.setMinWidth(600);
             gameChat.prefWidth(600);
@@ -401,6 +446,13 @@ public class View extends Application {
         System.out.println("Setting singleplayer scene");
         Platform.runLater(() -> {
             stage.setScene(singleplayerScene);
+            stage.setMaxWidth(800);
+            stage.setMinWidth(800);
+            stage.setMaxHeight(800);
+            stage.setMinHeight(800);
+            stage.setWidth(800);
+            stage.setHeight(800);
+            stage.sizeToScene();
             singleplayerController.startTimer();
             singleplayerController.guessCounter = 0;
             singleplayerController.counterLabel.setText("0");
@@ -497,7 +549,7 @@ public class View extends Application {
         Platform.runLater(() -> addLeaderBoard(arr));
     }
     public void clearLeaderBoard(){
-        Platform.runLater(() -> leaderBoard.getItems().clear());
+        Platform.runLater(() -> gameSceneController.leaderBoard.getItems().clear());
     }
 
     public void setBrushVisible(boolean b) {
@@ -590,4 +642,9 @@ public class View extends Application {
     public void clearGameIdField() {
         fxmlController.clearGameIdField();
     }
+
+    public String getIpString(){
+        return loginSceneFXMLController.ipField.getText();
+    }
+
 }

@@ -64,16 +64,14 @@ public class SingleplayerFXMLController {
             @Override
             public void run() {
                 System.out.println("counter = " + counter);
-                if (counter > 0){
+                if (counter == 0){
+                    Platform.runLater(() ->
+                            drawthing.setText(getRandomWord().replace('_', ' ')));
+                }
+                if (counter < 30){
                     Platform.runLater(() ->
                     timerLabel.setText(Integer.toString(counter)));
-                    --counter;
-                }
-                else {
-                    ///HERE SHOULD CHANGE THE WORD
-                    Platform.runLater(() ->
-                    drawthing.setText(getRandomWord().replace('_', ' ')));
-                    counter = 30;
+                    counter = (counter+1)%30;
                 }
             }
         }, 0,1000);

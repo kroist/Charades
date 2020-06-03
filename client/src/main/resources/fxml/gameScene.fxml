@@ -7,6 +7,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@bootstrap3.css, @chat.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.charades.client.GameSceneFXMLController">
+<AnchorPane maxHeight="800.0" maxWidth="800.0" minHeight="800.0" minWidth="800.0" prefHeight="800.0" prefWidth="800.0" stylesheets="@bootstrap3.css, @chat.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.charades.client.GameSceneFXMLController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="800.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -31,11 +33,15 @@
       <TextArea fx:id="gameChat" wrapText="true" />
       <TextField fx:id="enterMessage" maxWidth="800.0" onKeyPressed="#enterMessageHandler" />
       <ListView fx:id="leaderBoard" layoutX="600.0" layoutY="28.0" prefHeight="172.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
-      <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" styleClass="success" text="Return to menu" />
-      <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" styleClass="success" text="Start game" />
-      <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false;" />
-      <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
-      <Button fx:id="eraser" layoutX="50.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
+      <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-focus-traversable: false;" styleClass="success" text="Return to menu" />
+      <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" style="-fx-focus-traversable: false;" styleClass="success" text="Start game" />
+      <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false; -fx-focus-traversable: false;" />
+      <ToggleButton fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" style="-fx-focus-traversable: false;" styleClass="radio-button" visible="false">
+         <toggleGroup>
+            <ToggleGroup fx:id="toggleKek" />
+         </toggleGroup>
+      </ToggleButton>
+      <ToggleButton fx:id="eraser" layoutX="50.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" style="-fx-focus-traversable: false;" toggleGroup="$toggleKek" visible="false" />
       <ListView fx:id="waitingList" layoutX="600.0" layoutY="237.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
       <Text fx:id="gameTimer" layoutX="75.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
          <font>
@@ -55,7 +61,7 @@
                </font>
             </Label>
             <Button layoutX="315.0" layoutY="5.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#closeRoundEndPanel" prefHeight="30.0" prefWidth="30.0" style="-fx-text-fill: transparent;" text="Button" />
-            <ImageView disable="true" fitHeight="30.0" fitWidth="30.0" layoutX="315.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView disable="true" fitHeight="30.0" fitWidth="30.0" layoutX="315.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" style="-fx-focus-traversable: false;">
                <image>
                   <Image url="@../close-icon.png" />
                </image>
@@ -67,12 +73,12 @@
             </Label>
          </children>
       </Pane>
-      <Button fx:id="clearAllButton" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#clearAllHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
+      <Button fx:id="clearAllButton" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#clearAllHandler" prefHeight="50.0" prefWidth="50.0" style="-fx-focus-traversable: false;" visible="false" />
       <Label fx:id="gameID" disable="true" layoutX="12.0" layoutY="5.0" style="-fx-opacity: 1; -fx-font-size: 12;" styleClass="button" text="Your game id is: 1111" />
       <HBox disable="true" layoutX="599.0" prefHeight="28.0" prefWidth="200.0" style="-fx-opacity: 100;">
          <children>
-            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" style="-fx-opacity: 1;" styleClass="first" text="Player" />
-            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="71.0" style="-fx-opacity: 1;" styleClass="last" text="Score" />
+            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="125.0" style="-fx-opacity: 1;" styleClass="first" text="Player" />
+            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="77.0" style="-fx-opacity: 1;" styleClass="last" text="Score" />
          </children>
       </HBox>
       <Button fx:id="waitingListLabel" disable="true" layoutX="600.0" layoutY="201.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="200.0" style="-fx-opacity: 1;" text="Waiting list" />

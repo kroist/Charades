@@ -7,7 +7,9 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -23,11 +25,6 @@ public class Model {
     ObjectOutputStream out;
 
     Model(String[] args){
-        if (args.length == 1){
-            String[] arr = args[0].split(":");
-            hostName = arr[0];
-            portNumber = Integer.parseInt(arr[1]);
-        }
     }
     public void setController(Controller c){
         controller = c;
@@ -38,9 +35,27 @@ public class Model {
     public void setIsSpectator(boolean b){
         isDrawer = b;
     }
-    public int connect(String nickname) {
+    public int connect(String nickname, String ipString) {
+        if (ipString.length() > 0){
+            String[] arr = ipString.split(":");
+            if (arr.length != 2){
+                return -2;
+            }
+            hostName = arr[0];
+            portNumber = Integer.parseInt(arr[1]);
+        }
+        else {
+            hostName = "localhost";
+            portNumber = 4001;
+        }
         try{
-            clientSocket = new Socket(hostName, portNumber);
+            try {
+                clientSocket = new Socket();
+                clientSocket.connect(new InetSocketAddress(hostName, portNumber), 3000);
+            } catch(Exception e){
+                System.out.println("KEK");
+                return -2;
+            }
             System.out.println(clientSocket.isConnected());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new ObjectInputStream(clientSocket.getInputStream());

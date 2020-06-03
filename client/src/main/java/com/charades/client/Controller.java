@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.ImageCursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -54,7 +53,7 @@ public class Controller {
             returnToLogin("Bad nickname");
             return;
         }
-        int msg = model.connect(username);
+        int msg = model.connect(username, view.getIpString());
         if(msg != 1){
             if(msg == -1) {
                 returnToLogin("Busy nickname");
