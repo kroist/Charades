@@ -18,6 +18,7 @@
             <Image url="@../pattern.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="compressedImage" fitHeight="100.0" fitWidth="100.0" layoutX="32.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
       <PieChart fx:id="piechart" layoutX="499.0" layoutY="275.0" prefHeight="359.0" prefWidth="251.0" />
       <Button layoutX="41.0" layoutY="51.0" mnemonicParsing="false" onAction="#retToMenuSp" styleClass="warning" text="Return to menu" />
       <AnchorPane layoutX="145.0" layoutY="324.0" prefHeight="260.0" prefWidth="260.0" style="-fx-background-color: black, white; -fx-background-insets: 0, 3;">
@@ -34,7 +35,6 @@
             </ImageView>
          </graphic>
       </Button>
-      <ImageView fx:id="compressedImage" fitHeight="100.0" fitWidth="100.0" layoutX="32.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" visible="false" />
       <VBox disable="true" layoutX="66.0" layoutY="196.0" prefHeight="92.0" prefWidth="133.0" style="-fx-background-color: white; -fx-opacity: 100;" styleClass="button">
          <children>
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="106.0" style="-fx-opacity: 100;" text="Time left:">

@@ -9,10 +9,8 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.datavec.image.loader.NativeImageLoader;
 import org.deeplearning4j.nn.modelimport.keras.KerasModelImport;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -157,7 +155,8 @@ public class Controller {
         BufferedImage scaledImg = getScaledImage(View.getCanvasSP());
         View.singleplayerController.compressedImage.setImage(SwingFXUtils.toFXImage(scaledImg, null));
 
-        NativeImageLoader loader = new NativeImageLoader(28, 28, 1, true);
+        //Java2DNativeImageLoader loader = new Java2DNativeImageLoader(28, 28, 1, true);
+        MyImageLoader loader = new MyImageLoader(28, 28, 1, true);
         INDArray image;
         try {
             image = loader.asRowVector(scaledImg);
@@ -345,12 +344,6 @@ public class Controller {
 
         canvas.setOnMouseReleased(e -> {
             makeGuess();
-        });
-
-        canvas.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.SECONDARY) {
-                makeGuess();
-            }
         });
 
     }
