@@ -67,12 +67,9 @@ public class FxmlController {
             button.setText("Connect");
             //button.getStylesheets().add("/main/resources/boostrap3.css");
             button.getStyleClass().add("info");
-            button.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    System.out.println(split[0]);
-                    controller.connectToTheExistingLobby(split[3]);
-                }
+            button.setOnAction(actionEvent -> {
+                System.out.println(split[0]);
+                controller.connectToTheExistingLobby(split[3]);
             });
             this.getChildren().addAll(name, players, difficulty, button);
         }

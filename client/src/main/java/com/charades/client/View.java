@@ -58,7 +58,7 @@ public class View extends Application {
     private static Text gameTimer;
     private static Text messageText;
     private static ListView<Pair<String, Integer>> leaderBoard;
-    private static ListView<String > whaitingList;
+    private static ListView<String > waitingList;
 
     private static Label gameID;
     private static Text gameWord;
@@ -192,7 +192,7 @@ public class View extends Application {
         gameWord.setVisible(false);
 
         leaderBoard = gameSceneController.leaderBoard;
-        whaitingList = gameSceneController.whaitingList;
+        waitingList = gameSceneController.waitingList;
 
         gameTimer.setVisible(false);
 
@@ -355,7 +355,7 @@ public class View extends Application {
 
             //gameTimer.setVisible(true);
 
-            whaitingList.setVisible(false);
+            waitingList.setVisible(false);
         });
 
 
@@ -383,7 +383,7 @@ public class View extends Application {
 
             //gameTimer.setVisible(false);
 
-            whaitingList.setVisible(true);
+            waitingList.setVisible(true);
         });
 
         // TODO: 14.05.2020
@@ -420,7 +420,6 @@ public class View extends Application {
     }
 
     public void setMessageText(String message) {
-        //messageText.setText(message);
         fxmlController.updateLobbyMessage(message);
     }
 
@@ -464,6 +463,10 @@ public class View extends Application {
     public void setDefaultLineWidth(){
         lineWidth = 3;
     }
+    public void newLineWidth(Object obj) {
+        Integer lineWidth = (Integer)obj;
+        Platform.runLater(() -> View.lineWidth = lineWidth);
+    }
     public void newChatMessage(Object obj) {
         ChatMessage msg = (ChatMessage)obj;
         Platform.runLater(() -> gameChat.appendText(msg.getText()));
@@ -485,10 +488,6 @@ public class View extends Application {
         Platform.runLater(() -> leaderBoard.getItems().clear());
     }
 
-    public void newLineWidth(Object obj) {
-        Integer lineWidth = (Integer)obj;
-        Platform.runLater(() -> View.lineWidth = lineWidth);
-    }
 
     public void setBrushVisible(boolean b) {
         Platform.runLater(() -> brush.setVisible(b));
@@ -510,10 +509,10 @@ public class View extends Application {
     }
 
     public void setWhaitingList(ObservableList<String> arr) {
-        Platform.runLater(() -> whaitingList.setItems(arr));
+        Platform.runLater(() -> waitingList.setItems(arr));
     }
     public void clearWhaitingList() {
-        Platform.runLater(() -> whaitingList.getItems().clear());
+        Platform.runLater(() -> waitingList.getItems().clear());
     }
 
     public void setNewTime(Object obj) {

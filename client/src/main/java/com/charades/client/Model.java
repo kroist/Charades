@@ -171,7 +171,7 @@ public class Model {
                         ArrayList<String> arr2 = (ArrayList<String>) obj;
                         for (String string : arr2){
                             String[] strings = string.split(":");
-                            arr.add(new Pair<String, Integer>(strings[0], Integer.parseInt(strings[1])));
+                            arr.add(new Pair<>(strings[0], Integer.parseInt(strings[1])));
                         }
                         controller.newLeaderBoard(arr);
                     } else if (obj instanceof Integer) {

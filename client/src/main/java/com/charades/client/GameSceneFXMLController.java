@@ -25,7 +25,7 @@ public class GameSceneFXMLController {
     @FXML public ColorPicker colorPicker;
     @FXML public Button brush;
     @FXML public Button eraser;
-    @FXML public ListView<String> whaitingList;
+    @FXML public ListView<String> waitingList;
     @FXML public Text gameTimer;
     @FXML public Text gameWord;
 

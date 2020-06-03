@@ -502,7 +502,7 @@ public class Controller {
             setColor(view.getBrushColor());
             setLineWidth(3);
         }else {
-            setColor(new MyColor(Color.web("#f4f4f4")));
+            setColor(new MyColor(Color.WHITE));
             setLineWidth(25);
         }
     }
