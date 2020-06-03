@@ -18,7 +18,7 @@
             <Image url="@../pattern.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="compressedImage" fitHeight="100.0" fitWidth="100.0" layoutX="32.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="compressedImage" fitHeight="100.0" fitWidth="100.0" layoutX="32.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" visible="false" />
       <PieChart fx:id="piechart" layoutX="499.0" layoutY="275.0" prefHeight="359.0" prefWidth="251.0" />
       <Button layoutX="41.0" layoutY="51.0" mnemonicParsing="false" onAction="#retToMenuSp" style="-fx-focus-traversable: false;" styleClass="warning" text="Return to menu" />
       <AnchorPane layoutX="145.0" layoutY="324.0" prefHeight="260.0" prefWidth="260.0" style="-fx-background-color: black, white; -fx-background-insets: 0, 3;">

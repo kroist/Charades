@@ -107,14 +107,14 @@ public class SingleplayerFXMLController {
             ++guessCounter;
             counterLabel.setText(Integer.toString(guessCounter));
         }
-        if (words.get(g2).replace('_', ' ').equals(drawthing.getText()) && p2 >= sum/3){
+        /*if (words.get(g2).replace('_', ' ').equals(drawthing.getText()) && p2 >= sum/3){
             System.out.println("YOU WON");
             timer.cancel();
             startTimer();
             controller.clearCanvasSP();
             ++guessCounter;
             counterLabel.setText(Integer.toString(guessCounter));
-        }
+        }*/
 
         piechart.setData(observableList);
         for (Node node : piechart.lookupAll(".chart-legend-item")){
