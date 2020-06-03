@@ -110,25 +110,41 @@ public class Controller {
         canvas.snapshot(null, writableImage);
         BufferedImage tmpp = SwingFXUtils.fromFXImage(writableImage, null);
 
-        int minX = 255, maxX = 0;
+        int minX = 255, minY = 255, maxX = 0, maxY = 0;
         for (int i = 0; i < 256; i++){
             for (int j = 0; j < 256; j++){
                 if (tmpp.getRGB(i, j) != -1){
                     minX = Math.min(minX, i);
-                    minX = Math.min(minX, j);
+                    minY = Math.min(minY, j);
                     maxX = Math.max(maxX, i);
-                    maxX = Math.max(maxX, j);
+                    maxY = Math.max(maxY, j);
+                    //System.out.println("KEK: " + i + " " + j);
                 }
             }
         }
+        System.out.println(minX + " " + maxX);
 
         if (minX > maxX){
             minX = 0;
             maxX = 255;
+            minY = 0;
+            maxY = 255;
         }
 
-
-        tmpp = tmpp.getSubimage(minX, minX, maxX-minX, maxX-minX);
+        System.out.println(minX + " " + minY);
+        System.out.println(maxX + " " + maxY);
+        int len = Math.max(maxX-minX, maxY-minY);
+        if (minX+len > 255 && minY+len > 255){
+            tmpp = tmpp.getSubimage(255-len, 255-len, len, len);
+        }
+        else if (minX + len > 255){
+            tmpp = tmpp.getSubimage(255-len, minY, len, len);
+        }
+        else if (minY + len > 255){
+            tmpp = tmpp.getSubimage(minX, 255-len, len, len);
+        }
+        else
+            tmpp = tmpp.getSubimage(minX, minY, len, len);
 
         Image tmp = tmpp.getScaledInstance(28, 28, Image.SCALE_SMOOTH);
 

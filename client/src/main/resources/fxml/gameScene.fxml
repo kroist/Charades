@@ -10,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -29,13 +30,13 @@
       <Line endY="800.0" startX="800.0" startY="800.0" />
       <TextArea fx:id="gameChat" wrapText="true" />
       <TextField fx:id="enterMessage" maxWidth="800.0" onKeyPressed="#enterMessageHandler" />
-      <ListView fx:id="leaderBoard" layoutX="600.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
+      <ListView fx:id="leaderBoard" layoutX="600.0" layoutY="28.0" prefHeight="172.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
       <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" styleClass="success" text="Return to menu" />
       <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" styleClass="success" text="Start game" />
       <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false;" />
       <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
       <Button fx:id="eraser" layoutX="50.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
-      <ListView fx:id="waitingList" layoutX="600.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
+      <ListView fx:id="waitingList" layoutX="600.0" layoutY="237.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
       <Text fx:id="gameTimer" layoutX="75.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
          <font>
             <Font name="System Bold" size="24.0" />
@@ -68,5 +69,12 @@
       </Pane>
       <Button fx:id="clearAllButton" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#clearAllHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
       <Label fx:id="gameID" disable="true" layoutX="12.0" layoutY="5.0" style="-fx-opacity: 1; -fx-font-size: 12;" styleClass="button" text="Your game id is: 1111" />
+      <HBox disable="true" layoutX="599.0" prefHeight="28.0" prefWidth="200.0" style="-fx-opacity: 100;">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" style="-fx-opacity: 1;" styleClass="first" text="Player" />
+            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="71.0" style="-fx-opacity: 1;" styleClass="last" text="Score" />
+         </children>
+      </HBox>
+      <Button fx:id="waitingListLabel" disable="true" layoutX="600.0" layoutY="201.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="200.0" style="-fx-opacity: 1;" text="Waiting list" />
    </children>
 </AnchorPane>

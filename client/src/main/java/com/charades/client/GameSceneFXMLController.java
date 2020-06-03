@@ -2,14 +2,22 @@ package com.charades.client;
 
 import com.charades.tools.ChatMessage;
 import com.charades.tools.MyColor;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 
@@ -18,7 +26,7 @@ public class GameSceneFXMLController {
     @FXML public Canvas canvas;
     @FXML public TextArea gameChat;
     @FXML public TextField enterMessage;
-    @FXML public ListView<Pair<String, Integer>> leaderBoard;
+    @FXML public ListView<OwnHBox> leaderBoard;
     @FXML public Button returnToMenuButton;
     @FXML public Button startGameButton;
     @FXML public Label gameID;
@@ -32,6 +40,7 @@ public class GameSceneFXMLController {
     @FXML public Label gameEndMessage;
     @FXML public Label hiddenWord;
     @FXML public Pane gameEndPanel;
+    @FXML public Button waitingListLabel;
 
 
     public Controller controller;
@@ -68,6 +77,24 @@ public class GameSceneFXMLController {
         controller.setIsBrush(true);
     }
 
+    public static class OwnHBox extends HBox {
+        Label name = new Label();
+        Label score = new Label();
+        OwnHBox(String playerName, Integer playerScore){
+            super();
+            name.setText(playerName);
+            name.setAlignment(Pos.CENTER);
+            name.setPrefWidth(120);
+            name.setPadding(new Insets(0, 10, 0, 0));
+            score.setText(playerScore.toString());
+            score.setAlignment(Pos.CENTER);
+            score.setPrefWidth(70);
+            Separator separator = new Separator();
+            separator.setOrientation(Orientation.VERTICAL);
+            this.getChildren().addAll(name, separator, score);
+        }
+    }
+
     @FXML
     public void eraserHandler(MouseEvent actionEvent) {
         controller.setIsBrush(false);
@@ -79,5 +106,13 @@ public class GameSceneFXMLController {
 
     public void clearAllHandler(MouseEvent mouseEvent) {
         controller.clearAllButton();
+    }
+
+    public void setLeaderboard(ObservableList<Pair<String, Integer>> arr){
+        ObservableList<OwnHBox> lst = FXCollections.observableArrayList();
+        for (Pair<String, Integer> pair : arr){
+            lst.add(new OwnHBox(pair.getKey(), pair.getValue()));
+        }
+        Platform.runLater(() -> leaderBoard.setItems(lst));
     }
 }

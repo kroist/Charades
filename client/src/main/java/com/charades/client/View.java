@@ -35,7 +35,7 @@ public class View extends Application {
     public static Controller controller;
 
     private FXMLLoader gameSceneLoader;
-    private GameSceneFXMLController gameSceneController;
+    private static GameSceneFXMLController gameSceneController;
     private FXMLLoader loginSceneLoader;
     static public LoginSceneFXMLController loginSceneFXMLController;
 
@@ -194,7 +194,7 @@ public class View extends Application {
         gameWord = gameSceneController.gameWord;
         gameWord.setVisible(false);
 
-        leaderBoard = gameSceneController.leaderBoard;
+        //leaderBoard = gameSceneController.leaderBoard;
         waitingList = gameSceneController.waitingList;
 
         gameTimer.setVisible(false);
@@ -339,16 +339,20 @@ public class View extends Application {
             gameChat.setMaxWidth(400);
             gameChat.setMinWidth(400);
             gameChat.prefWidth(400);
-            gameChat.setMaxHeight(170);
-            gameChat.setMinHeight(170);
-            gameChat.prefHeight(170);
+            gameChat.setMaxHeight(150);
+            gameChat.setMinHeight(150);
+            gameChat.prefHeight(150);
             gameChat.setLayoutX(200);
             gameChat.setLayoutY(0);
             gameChat.clear();
+            gameChat.setFont(Font.font(15));
 
+            enterMessage.setFont(Font.font(15));
+            enterMessage.setMinWidth(400);
             enterMessage.prefWidth(400);
+            enterMessage.setMaxWidth(400);
             enterMessage.setLayoutX(200);
-            enterMessage.setLayoutY(170);
+            enterMessage.setLayoutY(160);
             enterMessage.clear();
 
             gameEndPanel.setVisible(false);
@@ -356,6 +360,7 @@ public class View extends Application {
             //gameTimer.setVisible(true);
 
             waitingList.setVisible(false);
+            gameSceneController.waitingListLabel.setVisible(false);
         });
 
 
@@ -367,14 +372,16 @@ public class View extends Application {
             gameChat.setMaxWidth(600);
             gameChat.setMinWidth(600);
             gameChat.prefWidth(600);
-            gameChat.setMaxHeight(550);
-            gameChat.setMinHeight(550);
-            gameChat.prefHeight(550);
+            gameChat.setMaxHeight(530);
+            gameChat.setMinHeight(530);
+            gameChat.prefHeight(530);
             gameChat.setLayoutX(0);
             gameChat.setLayoutY(200);
             gameChat.clear();
             gameChat.setFont(Font.font(20));
 
+            enterMessage.setMaxWidth(600);
+            enterMessage.setMinWidth(600);
             enterMessage.prefWidth(600);
             enterMessage.setFont(Font.font(20));
             enterMessage.setLayoutX(0);
@@ -384,6 +391,7 @@ public class View extends Application {
             //gameTimer.setVisible(false);
 
             waitingList.setVisible(true);
+            gameSceneController.waitingListLabel.setVisible(true);
         });
 
         // TODO: 14.05.2020
@@ -476,7 +484,7 @@ public class View extends Application {
     }
 
     private static void addLeaderBoard(ObservableList<Pair<String, Integer>> arr) {
-        leaderBoard.setItems(arr);
+        gameSceneController.setLeaderboard(arr);
     }
     public void newLeaderBoard(Object obj) {
         @SuppressWarnings("unchecked")
