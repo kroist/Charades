@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 import org.deeplearning4j.nn.modelimport.keras.KerasModelImport;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -320,17 +321,13 @@ public class Controller {
 
     public void getReadyToWritePoints() {
         Canvas canvas = view.getCanvas();
-        System.out.println(canvas);
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 event -> {
-                    //view.mousePressed(event);
-                    System.out.println("hah");
                     model.sendObject(new Point(event.getX(), event.getY(), true));
                 });
 
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 event -> {
-                    //view.mouseDragged(event);
                     if (model.isGameStarted()){
                         model.sendObject(new Point(event.getX(), event.getY(), false));
                     }
@@ -343,26 +340,35 @@ public class Controller {
                 });
     }
 
+    double spPrevX, spPrevY;
     public void getReadyToWritePointsSP() {
-        Canvas canvas = View.getCanvasSP();
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
-        canvas.setOnMousePressed(e -> {
-            ctx.setStroke(Color.BLACK);
-            ctx.beginPath();
-            ctx.moveTo(e.getX(), e.getY());
-            ctx.stroke();
-        });
+        Canvas canvasSP = View.getCanvasSP();
+        GraphicsContext ctx = canvasSP.getGraphicsContext2D();
+        canvasSP.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                event -> {
+                    double x = event.getX(), y = event.getY();
+                    spPrevX = x;
+                    spPrevY = y;
+                    x = x - 8.0 / 2.0;
+                    y = y - 8.0 / 2.0;
+                    ctx.setFill(Color.BLACK);
+                    ctx.fillOval(x, y, 8, 8);
+                });
 
-        canvas.setOnMouseDragged(e -> {
-            ctx.setStroke(Color.BLACK);
-            ctx.lineTo(e.getX(), e.getY());
-            ctx.stroke();
-        });
-
-        canvas.setOnMouseReleased(e -> {
-            makeGuess();
-        });
-
+        canvasSP.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                event -> {
+                    double x = event.getX(), y = event.getY();
+                    ctx.setLineWidth(8.0);
+                    ctx.setLineCap(StrokeLineCap.ROUND);
+                    ctx.setStroke(Color.BLACK);
+                    ctx.strokeLine(spPrevX, spPrevY, x, y);
+                    spPrevX = x;
+                    spPrevY = y;
+                });
+        canvasSP.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                event -> {
+                    makeGuess();
+                });
     }
 
     public void resetPlayer(){

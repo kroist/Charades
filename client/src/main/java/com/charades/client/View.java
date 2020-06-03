@@ -432,7 +432,10 @@ public class View extends Application {
     }
 
     public void clearCanvasGame() {
-        Platform.runLater(() -> {canvas.getGraphicsContext2D().setFill(Color.WHITE); canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());});
+        Platform.runLater(() -> {
+            canvas.getGraphicsContext2D().setFill(Color.WHITE);
+            canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        });
         canvas.getGraphicsContext2D().beginPath();
     }
 
@@ -442,7 +445,9 @@ public class View extends Application {
     }
 
     public void clearCanvasSP() {
-        Platform.runLater(() -> {canvasSP.getGraphicsContext2D().fillRect(0, 0, 256, 256);});
+        canvasSP.getGraphicsContext2D().setFill(Color.WHITE);
+        canvasSP.getGraphicsContext2D().fillRect(0, 0, 256, 256);
+        canvasSP.getGraphicsContext2D().beginPath();
         //Platform.runLater(() -> canvasSP.getGraphicsContext2D().clearRect(0, 0, canvasSP.getWidth(), canvasSP.getHeight()));
         //canvasSP.getGraphicsContext2D().beginPath();
     }
