@@ -68,7 +68,7 @@ public class Controller {
     }
 
     public void clearCanvas() {
-        view.clearCanvas();
+        view.clearCanvasGame();
     }
 
     public void clearCanvasSP() {
@@ -451,6 +451,7 @@ public class Controller {
     public void startGame() {
         view.setGameScene();
         model.setGameStarted(true);
+        view.clearCanvasGame();
         Sound.setSound("pencil_sound.aif");
         if (model.isDrawer()){
             //getReadyToWritePoints();

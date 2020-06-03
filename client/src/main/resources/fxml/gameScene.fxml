@@ -17,25 +17,25 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@bootstrap3.css, @chat.css, @entermessage.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.charades.client.GameSceneFXMLController">
    <children>
+      <ImageView fitHeight="800.0" fitWidth="800.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../pattern.png" />
+         </image>
+      </ImageView>
       <Canvas fx:id="canvas" height="600.0" layoutY="200.0" width="800.0" />
       <Line endY="800.0" startY="200.0" />
       <Line endX="800.0" endY="200.0" startY="200.0" />
       <Line endX="800.0" endY="800.0" startX="800.0" startY="200.0" />
       <Line endY="800.0" startX="800.0" startY="800.0" />
       <TextArea fx:id="gameChat" wrapText="true" />
-      <TextField fx:id="enterMessage" onKeyPressed="#enterMessageHandler" maxWidth="800.0" />
-      <ListView fx:id="leaderBoard" layoutX="600.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextField fx:id="enterMessage" maxWidth="800.0" onKeyPressed="#enterMessageHandler" />
+      <ListView fx:id="leaderBoard" layoutX="600.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
       <Button fx:id="returnToMenuButton" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#returnToMenuHandler" prefHeight="25.0" prefWidth="200.0" styleClass="success" text="Return to menu" />
       <Button fx:id="startGameButton" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#startGameHandler" prefHeight="25.0" prefWidth="200.0" styleClass="success" text="Start game" />
-      <Text fx:id="gameID" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your game id is: 1111" textAlignment="CENTER">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Text>
       <ColorPicker fx:id="colorPicker" layoutY="168.0" onAction="#colorPickerHandler" prefHeight="25.0" prefWidth="50.0" style="-fx-color-label-visible: false;" />
       <Button fx:id="brush" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#brushHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
       <Button fx:id="eraser" layoutX="50.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#eraserHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
-      <ListView fx:id="whaitingList" layoutX="600.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="whaitingList" layoutX="600.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-focus-traversable: false;" />
       <Text fx:id="gameTimer" layoutX="75.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
          <font>
             <Font name="System Bold" size="24.0" />
@@ -67,5 +67,6 @@
          </children>
       </Pane>
       <Button fx:id="clearAllButton" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#clearAllHandler" prefHeight="50.0" prefWidth="50.0" visible="false" />
+      <Label fx:id="gameID" disable="true" layoutX="12.0" layoutY="5.0" style="-fx-opacity: 1; -fx-font-size: 12;" styleClass="button" text="Your game id is: 1111" />
    </children>
 </AnchorPane>

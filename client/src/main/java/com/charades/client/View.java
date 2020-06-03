@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -59,7 +60,7 @@ public class View extends Application {
     private static ListView<Pair<String, Integer>> leaderBoard;
     private static ListView<String > whaitingList;
 
-    private static Text gameID;
+    private static Label gameID;
     private static Text gameWord;
     private static Button startGameButton;
 
@@ -268,7 +269,7 @@ public class View extends Application {
                 0,              //y of the upper left corner
                 canvasWidth,    //width of the rectangle
                 canvasHeight);  //height of the rectangle
-        gc.setFill(Color.RED);
+        gc.setFill(Color.WHITE);
         gc.setStroke(color.getColor());
         gc.setLineWidth(lineWidth);
     }
@@ -366,16 +367,18 @@ public class View extends Application {
             gameChat.setMaxWidth(600);
             gameChat.setMinWidth(600);
             gameChat.prefWidth(600);
-            gameChat.setMaxHeight(570);
-            gameChat.setMinHeight(570);
-            gameChat.prefHeight(570);
+            gameChat.setMaxHeight(550);
+            gameChat.setMinHeight(550);
+            gameChat.prefHeight(550);
             gameChat.setLayoutX(0);
             gameChat.setLayoutY(200);
             gameChat.clear();
+            gameChat.setFont(Font.font(20));
 
             enterMessage.prefWidth(600);
+            enterMessage.setFont(Font.font(20));
             enterMessage.setLayoutX(0);
-            enterMessage.setLayoutY(770);
+            enterMessage.setLayoutY(740);
             enterMessage.clear();
 
             //gameTimer.setVisible(false);
@@ -421,7 +424,12 @@ public class View extends Application {
         fxmlController.updateLobbyMessage(message);
     }
 
-    public void clearCanvas() {
+    public void clearCanvasGame() {
+        Platform.runLater(() -> {canvas.getGraphicsContext2D().setFill(Color.WHITE); canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());});
+        canvas.getGraphicsContext2D().beginPath();
+    }
+
+    public void clearCanvas(){
         Platform.runLater(() -> canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight()));
         canvas.getGraphicsContext2D().beginPath();
     }

@@ -21,7 +21,7 @@ public class GameSceneFXMLController {
     @FXML public ListView<Pair<String, Integer>> leaderBoard;
     @FXML public Button returnToMenuButton;
     @FXML public Button startGameButton;
-    @FXML public Text gameID;
+    @FXML public Label gameID;
     @FXML public ColorPicker colorPicker;
     @FXML public Button brush;
     @FXML public Button eraser;

@@ -128,4 +128,9 @@ public class FxmlController {
         lobbyMessage.setText(s);
     }
 
+    @FXML
+    public void returnToLoginScene(){
+        controller.returnToLogin("");
+    }
+
 }

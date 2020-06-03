@@ -47,7 +47,7 @@
                   <Insets />
                </opaqueInsets>
             </VBox>
-            <ListView fx:id="listOfLobbies" layoutX="56.0" layoutY="152.0" prefHeight="497.0" prefWidth="434.0" />
+            <ListView fx:id="listOfLobbies" layoutX="56.0" layoutY="152.0" prefHeight="497.0" prefWidth="434.0" style="-fx-focus-traversable: false;" />
             <Button layoutX="603.0" layoutY="507.0" mnemonicParsing="false" onAction="#refreshListClick" style="visibility: false;" styleClass="info" text="refresh list" />
             <Button disable="true" layoutX="56.0" layoutY="124.0" maxWidth="150.0" minWidth="160.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" style="-fx-font-weight: bold; -fx-opacity: 1;" styleClass="first" text="Lobby name" />
             <Button disable="true" layoutX="205.0" layoutY="124.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="83.0" style="-fx-font-weight: bold; -fx-opacity: 1;" styleClass="middle" text="Players" />
@@ -156,6 +156,7 @@
                   </Label>
                </children>
             </Pane>
+            <Button layoutX="693.0" layoutY="48.0" mnemonicParsing="false" onAction="#returnToLoginScene" style="-fx-focus-traversable: false;" styleClass="info" text="Return" />
          </children>
       </Pane>
    </children>

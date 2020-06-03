@@ -20,7 +20,7 @@
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff6a" height="240.0" layoutX="220.0" layoutY="270.0" stroke="TRANSPARENT" strokeType="INSIDE" width="360.0" />
-      <VBox alignment="TOP_CENTER" layoutX="226.0" layoutY="278.0" prefHeight="283.0" prefWidth="349.0">
+      <VBox alignment="TOP_CENTER" layoutX="226.0" layoutY="278.0" prefHeight="371.0" prefWidth="349.0">
          <children>
             <Label alignment="CENTER" prefHeight="55.0" prefWidth="246.0" text="Enter your username" textAlignment="CENTER">
                <font>
