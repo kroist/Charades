@@ -417,10 +417,11 @@ VBox > .split-menu-button.last > .arrow-button {
 	-fx-background-radius: 4;
 	-fx-effect: innershadow(gaussian, transparent, 0, 0, 0, 0);
 }
-
-.text-field:focused, .text-area:focused {
-	-fx-border-color: #66afe9;
-	-fx-effect: dropshadow(gaussian, #66afe9, 10, 0, 0, 0);
+.text-field .content {
+	-fx-background-color: #fff;
+}
+.text-field:focused .content {
+	-fx-background-color: #fff;
 }
 
 .text-area .scroll-pane, .text-area .scroll-pane .content {

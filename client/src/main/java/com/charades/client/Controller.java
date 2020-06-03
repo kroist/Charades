@@ -288,7 +288,7 @@ public class Controller {
         System.out.println(o);
         System.out.println(o);
         if (ConnectionMessage.BAD_ID.equals(o)){
-            updateMenu("You entered bad id");
+            updateMenu("This lobby does not exist");
             return;
         }
         if (ConnectionMessage.LOBBY_FULL.equals(o)){
@@ -366,9 +366,7 @@ public class Controller {
                     spPrevY = y;
                 });
         canvasSP.addEventHandler(MouseEvent.MOUSE_RELEASED,
-                event -> {
-                    makeGuess();
-                });
+                event -> makeGuess());
     }
 
     public void resetPlayer(){
