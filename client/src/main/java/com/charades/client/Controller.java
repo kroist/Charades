@@ -400,6 +400,8 @@ public class Controller {
                 case "Server offline":
                     View.loginSceneFXMLController.nicknameTakenBox.setText("Server is offline");
                     break;
+                default:
+                    View.loginSceneFXMLController.nicknameTakenBox.setText("");
             }
         }
         else {
@@ -517,10 +519,6 @@ public class Controller {
     }
 
     public void setDrawer() {
-        /*view.getCanvas().setDisable(false);
-        view.setColorPickerVisible(true);
-        view.setEraserVisible(true);
-        view.setBrushVisible(true);*/
         view.setVisibleStartGameButton(true);
     }
     public void returnToLobby() {
