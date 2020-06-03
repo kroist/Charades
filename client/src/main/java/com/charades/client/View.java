@@ -6,7 +6,9 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -16,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -299,8 +302,8 @@ public class View extends Application {
         prevY = y;
     }
 
-    public void newPoint(Object obj) {
-        Point p = (Point)obj;
+    public void newPoint(Point p) {
+        Sound.startSound();
         if (p.getSingle()) {
             prevX = p.getX();
             prevY = p.getY();
@@ -311,9 +314,6 @@ public class View extends Application {
             Platform.runLater(() -> drawLine(x, y));
         }
     }
-    /*private static void changeColor(com.charades.tools.MyColor cl){
-        color = cl;
-    }*/
     public void newColor(Object obj){
         MyColor cl = (MyColor)obj;
         Platform.runLater(() -> color = cl);
@@ -463,8 +463,7 @@ public class View extends Application {
     public void setDefaultLineWidth(){
         lineWidth = 3;
     }
-    public void newLineWidth(Object obj) {
-        Integer lineWidth = (Integer)obj;
+    public void newLineWidth(Integer lineWidth) {
         Platform.runLater(() -> View.lineWidth = lineWidth);
     }
     public void newChatMessage(Object obj) {
@@ -488,15 +487,27 @@ public class View extends Application {
         Platform.runLater(() -> leaderBoard.getItems().clear());
     }
 
-
     public void setBrushVisible(boolean b) {
         Platform.runLater(() -> brush.setVisible(b));
     }
 
-    public void setIsBrash(boolean b) {
+    public void setIsBrush(boolean b) {
         isBrush = b;
+        if(b) {
+            canvas.setCursor(new ImageCursor(new Image("BrushCursor.png")));
+        }
+        else {
+            Circle circle = new Circle(16, null);
+            circle.setFill(Color.YELLOW);
+            circle.setStroke(Color.YELLOW);
+            SnapshotParameters sp = new SnapshotParameters();
+            sp.setFill(Color.TRANSPARENT);
+            Image eraserCursor = circle.snapshot(sp, null);
+
+            canvas.setCursor(new ImageCursor(eraserCursor, 16, 16));
+        }
     }
-    public boolean isBrash(){
+    public boolean isBrush(){
         return isBrush;
     }
 
@@ -508,10 +519,11 @@ public class View extends Application {
         return brushColor;
     }
 
-    public void setWhaitingList(ObservableList<String> arr) {
+    public void setWaitingList(ObservableList<String> arr) {
         Platform.runLater(() -> waitingList.setItems(arr));
     }
-    public void clearWhaitingList() {
+
+    public void clearWaitingList() {
         Platform.runLater(() -> waitingList.getItems().clear());
     }
 

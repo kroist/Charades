@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.ImageCursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -377,7 +378,7 @@ public class Controller {
 
         view.clearChat();
         view.clearLeaderBoard();
-        view.clearWhaitingList();
+        view.clearWaitingList();
 
         //view.setMessageText(message);
     }
@@ -441,9 +442,8 @@ public class Controller {
     }
 
     public void newPoint(Object obj) {
-        view.newPoint(obj);
-        Sound.startSound();
-
+        Point p = (Point)obj;
+        view.newPoint(p);
     }
 
     public void startGameButton() {
@@ -464,6 +464,7 @@ public class Controller {
             view.setClearAllButtonVisible(true);
             view.setBrushVisible(true);
             view.setEnterMessageVisible(false);
+            view.setIsBrush(true);
         }
         //view.setVisibleGameTimer(true);
     }
@@ -477,7 +478,14 @@ public class Controller {
         model.sendObject(lineWidth);
     }
     public void newLineWidth(Object obj){
-        view.newLineWidth(obj);
+        Integer lineWidth = (Integer)obj;
+        if(lineWidth == 25){
+            Sound.setSound("eraserrr.aif");
+        }
+        else {
+            Sound.setSound("pencil_sound.aif");
+        }
+        view.newLineWidth(lineWidth);
     }
     public void sendChatMessage(ChatMessage msg){
         model.sendObject(msg);
@@ -496,8 +504,8 @@ public class Controller {
         view.newLeaderBoard(obj);
     }
 
-    public void setIsBrash(boolean b) {
-        view.setIsBrash(b);
+    public void setIsBrush(boolean b) {
+        view.setIsBrush(b);
         if (b){
             setColor(view.getBrushColor());
             setLineWidth(3);
@@ -509,13 +517,13 @@ public class Controller {
 
     public void setBrushColor(MyColor myColor) {
         view.setBrushColor(myColor);
-        if (view.isBrash())setColor(view.getBrushColor());
+        if (view.isBrush())setColor(view.getBrushColor());
     }
 
     public void newWaitingList(Object obj) {
         @SuppressWarnings("unchecked")
         ObservableList<String> arr = FXCollections.observableArrayList((HashSet<String>)obj);
-        view.setWhaitingList(arr);
+        view.setWaitingList(arr);
     }
 
     public void setDrawer() {

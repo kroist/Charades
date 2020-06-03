@@ -144,16 +144,21 @@ public class Model {
                     System.out.println("really received " + obj);
                     if (obj instanceof ConnectionMessage) {
                         if (obj.equals(ConnectionMessage.STOP_READING)) break;
-                        if (obj.equals(ConnectionMessage.NEW_DRAWER))
+                        if (obj.equals(ConnectionMessage.NEW_DRAWER)) {
                             setIsDrawer(true);
+                        }
                         if (obj.equals(ConnectionMessage.GAME_STARTED)) {
                             controller.startGame();
                         }
                         if (obj.equals(ConnectionMessage.GAME_ENDED)) {
                             controller.returnToLobby();
                         }
-                        if (obj.equals(ConnectionMessage.CLEAR_CANVAS))controller.clearCanvas();
-                        if (obj.equals(ConnectionMessage.MOUSE_RELEASED))Sound.stopSound();
+                        if (obj.equals(ConnectionMessage.CLEAR_CANVAS)) {
+                            controller.clearCanvas();
+                        }
+                        if (obj.equals(ConnectionMessage.MOUSE_RELEASED)){
+                            Sound.stopSound();
+                        }
                     } else if (obj instanceof GameResult){
                         controller.newGameResult(obj);
                     } else if (obj instanceof GameWord){

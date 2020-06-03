@@ -65,15 +65,12 @@ public class GameSceneFXMLController {
 
     @FXML
     public void brushHandler(MouseEvent actionEven){
-        controller.setIsBrash(true);
-        //controller.();
+        controller.setIsBrush(true);
     }
 
     @FXML
     public void eraserHandler(MouseEvent actionEvent) {
-        controller.setIsBrash(false);
-        //controller.setColor(new com.charades.tools.MyColor(Color.web("#f4f4f4")));
-        //controller.setLineWidth(10);
+        controller.setIsBrush(false);
     }
 
     public void closeRoundEndPanel(ActionEvent actionEvent) {
