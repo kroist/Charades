@@ -70,7 +70,7 @@ public class SingleplayerFXMLController {
                 }
                 if (counter < 30){
                     Platform.runLater(() ->
-                    timerLabel.setText(Integer.toString(counter)));
+                    timerLabel.setText(Integer.toString(30-counter)));
                     counter = (counter+1)%30;
                 }
             }
