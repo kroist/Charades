@@ -91,12 +91,10 @@ public class View extends Application {
         View.stage = stage;
         createContent();
 
-        stage.setMaxWidth(800);
-        stage.setMinWidth(800);
-        stage.setMaxHeight(800);
-        stage.setMinHeight(800);
-        stage.setWidth(800);
-        stage.setHeight(800);
+        //stage.setMinWidth(800);
+        //stage.setMinHeight(800);
+        //stage.setWidth(800);
+        //stage.setHeight(800);
         stage.setResizable(false);
         stage.setScene(loginScene);
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
@@ -342,37 +340,37 @@ public class View extends Application {
         Platform.runLater(() -> {
             fxmlController.resetCreateLobbyPanel();
             stage.setScene(menuScene);
-            stage.setMaxWidth(800);
+            /*stage.setMaxWidth(800);
             stage.setMinWidth(800);
             stage.setMaxHeight(800);
             stage.setMinHeight(800);
             stage.setWidth(800);
             stage.setHeight(800);
-            stage.sizeToScene();
+            stage.sizeToScene();*/
         });
     }
     public void setLoginScene() {
         Platform.runLater(()->{
             stage.setScene(loginScene);
-            stage.setMaxWidth(800);
+            /*stage.setMaxWidth(800);
             stage.setMinWidth(800);
             stage.setMaxHeight(800);
             stage.setMinHeight(800);
             stage.setWidth(800);
             stage.setHeight(800);
-            stage.sizeToScene();
+            stage.sizeToScene();*/
         });
     }
     public void setGameScene() {
         Platform.runLater(() -> {
             stage.setScene(gameScene);
-            stage.setMaxWidth(800);
+            /*axWidth(800);
             stage.setMinWidth(800);
             stage.setMaxHeight(800);
             stage.setMinHeight(800);
             stage.setWidth(800);
             stage.setHeight(800);
-            stage.sizeToScene();
+            stage.sizeToScene();*/
             gameChat.setMaxWidth(400);
             gameChat.setMinWidth(400);
             gameChat.prefWidth(400);
@@ -413,13 +411,13 @@ public class View extends Application {
     public void setLobbyScene() {
         Platform.runLater(() -> {
             stage.setScene(gameScene);
-            stage.setMaxWidth(800);
+            /*stage.setMaxWidth(800);
             stage.setMinWidth(800);
             stage.setMaxHeight(800);
             stage.setMinHeight(800);
             stage.setWidth(800);
             stage.setHeight(800);
-            stage.sizeToScene();
+            stage.sizeToScene();*/
             gameChat.setMaxWidth(600);
             gameChat.setMinWidth(600);
             gameChat.setPrefWidth(600);
@@ -457,13 +455,13 @@ public class View extends Application {
         System.out.println("Setting singleplayer scene");
         Platform.runLater(() -> {
             stage.setScene(singleplayerScene);
-            stage.setMaxWidth(800);
+            /*stage.setMaxWidth(800);
             stage.setMinWidth(800);
             stage.setMaxHeight(800);
             stage.setMinHeight(800);
             stage.setWidth(800);
             stage.setHeight(800);
-            stage.sizeToScene();
+            stage.sizeToScene();*/
             singleplayerController.startTimer();
             singleplayerController.guessCounter = 0;
             singleplayerController.counterLabel.setText("0");
