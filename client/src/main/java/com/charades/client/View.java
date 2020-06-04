@@ -181,7 +181,8 @@ public class View extends Application {
         gameChat.setEditable(false);
         enterMessage = gameSceneController.enterMessage;
         enterMessage.setEditable(true);
-        enterMessage.setPrefWidth(600);
+        enterMessage.setMinWidth(600);
+        enterMessage.setMaxWidth(600);
         enterMessage.setOnKeyTyped(event -> {
             String string = enterMessage.getText();
 
@@ -385,8 +386,13 @@ public class View extends Application {
 
             enterMessage.setFont(Font.font(15));
             enterMessage.setMinWidth(400);
-            enterMessage.prefWidth(400);
             enterMessage.setMaxWidth(400);
+            enterMessage.setPrefWidth(400);
+
+            enterMessage.setMinHeight(25);
+            enterMessage.setMaxHeight(25);
+            enterMessage.setPrefHeight(25);
+
             enterMessage.setLayoutX(200);
             enterMessage.setLayoutY(160);
             enterMessage.clear();
@@ -416,10 +422,10 @@ public class View extends Application {
             stage.sizeToScene();
             gameChat.setMaxWidth(600);
             gameChat.setMinWidth(600);
-            gameChat.prefWidth(600);
+            gameChat.setPrefWidth(600);
             gameChat.setMaxHeight(530);
             gameChat.setMinHeight(530);
-            gameChat.prefHeight(530);
+            gameChat.setPrefHeight(530);
             gameChat.setLayoutX(0);
             gameChat.setLayoutY(200);
             gameChat.clear();
@@ -427,7 +433,12 @@ public class View extends Application {
 
             enterMessage.setMaxWidth(600);
             enterMessage.setMinWidth(600);
-            enterMessage.prefWidth(600);
+            enterMessage.setPrefWidth(600);
+
+            enterMessage.setMinHeight(40);
+            enterMessage.setMaxHeight(40);
+            enterMessage.setPrefHeight(40);
+
             enterMessage.setFont(Font.font(20));
             enterMessage.setLayoutX(0);
             enterMessage.setLayoutY(740);
