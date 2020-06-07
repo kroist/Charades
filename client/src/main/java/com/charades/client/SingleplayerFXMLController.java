@@ -60,11 +60,11 @@ public class SingleplayerFXMLController {
         if (timer != null)timer.cancel();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-            private int counter = 0;
+            private int counter = 29;
             @Override
             public void run() {
                 System.out.println("counter = " + counter);
-                if (counter == 0){
+                if (counter == 29){
                     Platform.runLater(() ->
                             drawthing.setText(getRandomWord().replace('_', ' ')));
                 }
