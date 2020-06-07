@@ -83,8 +83,8 @@ public class Controller {
             System.out.println("Starting to refresh lobbies");
             while(running){
                 try {
+                    Thread.sleep(2000) ;
                     View.fxmlController.refreshList();
-                    Thread.sleep(2000);
                 } catch (InterruptedException e){
                     System.out.println("Stopped refreshing lobbies");
                     running = false;
