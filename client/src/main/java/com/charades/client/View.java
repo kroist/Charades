@@ -387,9 +387,9 @@ public class View extends Application {
             enterMessage.setMaxWidth(400);
             enterMessage.setPrefWidth(400);
 
-            enterMessage.setMinHeight(25);
-            enterMessage.setMaxHeight(25);
-            enterMessage.setPrefHeight(25);
+            enterMessage.setMinHeight(35);
+            enterMessage.setMaxHeight(35);
+            enterMessage.setPrefHeight(35);
 
             enterMessage.setLayoutX(200);
             enterMessage.setLayoutY(160);

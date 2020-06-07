@@ -58,7 +58,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="ipField" alignment="CENTER" maxWidth="190.0" minWidth="190.0" prefHeight="28.0" prefWidth="190.0">
+            <TextField fx:id="ipField" alignment="CENTER" maxWidth="190.0" minWidth="190.0" prefHeight="28.0" prefWidth="190.0" style="-fx-focus-traversable: false;">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
