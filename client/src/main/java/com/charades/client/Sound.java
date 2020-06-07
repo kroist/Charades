@@ -3,6 +3,7 @@ package com.charades.client;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import java.net.URL;
 
 public class Sound {
     public static Clip sound;
@@ -10,8 +11,9 @@ public class Sound {
         try {
             if (sound != null)sound.stop();
             sound = AudioSystem.getClip();
+            URL soundUrl = Main.class.getResource("/" + url);
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                    Main.class.getResourceAsStream("/" + url));
+                    soundUrl);
             sound.open(inputStream);
             sound.loop(-1);
             sound.stop();
