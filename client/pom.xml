@@ -15,7 +15,7 @@
         <!--
         <my.os1>linux-x86</my.os1>
         <my.os2>linux-x86_64</my.os2>
-           -->
+        -->
 
         <my.os1>windows-x86</my.os1>
         <my.os2>windows-x86_64</my.os2>

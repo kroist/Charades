@@ -430,6 +430,7 @@ public class Controller {
     }
 
     public void returnToLoginSP(){
+        View.loginSceneFXMLController.nicknameTakenBox.setText("");
         view.setLoginScene();
     }
 
