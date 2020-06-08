@@ -18,3 +18,19 @@ Player has to draw a guessed object in 30 seconds, so the computer guesses it.
 ### Frameworks and Libraries used:
 * JavaFX
 * Deeplearning4j and TensorFlow
+
+### Running application
+* Jar files are in the release section
+* First, you have run charades-server.jar file with your port_number
+```
+java -jar charades-server.jar port_number
+```  
+* To start client application, run the charades-windows.jar or charades-linux.jar file
+```
+java -jar charades-windows.jar
+```
+or
+```
+java -jar charades-linux.jar
+```
+* If you have Mac OS, or you want to compile code to binaries, ```git clone``` the repository and execute following commands in the root folder of repository ```mvn clean```, ```mvn install```, ```mvn javafx:run -pl client``` (for Mac OS uncomment macosx-x86_64 properties in pom.xml in client module and comment other properties) 
