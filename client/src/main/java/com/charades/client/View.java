@@ -339,6 +339,7 @@ public class View extends Application {
         Sound.stopSound();
         Platform.runLater(() -> {
             fxmlController.resetCreateLobbyPanel();
+            fxmlController.lobbyMessage.setText("");
             stage.setScene(menuScene);
             /*stage.setMaxWidth(800);
             stage.setMinWidth(800);
